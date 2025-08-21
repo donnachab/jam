@@ -1,0 +1,41 @@
+/* Your custom CSS rules will go here. */
+.admin-controls, .admin-controls-inline {
+    display: none;
+}
+
+body.admin-mode .admin-controls {
+    display: block;
+}
+body.admin-mode .admin-controls-inline {
+    display: inline-flex;
+}
+
+/* Style for special (non-Saturday) jams */
+.jam-special {
+    border-left-color: #7c3aed; /* Tailwind violet-600 */
+}
+
+/* Style for cancelled jams */
+.jam-cancelled {
+    background-color: #fee2e2; /* Tailwind red-100 */
+    opacity: 0.7;
+}
+
+/* Ensure admin buttons on gallery items are positioned correctly */
+.gallery-item {
+    position: relative;
+}
+.gallery-item .delete-photo-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+.community-image-container {
+    position: relative;
+}
+.slide-admin-controls {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+}
