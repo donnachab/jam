@@ -1,0 +1,31 @@
+# GitHub Actions workflow to deploy the new modular website to Firebase Hosting
+
+name: Deploy Modular Site to Firebase Hosting
+
+# Triggers the workflow on push events but only for the main branch
+'on':
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # This is the main deployment action
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GALWAY_JAM_CIRCLE_LIVE }}'
+          projectId: galway-jam-circle-live
+          target: gjc-live # <-- This line directs the deploy to your new site
+
+      # This final step writes a custom message to the action summary page
+      - name: Output Deployment URL
+        run: |
+          echo "### 🚀 Modular Site Deployment Successful! 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "**Live Site URL:** https://gjc-live.web.app" >> $GITHUB_STEP_SUMMARY
+          echo "It may take a minute for changes to be visible." >> $GITHUB_STEP_SUMMARY
