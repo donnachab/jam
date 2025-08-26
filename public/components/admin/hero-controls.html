@@ -1,0 +1,27 @@
+<div class="container mx-auto px-4 sm:px-6 text-center -mt-8 relative z-10">
+  <div class="admin-controls-inline items-center justify-center">
+    <button id="edit-cover-photo-btn" class="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600 transition duration-300 shadow-md">
+      Change Cover Photo
+    </button>
+    <button class="exit-admin-btn px-4 py-2 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 transition duration-300 shadow-md ml-4">
+      Exit Admin Mode
+    </button>
+  </div>
+  <form id="edit-cover-photo-form" class="max-w-xl mx-auto mt-4 p-6 bg-white rounded-lg shadow-xl border border-gray-200" style="display: none;">
+    <h3 class="text-xl font-bold text-primary mb-4">
+      Change Cover Photo
+    </h3>
+    <div class="mb-4">
+      <label for="cover-photo-url" class="block text-gray-700 font-bold mb-2 text-left">New Photo URL</label>
+      <input type="url" id="cover-photo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
+    </div>
+    <div class="flex justify-end space-x-4">
+      <button type="button" id="cancel-cover-photo-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">
+        Cancel
+      </button>
+      <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">
+        Save Photo
+      </button>
+    </div>
+  </form>
+</div>
