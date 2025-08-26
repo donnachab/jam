@@ -1,78 +1,45 @@
-// -----------------------------------------------------------------------------
-// --- 1. UTILITIES & HELPERS
-// -----------------------------------------------------------------------------
-console.log("✅ main.js script has started.");
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Galway Jam Circle - Official Website</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body class="text-gray-800">
 
-/**
- * Loads an HTML component from a file into a specified container element.
- * @param {string} componentPath - The path to the component file (e.g., 'components/header.html').
- * @param {string} containerId - The ID of the DOM element to load the component into.
- */
-async function loadComponent(componentPath, containerId) {
-  console.log(`Attempting to load component: ${componentPath}`);
-  try {
-    const response = await fetch(componentPath);
-    if (!response.ok) {
-      throw new Error(`Network response was not ok. Status: ${response.status}`);
-    }
-    const content = await response.text();
-    const container = document.getElementById(containerId);
-    if (container) {
-      container.innerHTML = content;
-      console.log(`✅ Component '${componentPath}' loaded successfully into #${containerId}.`);
-    } else {
-      console.warn(`⚠️ Container with ID #${containerId} not found.`);
-    }
-  } catch (error) {
-    console.error(`❌ FAILED to load component ${componentPath}:`, error);
-  }
-}
+    <header id="header-container" class="bg-primary shadow-lg sticky top-0 z-50"></header>
+    
+    <main>
+      <div id="hero-container"></div>
+      <div id="admin-hero-controls-container"></div>
+      <div id="jams-container"></div>
+      <div id="admin-jam-controls-container"></div>
+      <div id="format-container"></div>
+      <div id="events-container"></div>
+      <div id="admin-event-controls-container"></div>
+      <div id="community-container"></div>
+      <div id="admin-community-controls-container"></div>
+      <div id="gallery-container"></div>
+      <div id="admin-gallery-controls-container"></div>
+      <div id="contact-container"></div>
+    </main>
 
-// -----------------------------------------------------------------------------
-// --- 2. MAIN APPLICATION LOGIC
-// -----------------------------------------------------------------------------
+    <footer id="footer-container"></footer>
+    <div id="modal-container"></div>
 
-/**
- * Main function to initialize the entire application.
- */
-async function main() {
-  console.log("🚀 Initializing application...");
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
-  // --- Load all HTML components into the DOM ---
-  // We use Promise.all to load them in parallel for speed.
-  await Promise.all([
-    loadComponent('components/header.html', 'header-container'),
-    loadComponent('components/hero.html', 'hero-container'),
-    loadComponent('components/admin/hero-controls.html', 'admin-hero-controls-container'),
-    loadComponent('components/jams.html', 'jams-container'),
-    loadComponent('components/admin/jam-controls.html', 'admin-jam-controls-container'),
-    loadComponent('components/format.html', 'format-container'),
-    loadComponent('components/events.html', 'events-container'),
-    loadComponent('components/admin/event-controls.html', 'admin-event-controls-container'),
-    loadComponent('components/community.html', 'community-container'),
-    loadComponent('components/admin/community-controls.html', 'admin-community-controls-container'),
-    loadComponent('components/gallery.html', 'gallery-container'),
-    loadComponent('components/admin/gallery-controls.html', 'admin-gallery-controls-container'),
-    loadComponent('components/contact.html', 'contact-container'),
-    loadComponent('components/footer.html', 'footer-container'),
-    loadComponent('components/ui/modal.html', 'modal-container')
-  ]);
-  console.log("👍 All HTML components loaded.");
+    <script type="module" src="js/main.js"></script>
 
-  // --- Import and initialize JavaScript modules ---
-  // (This section will be filled in as we create the other JS files)
-  // Example:
-  // const { initializeFirebase } = await import('./firebase-config.js');
-  // const { initializeMobileMenu } = await import('./ui/mobile-menu.js');
-  //
-  // const db = initializeFirebase();
-  // initializeMobileMenu();
-  // ... and so on for every module.
-
-  console.log("🎉 Application initialization complete.");
-}
-
-// -----------------------------------------------------------------------------
-// --- 3. SCRIPT EXECUTION
-// -----------------------------------------------------------------------------
-document.addEventListener("DOMContentLoaded", main);
+  </body>
+</html>
