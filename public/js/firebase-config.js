@@ -4,14 +4,15 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-
 
 // --- Your Firebase Configuration ---
 // IMPORTANT: Replace this with your actual Firebase project configuration
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyC4SnqaOMQWmEFulkN8zZALZsqJLK7hOh0",
+    authDomain: "galway-jam-circle-live.firebaseapp.com",
+    projectId: "galway-jam-circle-live",
+    storageBucket: "galway-jam-circle-live.firebasestorage.app",
+    messagingSenderId: "140452021164",
+    appId: "1:140452021164:web:049a190be3ba0b6c9a3009"
+  };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -21,3 +22,4 @@ console.log("✅ Firebase initialized successfully.");
 
 // Export the database instance to be used in other modules
 export { db };
+
