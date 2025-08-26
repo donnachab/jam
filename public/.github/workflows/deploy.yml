@@ -19,9 +19,12 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          # This is a secure placeholder. It tells GitHub to use the secret
+          # you will create in your repository's settings.
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GALWAY_JAM_CIRCLE_LIVE }}'
           projectId: galway-jam-circle-live
-          target: gjc-live # <-- This line directs the deploy to your new site
+          # This line directs the deployment to your new site
+          target: gjc-live
 
       # This final step writes a custom message to the action summary page
       - name: Output Deployment URL
