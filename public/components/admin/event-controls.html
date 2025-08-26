@@ -1,0 +1,50 @@
+<div class="max-w-4xl mx-auto">
+  <!-- Admin button for this section -->
+  <div class="text-center mt-8 admin-controls-inline">
+    <button id="add-event-btn" class="px-6 py-2 bg-green-500 text-white font-bold rounded-full hover:bg-green-600 transition duration-300 shadow-md">
+      Add New Event
+    </button>
+  </div>
+
+  <!-- Hidden form for adding/editing an event -->
+  <form id="add-event-form" class="max-w-4xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-inner border" style="display: none;">
+    <h3 id="event-form-title" class="text-xl font-bold text-primary mb-4">
+      Add a New Event
+    </h3>
+    <input type="hidden" id="edit-event-id" />
+    <div class="mb-4">
+      <label for="event-title" class="block text-gray-700 font-bold mb-2 text-left">Title</label>
+      <input type="text" id="event-title" class="w-full p-2 border rounded" placeholder="e.g., Cleggan Fringe Festival"/>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label for="event-start-date" class="block text-gray-700 font-bold mb-2 text-left">Start Date</label>
+        <input type="text" id="event-start-date" class="w-full p-2 border rounded" placeholder="Select a start date..."/>
+      </div>
+      <div>
+        <label for="event-end-date" class="block text-gray-700 font-bold mb-2 text-left">End Date</label>
+        <input type="text" id="event-end-date" class="w-full p-2 border rounded" placeholder="Select an end date..."/>
+      </div>
+    </div>
+    <div class="mb-4">
+      <label for="event-time" class="block text-gray-700 font-bold mb-2 text-left">Time (Optional)</label>
+      <input type="text" id="event-time" class="w-full p-2 border rounded" placeholder="e.g., 6:00 PM - 8:00 PM"/>
+    </div>
+    <div class="mb-4">
+      <label for="event-map-link" class="block text-gray-700 font-bold mb-2 text-left">Google Maps Link (Optional)</label>
+      <input type="url" id="event-map-link" class="w-full p-2 border rounded" placeholder="Paste Google Maps share link..."/>
+    </div>
+    <div class="mb-4">
+      <label for="event-description" class="block text-gray-700 font-bold mb-2 text-left">Description</label>
+      <textarea id="event-description" class="w-full p-2 border rounded" rows="4" placeholder="Enter event details..."></textarea>
+    </div>
+    <div class="flex justify-end space-x-4">
+      <button type="button" id="cancel-event-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">
+        Cancel
+      </button>
+      <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">
+        Save Event
+      </button>
+    </div>
+  </form>
+</div>
