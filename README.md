@@ -16,7 +16,7 @@ Welcome to the repository for the official Galway Jam Circle website. This docum
 ---
 ### High-Level Specification
 
-For a detailed checklist of all features and requirements, please see the **[SPEC.md file](./spec.md)**.
+For a detailed checklist of all features and requirements, please see the **[SPEC.md file](./public/spec.md)**.
 
 ---
 ## The Logic of the Site Structure
