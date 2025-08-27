@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "galway-jam-circle-live"
+  },
+  "targets": {
+    "galway-jam-circle-live": {
+      "hosting": {
+        "gjc-live": [
+          "gjc-live"
+        ]
+      }
+    }
+  }
+}
