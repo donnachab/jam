@@ -93,8 +93,16 @@ export function initializeCommunity(initialItems, refreshData) {
             amountRaised: document.getElementById("community-amount").value.trim(),
             charityName: document.getElementById("community-charity-name").value.trim(),
         };
-        if (!itemData.imageUrl || !itemData.description) return;
-        
+        // Add validation logic here
+        if (!itemData.imageUrl || !itemData.description) {
+            return showModal("Image URL and Description are required.", "alert");
+        }
+        if (itemData.type === "community" && !itemData.headline) {
+            return showModal("Headline is required for community events.", "alert");
+        }
+        if (itemData.type === "charity" && (!itemData.amountRaised || !itemData.charityName)) {
+            return showModal("Amount Raised and Charity Name are required for charity fundraisers.", "alert");
+        }
         await setDoc(doc(db, "community", id), itemData);
         form.style.display = "none";
         await refreshData();
