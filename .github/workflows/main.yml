@@ -1,20 +1,49 @@
+# This is the name of the workflow, which you'll see in the "Actions" tab.
 name: Deploy Modular Site to Firebase Hosting
+
+# This section defines when the workflow should run.
 on:
+  # 'push' means it runs when you commit code.
   push:
+    # 'branches' filters it to only run for the 'main' branch.
     branches:
       - main
+
+# This section defines the actual job(s) to be run.
 jobs:
   build_and_deploy:
+    # This specifies the type of virtual machine to use. 'ubuntu-latest' is standard.
     runs-on: ubuntu-latest
+    
+    # This section lists the individual steps the job will perform in order.
     steps:
+      # Step 1: Checks out your repository's code into the virtual machine.
       - uses: actions/checkout@v3
+
+      # Step 2: (DEBUGGING STEP) Lists all files and folders recursively.
+      # This will show us the exact file structure before the deployment command runs.
+      - name: List files in the repository
+        run: ls -R
+
+      # Step 3: The main deployment action that sends your code to Firebase.
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
+          # A token that gives the action permission to work with your repository.
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          
+          # The secret key that allows the action to authenticate with your Firebase project.
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GALWAY_JAM_CIRCLE_LIVE }}'
+          
+          # Your Firebase Project ID.
           projectId: galway-jam-circle-live
+          
+          # The specific deployment target (nickname) we defined in .firebaserc.
           target: gjc-live
+          
+          # Tells the action to deploy to the main "live" channel, not a preview.
           channelId: live
+          
+      # Step 4: Writes a summary message to the workflow results page.
       - name: Output Deployment URL
         run: |
           echo "### 🚀 Modular Site Deployment Successful! 🚀" >> $GITHUB_STEP_SUMMARY
