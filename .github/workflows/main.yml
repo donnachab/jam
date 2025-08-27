@@ -1,42 +1,33 @@
-name: Deploy Modular Site to Firebase Hosting
+# The name of the workflow as it appears in the Actions tab.
+name: Deploy Site to Firebase Hosting
+
+# This tells the workflow to run automatically on any push to the 'main' branch.
 on:
   push:
     branches:
       - main
+
 jobs:
   build_and_deploy:
+    # Use a standard Ubuntu virtual machine for the job.
     runs-on: ubuntu-latest
+    
+    # These are the sequential steps the job will perform.
     steps:
-      # Step 1: Checks out your repository's code.
+      # Step 1: Checks out your repository's code so the job can access it.
       - uses: actions/checkout@v3
 
-      # Step 2: (THE NEW FIX) This uses a standard "here document" to
-      # robustly create a valid firebase.json file, overwriting any broken version.
-      - name: Overwrite with a valid firebase.json
-        run: |
-          cat <<EOF > firebase.json
-          {
-            "hosting": [
-              {
-                "site": "galwayjam",
-                "public": "public",
-                "ignore": [
-                  "firebase.json",
-                  "**/.*",
-                  "**/node_modules/**"
-                ],
-                "rewrites": [
-                  {
-                    "source": "**",
-                    "destination": "/index.html"
-                  }
-                ]
-              }
-            ]
-          }
-          EOF
+      # Step 2 (Debugging): Prints a list of all files and folders.
+      # This is useful to confirm that all your files are present.
+      - name: Show all files in the repository
+        run: ls -R
 
-      # Step 3: The deployment action will use the file we just created.
+      # Step 3 (Debugging): Displays the contents of firebase.json.
+      # This confirms that the correct configuration is being used.
+      - name: Show the firebase.json configuration
+        run: cat firebase.json
+
+      # Step 4: This is the main action that deploys your code to Firebase.
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
@@ -44,10 +35,10 @@ jobs:
           projectId: galway-jam-circle-live
           target: gjc-live
           channelId: live
-          
-      # Step 4: Writes a summary message.
+
+      # Step 5: This prints a helpful summary with a link to your live site.
       - name: Output Deployment URL
         run: |
-          echo "### 🚀 Modular Site Deployment Successful! 🚀" >> $GITHUB_STEP_SUMMARY
-          echo "**Live Site URL:** https://gjc-live.web.app" >> $GITHUB_STEP_SUMMARY
-          echo "It may take a minute for changes to be visible." >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "Your site has been deployed." >> $GITHUB_STEP_SUMMARY
+          echo "**Live Site URL:** https://galwayjam.web.app" >> $GITHUB_STEP_SUMMARY
