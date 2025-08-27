@@ -52,10 +52,16 @@ function handleAdminClick(e) {
   } else {
     showModal("Enter admin PIN:", "prompt", async (pin) => {
       if (!pin) return;
+      
+      // Show loading state while verifying
+      showModal("Verifying...", "loading");
+
       const isCorrect = await verifyPin(pin);
       if (isCorrect) {
         sessionStorage.setItem("gjc_isAdmin", "true");
         toggleAdminMode(true);
+        // Hide the loading modal after success
+        showModal("", "alert", () => {}, () => {}, false); // A quick way to hide, a proper hide function would be better
       } else {
         showModal("Incorrect PIN.", "alert");
       }
