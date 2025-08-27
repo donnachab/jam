@@ -7,14 +7,15 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Checks out your repository's code (including the broken firebase.json).
+      # Step 1: Checks out your repository's code.
       - uses: actions/checkout@v3
 
-      # Step 2: (THE FIX) This step completely overwrites the broken firebase.json
-      # with a freshly created, guaranteed-valid version.
+      # Step 2: (THE NEW FIX) This uses a standard "here document" to
+      # robustly create a valid firebase.json file, overwriting any broken version.
       - name: Overwrite with a valid firebase.json
         run: |
-          echo '{
+          cat <<EOF > firebase.json
+          {
             "hosting": [
               {
                 "site": "galwayjam",
@@ -32,9 +33,10 @@ jobs:
                 ]
               }
             ]
-          }' > firebase.json
+          }
+          EOF
 
-      # Step 3: The deployment action will now use the file we just created.
+      # Step 3: The deployment action will use the file we just created.
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
