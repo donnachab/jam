@@ -1,6 +1,6 @@
 # High-Level Feature Specification & Analysis
 
-This document serves as the master checklist for the website's functionality and the "source of truth" for our refactoring process.
+This document serves as the master checklist for the website's functionality. It has been updated to reflect the completed refactoring work.
 
 ---
 ## 1. General / Site-wide
@@ -8,22 +8,13 @@ This document serves as the master checklist for the website's functionality and
 ### 1.1. Functional Requirements
 
 * **Layout & Navigation:**
-    * `[ ]` The header element must be sticky, remaining fixed to the top of the viewport during vertical scrolling.
-    * `[ ]` On screen widths below 768px (`md` breakpoint), the main navigation links must be hidden, and a "hamburger" menu icon must be displayed.
-    * `[ ]` Clicking the hamburger icon must toggle the visibility of the mobile menu dropdown.
-    * `[ ]` Clicking any navigation link (in either the main nav or mobile menu) must smoothly scroll the page to the corresponding section.
-    * `[ ]` Clicking any link within the open mobile menu must also immediately close the menu.
-
+    * `[✅]` The header element is sticky.
+    * `[✅]` The mobile menu is implemented for smaller screens.
+    * `[✅]` All navigation links scroll smoothly and close the mobile menu.
 * **Asset Loading:**
-    * `[ ]` All external CSS libraries (Flatpickr, Swiper) and fonts (Google Fonts) must be loaded in the `<head>`.
-    * `[ ]` All external JS libraries must be loaded at the end of the `<body>`.
-    * `[ ]` The main application logic must be initiated by a single ES6 module ([`js/main.js`](./js/main.js)).
-
-### 1.2. Critique & Suggestions
-
-> 🧐 **Design Flaw:** The original site loads all HTML for the entire single-page application at once. This includes all hidden admin forms. For a large site, this can slow down the initial page load.
->
-> **Our Action:** Our component-loading approach (the `loadComponent` function in `main.js`) is the correct solution. It breaks the HTML into smaller, manageable chunks that are loaded on demand. We will ensure all sections are loaded this way.
+    * `[✅]` All external libraries and fonts are loaded correctly.
+    * `[✅]` The application is initiated by a single ES6 module ([`js/main.js`](./js/main.js)).
+    * `[✅]` The site is broken down into small HTML components, loaded on demand by the `loadComponent` function to improve initial page load speed.
 
 ---
 ## 2. Admin Mode & Authentication
@@ -31,30 +22,20 @@ This document serves as the master checklist for the website's functionality and
 ### 2.1. Functional Requirements
 
 * **State Management:**
-    * `[ ]` Admin status must be managed using `sessionStorage`. An active session (`gjc_isAdmin=true`) persists only until the browser tab is closed.
-    * `[ ]` If a user loads the page with an active admin session, the site must automatically initialize in Admin Mode.
-
+    * `[✅]` Admin status is managed using `sessionStorage`.
+    * `[✅]` The site automatically initializes in Admin Mode if a session is active.
 * **Authentication Flow:**
-    * `[ ]` A button labeled "Admin" must be present in the site footer.
-    * `[ ]` Clicking the "Admin" button when not logged in must trigger a modal pop-up prompting for a PIN.
-    * `[ ]` The modal must contain a password input field and "Submit" / "Cancel" buttons.
-    * `[ ]` Submitting the correct PIN must enable Admin Mode.
-    * `[ ]` Submitting an incorrect PIN must display an error message in the modal.
-
+    * `[✅]` The "Admin" button in the footer triggers a PIN prompt modal.
+    * `[✅]` The PIN is sent securely in the body of an **`HTTP POST` request**, fixing the original security flaw.
 * **UI State:**
-    * `[ ]` When Admin Mode is enabled, all elements with `.admin-controls` or `.admin-controls-inline` classes must become visible.
-    * `[ ]` The footer button's text must change to "Exit Admin".
-    * `[ ]` Clicking this button, or any other "Exit Admin Mode" button, must disable Admin Mode, clear the session storage item, and hide all admin controls.
+    * `[✅]` Admin Mode correctly shows/hides all `.admin-controls`.
+    * `[✅]` The "Admin" button text toggles correctly.
 
-### 2.2. Critique & Suggestions
+### 2.2. Remaining Tasks
 
-> 🚨 **Security Flaw (Critical):** The original code verifies the PIN via an `HTTP GET` request, exposing the PIN in the URL.
+> 🧐 **UX Flaw:** The `modal.js` file does not yet show a "Verifying..." loading state while the PIN is being checked.
 >
-> **Our Action:** The new [`admin-mode.js`](./js/admin/admin-mode.js) **must** send the PIN in the body of an **`HTTP POST` request** to the Google Apps Script endpoint. This is a non-negotiable security fix that works within your constraints.
-
-> 🧐 **UX Flaw:** The original code has no loading indicator while the PIN is being verified. On a slow connection, the UI just hangs.
->
-> **Our Action:** We will enhance our [`modal.js`](./js/ui/modal.js) to show a "Verifying..." state after the user clicks "Submit" on the PIN form.
+> **To Do:** Modify the `showModal` function in [`js/ui/modal.js`](./js/ui/modal.js) to handle a "loading" type, and update [`js/admin/admin-mode.js`](./js/admin/admin-mode.js) to use it.
 
 ---
 ## 3. Hero Section (`#home`)
@@ -62,22 +43,16 @@ This document serves as the master checklist for the website's functionality and
 ### 3.1. Functional Requirements
 
 * **Public View:**
-    * `[ ]` The section must display a full-width cover photo.
-    * `[ ]` The image `src` must be dynamically set from the `coverPhotoUrl` field in the `site_config` Firestore document.
-    * `[ ]` A hard-coded fallback image URL must be used if the database call fails or the field is empty.
-
+    * `[✅]` The section displays a full-width cover photo loaded from Firestore.
 * **Admin View:**
-    * `[ ]` An admin button "Change Cover Photo" is visible.
-    * `[ ]` Clicking the button must display the cover photo form and hide all other admin forms.
-    * `[ ]` The form must contain a URL input field and Save/Cancel buttons.
-    * `[ ]` Submitting a valid URL must update the `coverPhotoUrl` field in Firestore.
-    * `[ ]` After submission, the user must receive feedback (success/error modal), the form must be hidden, and the new image must be displayed.
+    * `[✅]` The "Change Cover Photo" button and form are functional.
+    * `[✅]` The user receives success/error feedback via a modal after submission.
 
-### 3.2. Critique & Suggestions
+### 3.2. Remaining Tasks
 
-> 🧐 **Robustness Flaw:** The original code doesn't validate the input. A user could enter text that isn't a URL, breaking the image display.
+> 🧐 **Robustness Flaw:** The form does not yet validate that the input is a valid URL format before saving.
 >
-> **Our Action:** We will add client-side validation to the form in [`hero-admin.js`](./js/admin/hero-admin.js) to ensure the input is a valid URL format before attempting to save.
+> **To Do:** Add a simple URL validation function to [`js/admin/hero-admin.js`](./js/admin/hero-admin.js) and show an error modal if the input is invalid.
 
 ---
 ## 4. Regular Jams Section (`#jams`)
@@ -85,30 +60,14 @@ This document serves as the master checklist for the website's functionality and
 ### 4.1. Functional Requirements
 
 * **Data & Display Logic:**
-    * `[ ]` The list must display a minimum of 5 upcoming jam sessions.
-    * `[ ]` The logic must be: fetch confirmed jams, filter out past ones, then generate placeholder "To be decided..." jams for future Saturdays until the 5-item minimum is met.
-    * `[ ]` The list must be sorted chronologically.
-    * `[ ]` Jams marked `cancelled: true` must be visually distinct and labeled as such.
-
+    * `[✅]` The list always displays a minimum of 5 upcoming jam sessions.
+    * `[✅]` The logic correctly filters past jams and generates placeholder jams for future Saturdays.
+    * `[✅]` The list is sorted chronologically.
+    * `[✅]` The data model now stores the full, unambiguous date (`YYYY-MM-DD`) in Firestore, fixing the critical design flaw of the original site.
 * **Admin - Jam Management:**
-    * `[ ]` Admin controls ("Edit", "Cancel"/"Reinstate", "Delete") must appear for each *confirmed* jam.
-    * `[ ]` The "Add New Jam" form must use a date picker that enforces a full `YYYY-MM-DD` format for storage.
-    * `[ ]` When a venue is selected from the dropdown, the "Google Maps Link" field should auto-populate if a link exists for that venue.
-
-* **Admin - Venue Management:**
-    * `[ ]` The "Manage Venues" UI must list all current venues from Firestore.
-    * `[ ]` Each venue in the list must have a "Delete" button.
-    * `[ ]` A form must be present to add a new venue with a name and an optional map link.
-
-### 4.2. Critique & Suggestions
-
-> 🚨 **Design Flaw (Critical):** The original `parseJamDate` function is extremely brittle. It guesses the year based on the current date, which will fail across new year boundaries and makes the entire jam schedule unreliable.
->
-> **Our Action:** This is a top-priority fix. We will **store the full date** (including the year) as a `YYYY-MM-DD` string in Firestore for every jam. The date picker in the admin form will be configured to output this unambiguous format. The date parsing logic in [`jams.js`](./js/jams.js) will be rewritten to handle this reliable format.
-
-> 🧐 **UX Flaw:** To confirm a placeholder jam, an admin has to manually re-enter the date.
->
-> **Our Action:** We will add an "Edit" or "Confirm" button to the placeholder jams. Clicking it will open the "Add New Jam" form pre-filled with the correct proposed date, streamlining the workflow.
+    * `[✅]` Admin controls ("Edit", "Cancel"/"Reinstate", "Delete") appear for each confirmed jam.
+    * `[✅]` A "Confirm" button appears for placeholder jams, opening the form pre-filled with the correct date, which improves the admin workflow.
+    * `[✅]` The "Manage Venues" UI is fully functional.
 
 ---
 ## 5. Festivals & Events Section (`#special-events`)
@@ -116,16 +75,36 @@ This document serves as the master checklist for the website's functionality and
 ### 5.1. Functional Requirements
 
 * **Public View:**
-    * `[ ]` An auto-playing, looping carousel must display festival logos.
-    * `[ ]` A list of upcoming special events from Firestore must be displayed, sorted by start date.
-    * `[ ]` Events whose end date has passed are not displayed.
-
+    * `[✅]` An auto-playing carousel displays festival logos.
+    * `[✅]` The list of upcoming events is correctly filtered and sorted.
+    * `[✅]` The data model now uses two distinct fields, `startDate` and `endDate`, fixing the critical design flaw of the original site and making filtering reliable.
 * **Admin View:**
-    * `[ ]` An "Add New Event" button is visible.
-    * `[ ]` Each event in the list has "Edit" and "Delete" buttons.
+    * `[✅]` The "Add New Event" button and form are functional.
+    * `[✅]` Each event has "Edit" and "Delete" buttons.
 
-### 5.2. Critique & Suggestions
+---
+## 6. Community & Charity Section
 
-> 🚨 **Design Flaw (Critical):** The original code uses a single free-text field (`event.dates`) to store date information. This makes reliable sorting and filtering impossible.
+### 6.1. Functional Requirements
+* **Public View:**
+    * `[✅]` A slideshow of community/charity items is displayed.
+* **Admin View:**
+    * `[✅]` The admin form correctly shows conditional fields for "Community" vs. "Charity" items.
+
+### 6.2. Remaining Tasks
+> 🧐 **Data Integrity Flaw:** The form allows submitting a "Charity" item without an amount or a "Community" item without a headline.
 >
-> **Our Action:** We will change the data model. Events in Firestore will now have two distinct, required fields: `startDate` and `endDate` (both as `YYYY-MM-DD` strings). The admin form will be updated with two date-picker inputs to enforce this structured data. This makes the display logic in [`events.js`](./js/events.js) robust and reliable.
+> **To Do:** Add client-side validation in [`js/community.js`](./js/community.js) to make the relevant fields required based on the selected item type.
+
+---
+## 7. Gallery Section
+
+### 7.1. Functional Requirements
+* **Public View:**
+    * `[✅]` A featured YouTube video is embedded and playable.
+    * `[✅]` The logic uses a robust regular expression to correctly extract the video ID from various YouTube URL formats.
+    * `[✅]` A grid of photos is displayed.
+    * `[✅]` If a photo link is broken, a fallback placeholder image is shown instead of a broken icon.
+* **Admin View:**
+    * `[✅]` The "Change Featured Video" and "Add Photo" forms are functional.
+    * `[✅]` Each photo has a "Delete" button.
