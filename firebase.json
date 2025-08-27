@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "target": "gjc-live",
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
