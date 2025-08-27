@@ -3,6 +3,20 @@ import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-f
 import { showModal } from '../ui/modal.js';
 
 /**
+ * Checks if a string is a valid URL.
+ * @param {string} url - The URL to validate.
+ * @returns {boolean} - True if valid, false otherwise.
+ */
+function isValidUrl(url) {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
  * Initializes the hero section admin controls.
  * @param {function} refreshData - A callback function to reload all site data.
  */
@@ -30,6 +44,12 @@ export function initializeHeroAdmin(refreshData) {
     const newUrl = coverPhotoUrlInput.value.trim();
     if (!newUrl) return;
 
+    // Add validation check here
+    if (!isValidUrl(newUrl)) {
+      showModal("Please enter a valid URL.", "alert");
+      return;
+    }
+
     try {
       await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: newUrl }, { merge: true });
       showModal("Cover photo updated successfully!", "alert", refreshData);
@@ -39,5 +59,6 @@ export function initializeHeroAdmin(refreshData) {
       showModal("Failed to update cover photo.", "alert");
     }
   });
+
   console.log("✅ Hero admin controls initialized.");
 }
