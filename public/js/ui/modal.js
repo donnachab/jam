@@ -1,7 +1,7 @@
 /**
  * Displays a modal with a message and custom buttons.
  * @param {string} message - The text to display in the modal.
- * @param {'alert' | 'confirm' | 'prompt'} type - The type of modal to show.
+ * @param {'alert' | 'confirm' | 'prompt' | 'loading'} type - The type of modal to show.
  * @param {function} [onConfirm=()=>{}] - Callback function when the confirm/submit/ok button is clicked.
  * @param {function} [onCancel=()=>{}] - Callback function when the cancel button is clicked.
  */
@@ -74,6 +74,10 @@ export function showModal(message, type = "alert", onConfirm = () => {}, onCance
     };
     modalButtons.appendChild(cancelButton);
     modalButtons.appendChild(submitButton);
+  } else if (type === "loading") {
+    modalMessage.textContent = message;
+    modalInput.classList.add("hidden");
+    modalButtons.innerHTML = `<svg class="animate-spin h-5 w-5 mr-3 text-primary" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
   }
 
   modal.classList.remove("hidden");
