@@ -1,23 +1,26 @@
 import { showModal } from '../ui/modal.js';
-
-const PIN_VERIFICATION_URL = "https://script.google.com/macros/s/AKfycby34RunDhZjds7M7rUA5wP-m1M2uBv3UfJ6vpCxqKhMq36oGkHTIQ1BFF3-9kStGaTyAA/exec";
+import { db } from '../firebase-config.js';
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 /**
- * Verifies the admin PIN by sending it in a GET request.
+ * Verifies the admin PIN by fetching the correct PIN from Firestore.
  * @param {string} pin - The PIN to verify.
  * @returns {Promise<boolean>} - True if the PIN is correct, false otherwise.
  */
 async function verifyPin(pin) {
   try {
-    // This is the key change. We are using a GET request with the PIN as a URL parameter,
-    // which is what the Apps Script's doGet function expects.
-    const response = await fetch(`${PIN_VERIFICATION_URL}?pin=${encodeURIComponent(pin)}&action=check`);
+    const configDocRef = doc(db, "site_config", "main");
+    const configDoc = await getDoc(configDocRef);
+    const correctPin = configDoc.exists() ? configDoc.data().adminPin : null;
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    if (!correctPin) {
+      console.error("ADMIN_PIN not found in Firestore.");
+      showModal("Admin PIN not configured. Please contact site administrator.", "alert");
+      return false;
     }
-    const result = await response.json();
-    return result.success;
+    
+    // Compare the submitted PIN with the one from Firestore
+    return pin === correctPin;
   } catch (error) {
     console.error("Error verifying PIN:", error);
     showModal("Could not verify PIN. Please check your connection.", "alert");
@@ -51,7 +54,7 @@ function handleAdminClick(e) {
   } else {
     showModal("Enter admin PIN:", "prompt", async (pin) => {
       if (!pin) return;
-
+      
       showModal("Verifying...", "loading");
 
       const isCorrect = await verifyPin(pin);
