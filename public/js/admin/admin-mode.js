@@ -1,4 +1,5 @@
 import { showModal } from '../ui/modal.js';
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 const PIN_VERIFICATION_URL = "https://script.google.com/macros/s/AKfycby34RunDhZjds7M7rUA5wP-m1M2uBv3UfJ6vpCxqKhMq36oGkHTIQ1BFF3-9kStGaTyAA/exec";
 
@@ -45,6 +46,7 @@ function toggleAdminMode(enable) {
 function handleAdminClick(e) {
   e.preventDefault();
   const isAdmin = document.body.classList.contains("admin-mode");
+  const auth = getAuth();
 
   if (isAdmin) {
     sessionStorage.removeItem("gjc_isAdmin");
@@ -52,16 +54,23 @@ function handleAdminClick(e) {
   } else {
     showModal("Enter admin PIN:", "prompt", async (pin) => {
       if (!pin) return;
-      
+
       // Show loading state while verifying
       showModal("Verifying...", "loading");
 
       const isCorrect = await verifyPin(pin);
       if (isCorrect) {
-        sessionStorage.setItem("gjc_isAdmin", "true");
-        toggleAdminMode(true);
-        // Hide the loading modal after success
-        showModal("PIN verified!", "alert");
+        try {
+          // Sign in anonymously after successful PIN verification
+          await signInAnonymously(auth);
+          sessionStorage.setItem("gjc_isAdmin", "true");
+          toggleAdminMode(true);
+          // Hide the loading modal after success
+          showModal("PIN verified! You are now an authenticated admin.", "alert");
+        } catch (error) {
+          console.error("Anonymous sign-in failed:", error);
+          showModal("Authentication failed. Please check your network connection.", "alert");
+        }
       } else {
         showModal("Incorrect PIN.", "alert");
       }
