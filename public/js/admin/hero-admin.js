@@ -1,6 +1,10 @@
 import { db } from '../firebase-config.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 import { showModal } from '../ui/modal.js';
+
+// Get a reference to Firebase Storage
+const storage = getStorage();
 
 /**
  * Checks if a string is a valid URL.
@@ -45,13 +49,34 @@ export function initializeHeroAdmin(refreshData) {
     const newUrl = coverPhotoUrlInput.value.trim();
     const newFile = coverPhotoFileInput.files[0];
 
+    // Check if a file has been uploaded
     if (newFile) {
-        // Handle file upload to Firebase Storage here
-        // For now, we'll just log it.
-        showModal("File upload functionality is not yet implemented.", "alert");
-        return;
+      // Handle file upload to Firebase Storage
+      try {
+        showModal("Uploading image...", "loading");
+        const fileExtension = newFile.name.split('.').pop();
+        const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
+        const fileRef = ref(storage, `images/${fileName}`);
+        
+        // Upload the file to Firebase Storage
+        await uploadBytes(fileRef, newFile);
+
+        // Get the public download URL
+        const downloadURL = await getDownloadURL(fileRef);
+
+        // Update the cover photo URL in Firestore
+        await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: downloadURL }, { merge: true });
+        
+        showModal("Cover photo updated successfully!", "alert", refreshData);
+        editCoverPhotoForm.style.display = "none";
+      } catch (error) {
+        console.error("Error uploading cover photo:", error);
+        showModal("Failed to upload cover photo. Please try again.", "alert");
+      }
+      return;
     }
 
+    // Fallback to URL input if no file is provided
     if (!newUrl) {
       showModal("Please enter a valid URL or upload a file.", "alert");
       return;
