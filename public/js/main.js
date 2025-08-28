@@ -12,7 +12,8 @@ import { initializeVenueManagement } from './admin/venue-management.js';
 import { initializeJams } from './jams.js';
 import { initializeEvents } from './events.js';
 import { initializeCommunity } from './community.js';
-import { initializeGallery } from './gallery.js';
+import { initializeGallery } as galleryModule from './gallery.js'; // Note the new alias here
+import { getStorage } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 
 // -----------------------------------------------------------------------------
 // --- 2. STATE MANAGEMENT
@@ -81,7 +82,7 @@ function renderAll() {
     initializeJams(siteData.jams, siteData.venues, loadAllData);
     initializeEvents(siteData.events, loadAllData);
     initializeCommunity(siteData.communityItems, loadAllData);
-    initializeGallery(siteData.photos, siteData.config, loadAllData);
+    galleryModule.initializeGallery(siteData.photos, siteData.config, loadAllData); // Use the aliased module here
     
     // Re-initialize admin components that depend on dynamic data
     initializeVenueManagement(siteData.venues, loadAllData);
@@ -97,11 +98,11 @@ async function main() {
     const firebaseConfig = (typeof __firebase_config !== 'undefined' && __firebase_config) ? JSON.parse(__firebase_config) : {};
     const initialAuthToken = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) ? __initial_auth_token : null;
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    auth = getAuth(app);
-
+    // Check if the app is already initialized, if not initialize it.
+    if (!app.name) {
+      initializeApp(firebaseConfig);
+    }
+    
     // Sign in with the custom token or anonymously if not available
     try {
         if (initialAuthToken) {
