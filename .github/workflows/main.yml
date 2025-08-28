@@ -9,8 +9,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # This step deploys to your second site.
+      # This step deploys to your second site using the recommended service account method.
       - name: Deploy to Firebase
-        run: |
-          npm install -g firebase-tools
-          firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}" --project galway-jam-circle-live --only hosting:galwayjam
+        id: deploy_firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_GALWAY_JAM_CIRCLE_LIVE }}"
+          projectId: galway-jam-circle-live
+          target: gjc-live
