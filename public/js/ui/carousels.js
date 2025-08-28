@@ -2,9 +2,12 @@
  * Initializes the festival logo carousel.
  */
 export function initFestivalCarousel() {
-  if (document.querySelector(".festival-carousel")) {
-    new Swiper(".festival-carousel", {
-      loop: true,
+  const carouselElement = document.querySelector(".festival-carousel");
+  if (carouselElement) {
+    const slides = carouselElement.querySelectorAll('.swiper-slide');
+    new Swiper(carouselElement, {
+      // Only enable loop if there are enough slides for the largest breakpoint (5)
+      loop: slides.length >= 5, 
       autoplay: { delay: 4000, disableOnInteraction: false },
       pagination: { el: ".swiper-pagination", clickable: true },
       slidesPerView: 2,
