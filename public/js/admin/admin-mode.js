@@ -1,26 +1,21 @@
 import { showModal } from '../ui/modal.js';
-import { db } from '../firebase-config.js';
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+const PIN_VERIFICATION_URL = "https://script.google.com/macros/s/AKfycby34RunDhZjds7M7rUA5wP-m1M2uBv3UfJ6vpCxqKhMq36oGkHTIQ1BFF3-9kStGaTyAA/exec";
 
 /**
- * Verifies the admin PIN by fetching the correct PIN from Firestore.
+ * Verifies the admin PIN by sending it in a GET request.
  * @param {string} pin - The PIN to verify.
  * @returns {Promise<boolean>} - True if the PIN is correct, false otherwise.
  */
 async function verifyPin(pin) {
   try {
-    const configDocRef = doc(db, "site_config", "main");
-    const configDoc = await getDoc(configDocRef);
-    const correctPin = configDoc.exists() ? configDoc.data().adminPin : null;
+    const response = await fetch(`${PIN_VERIFICATION_URL}?pin=${encodeURIComponent(pin)}&action=check`);
 
-    if (!correctPin) {
-      console.error("ADMIN_PIN not found in Firestore.");
-      showModal("Admin PIN not configured. Please contact site administrator.", "alert");
-      return false;
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
-    // Compare the submitted PIN with the one from Firestore
-    return pin === correctPin;
+    const result = await response.json();
+    return result.success;
   } catch (error) {
     console.error("Error verifying PIN:", error);
     showModal("Could not verify PIN. Please check your connection.", "alert");
