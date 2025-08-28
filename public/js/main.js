@@ -13,8 +13,6 @@ import { initializeEvents } from './events.js';
 import { initializeCommunity } from './community.js';
 import { initializeGallery } from './gallery.js';
 import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-import { signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-
 
 // -----------------------------------------------------------------------------
 // --- 2. STATE MANAGEMENT
@@ -78,13 +76,13 @@ async function loadAllData() {
 // -----------------------------------------------------------------------------
 function renderAll() {
     console.log("🎨 Rendering all page components with fresh data...");
-    
+
     // Initialize all the feature modules with the data they need
     initializeJams(siteData.jams, siteData.venues, loadAllData);
     initializeEvents(siteData.events, loadAllData);
     initializeCommunity(siteData.communityItems, loadAllData);
     initializeGallery(siteData.photos, siteData.config, loadAllData);
-    
+
     // Re-initialize admin components that depend on dynamic data
     initializeVenueManagement(siteData.venues, loadAllData);
 }
@@ -99,14 +97,14 @@ async function main() {
     const initialAuthToken = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) ? __initial_auth_token : null;
     try {
         if (initialAuthToken) {
-            await signInWithCustomToken(auth, initialAuthToken);
+            await auth.signInWithCustomToken(initialAuthToken);
             console.log("✅ Signed in with custom token.");
         }
     } catch (error) {
         console.error("❌ Firebase authentication with custom token failed:", error);
         try {
             // Fallback to anonymous sign-in
-            await signInAnonymously(auth);
+            await auth.signInAnonymously();
             console.log("✅ Signed in anonymously.");
         } catch (anonError) {
             console.error("❌ Anonymous sign-in failed:", anonError);
@@ -137,7 +135,7 @@ async function main() {
     // Initialize UI modules that don't depend on data
     initializeMobileMenu();
     initFestivalCarousel();
-    
+
     // Initialize admin modules that depend on Firebase being authenticated
     initializeAdminMode();
     initializeHeroAdmin(loadAllData);
