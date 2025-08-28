@@ -1,29 +1,28 @@
 import { showModal } from '../ui/modal.js';
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { getAuth, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 const PIN_VERIFICATION_URL = "https://script.google.com/macros/s/AKfycby34RunDhZjds7M7rUA5wP-m1M2uBv3UfJ6vpCxqKhMq36oGkHTIQ1BFF3-9kStGaTyAA/exec";
+const TOKEN_URL = "https://script.google.com/macros/s/YOUR_AUTH_SCRIPT_HERE/exec"; // Replace with your token generation script URL
 
 /**
- * Verifies the admin PIN by sending it in a POST request.
+ * Verifies the admin PIN and fetches a custom auth token.
  * @param {string} pin - The PIN to verify.
- * @returns {Promise<boolean>} - True if the PIN is correct, false otherwise.
+ * @returns {Promise<string|null>} - The custom token if correct, otherwise null.
  */
-async function verifyPin(pin) {
+async function getCustomToken(pin) {
   try {
-    const response = await fetch(PIN_VERIFICATION_URL, {
+    const response = await fetch(TOKEN_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'text/plain', // As required by Google Apps Script simple POST
+        'Content-Type': 'text/plain',
       },
-      body: JSON.stringify({ pin, action: 'check' })
+      body: JSON.stringify({ pin, action: 'getToken' })
     });
-    if (!response.ok) return false;
     const result = await response.json();
-    return result.success;
+    return result.token || null;
   } catch (error) {
-    console.error("Error verifying PIN:", error);
-    showModal("Could not verify PIN. Please check your connection.", "alert");
-    return false;
+    console.error("Error fetching custom token:", error);
+    return null;
   }
 }
 
@@ -55,20 +54,17 @@ function handleAdminClick(e) {
     showModal("Enter admin PIN:", "prompt", async (pin) => {
       if (!pin) return;
 
-      // Show loading state while verifying
       showModal("Verifying...", "loading");
+      const token = await getCustomToken(pin);
 
-      const isCorrect = await verifyPin(pin);
-      if (isCorrect) {
+      if (token) {
         try {
-          // Sign in anonymously after successful PIN verification
-          await signInAnonymously(auth);
+          await signInWithCustomToken(auth, token);
           sessionStorage.setItem("gjc_isAdmin", "true");
           toggleAdminMode(true);
-          // Hide the loading modal after success
           showModal("PIN verified! You are now an authenticated admin.", "alert");
         } catch (error) {
-          console.error("Anonymous sign-in failed:", error);
+          console.error("Firebase custom token sign-in failed:", error);
           showModal("Authentication failed. Please check your network connection.", "alert");
         }
       } else {
@@ -87,7 +83,6 @@ export function initializeAdminMode() {
     adminModeBtn.addEventListener("click", handleAdminClick);
   }
 
-  // Listener for any "Exit Admin Mode" buttons
   document.body.addEventListener("click", (e) => {
     if (e.target.classList.contains("exit-admin-btn")) {
       sessionStorage.removeItem("gjc_isAdmin");
@@ -95,7 +90,6 @@ export function initializeAdminMode() {
     }
   });
 
-  // Check session storage on page load
   if (sessionStorage.getItem("gjc_isAdmin") === "true") {
     toggleAdminMode(true);
   }
