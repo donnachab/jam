@@ -61,7 +61,7 @@ function handleAdminClick(e) {
         sessionStorage.setItem("gjc_isAdmin", "true");
         toggleAdminMode(true);
         // Hide the loading modal after success
-        showModal("", "alert", () => {}, () => {}, false); // A quick way to hide, a proper hide function would be better
+        showModal("", "alert", () => {}, () => {}, false);
       } else {
         showModal("Incorrect PIN.", "alert");
       }
