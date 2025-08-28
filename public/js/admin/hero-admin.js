@@ -2,9 +2,11 @@ import { db } from '../firebase-config.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 import { showModal } from '../ui/modal.js';
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-// Get a reference to Firebase Storage
+// Get a reference to Firebase Storage and Auth
 const storage = getStorage();
+const auth = getAuth();
 
 /**
  * Checks if a string is a valid URL.
@@ -48,6 +50,13 @@ export function initializeHeroAdmin(refreshData) {
     e.preventDefault();
     const newUrl = coverPhotoUrlInput.value.trim();
     const newFile = coverPhotoFileInput.files[0];
+
+    // Check for authentication before attempting upload
+    const user = auth.currentUser;
+    if (!user) {
+        showModal("You must be logged in as an admin to upload files.", "alert");
+        return;
+    }
 
     // Check if a file has been uploaded
     if (newFile) {
