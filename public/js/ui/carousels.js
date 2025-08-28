@@ -28,6 +28,7 @@ export function initCommunityCarousel(items) {
         const swiper = new Swiper(".community-swiper", {
           effect: "fade",
           fadeEffect: { crossFade: true },
+          // Only enable loop mode if there's more than one item
           loop: items.length > 1,
           autoplay: { delay: 6000, disableOnInteraction: false },
           pagination: { el: ".swiper-pagination", clickable: true },
