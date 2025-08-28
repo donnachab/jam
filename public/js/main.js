@@ -103,19 +103,23 @@ async function main() {
     if (!app) {
         initializeApp(firebaseConfig);
     }
-
+    
     // Sign in with the custom token or anonymously if not available
     try {
         if (initialAuthToken) {
             await signInWithCustomToken(auth, initialAuthToken);
             console.log("✅ Signed in with custom token.");
-        } else {
-            await signInAnonymously(auth);
-            console.log("✅ Signed in anonymously.");
         }
     } catch (error) {
-        console.error("❌ Firebase authentication failed:", error);
-        showModal("Firebase authentication failed. Please try again.", "alert");
+        console.error("❌ Firebase authentication with custom token failed:", error);
+        try {
+            // Fallback to anonymous sign-in
+            await signInAnonymously(auth);
+            console.log("✅ Signed in anonymously.");
+        } catch (anonError) {
+            console.error("❌ Anonymous sign-in failed:", anonError);
+            showModal("Authentication failed. Please check your network connection.", "alert");
+        }
     }
 
     // Load all HTML components in parallel
