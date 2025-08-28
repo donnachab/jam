@@ -6,7 +6,7 @@ export function initFestivalCarousel() {
   if (carouselElement) {
     const slides = carouselElement.querySelectorAll('.swiper-slide');
     new Swiper(carouselElement, {
-      // Only enable loop if there are enough slides for the largest breakpoint (5)
+      // Only enable loop if there are enough slides to fill the view at the widest breakpoint
       loop: slides.length >= 5, 
       autoplay: { delay: 4000, disableOnInteraction: false },
       pagination: { el: ".swiper-pagination", clickable: true },
