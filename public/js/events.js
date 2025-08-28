@@ -4,11 +4,11 @@ import { showModal } from './ui/modal.js';
 import { initFestivalCarousel } from './ui/carousels.js';
 
 const festivalLogos = [
-  { src: "../images/cleggan-fringe-festival.jpg", alt: "Cleggan Fringe Festival Logo" },
-  { src: "../images/doolin-folkfest-2025.png", alt: "Doolin FolkFest Logo" },
-  { src: "../images/galway-folk-festival.png", alt: "Galway Folk Festival Logo" },
-  { src: "../images/westport-folk-and-bluegrass-festival.jpg", alt: "Westport Folk and Bluegrass Festival Logo" },
-  { src: "../images/cahersiveen-mountain-roots.jpg", alt: "Cahersiveen Mountain Roots Music Weekend Logo" },
+  { src: "images/cleggan-fringe-festival.jpg", alt: "Cleggan Fringe Festival Logo" },
+  { src: "images/doolin-folkfest-2025.png", alt: "Doolin FolkFest Logo" },
+  { src: "images/galway-folk-festival.png", alt: "Galway Folk Festival Logo" },
+  { src: "images/westport-folk-and-bluegrass-festival.jpg", alt: "Westport Folk and Bluegrass Festival Logo" },
+  { src: "images/cahersiveen-mountain-roots.jpg", alt: "Cahersiveen Mountain Roots Music Weekend Logo" },
   // Add new festival logos here
 ];
 
