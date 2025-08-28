@@ -1,40 +1,17 @@
 {
-  "hosting": [
-    {
-      "target": "galwayjam",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    },
-    {
-      "target": "galway-jam-circle-live",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
-    }
-  ],
-  "targets": {
-    "hosting": {
-      "galwayjam": {
-        "projectId": "galway-jam-circle-live",
-        "site": "galwayjam"
-      },
-      "galway-jam-circle-live": {
-        "projectId": "galway-jam-circle-live",
-        "site": "galway-jam-circle-live"
+  "hosting": {
+    "site": "galwayjam",
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
       }
-    }
+    ]
   }
 }
