@@ -1,28 +1,16 @@
-name: Deploy New Site to Firebase Hosting
-
+name: Deploy Jam Site to Firebase Hosting
 on:
   push:
     branches:
       - main
-
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Show all files in the repository
-        run: ls -R
-      - name: Show the firebase.json configuration
-        run: cat firebase.json
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GALWAY_JAM_CIRCLE_LIVE }}'
-          projectId: galway-jam-circle-live
-          target: galwayjam
-          channelId: live
-      - name: Output Deployment URL
+      
+      # This step deploys to your second site.
+      - name: Deploy to Firebase
         run: |
-          echo "### ✅ New Site Deployed! ✅" >> $GITHUB_STEP_SUMMARY
-          echo "Your new modular site has been deployed." >> $GITHUB_STEP_SUMMARY
-          echo "**Live Site URL:** https://galwayjam.web.app" >> $GITHUB_STEP_SUMMARY
+          npm install -g firebase-tools
+          firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}" --project galway-jam-circle-live --only hosting:galwayjam
