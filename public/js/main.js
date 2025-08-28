@@ -93,6 +93,29 @@ function renderAll() {
 async function main() {
     console.log("🚀 Initializing application...");
 
+    // Get Firebase configuration and auth token from the environment
+    const firebaseConfig = (typeof __firebase_config !== 'undefined' && __firebase_config) ? JSON.parse(__firebase_config) : {};
+    const initialAuthToken = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) ? __initial_auth_token : null;
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    auth = getAuth(app);
+
+    // Sign in with the custom token or anonymously if not available
+    try {
+        if (initialAuthToken) {
+            await signInWithCustomToken(auth, initialAuthToken);
+            console.log("✅ Signed in with custom token.");
+        } else {
+            await signInAnonymously(auth);
+            console.log("✅ Signed in anonymously.");
+        }
+    } catch (error) {
+        console.error("❌ Firebase authentication failed:", error);
+        showModal("Firebase authentication failed. Please try again.", "alert");
+    }
+
     // Load all HTML components in parallel
     await Promise.all([
         loadComponent('components/header.html', 'header-container'),
