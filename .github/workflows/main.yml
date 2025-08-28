@@ -1,7 +1,5 @@
-# The name of the workflow as it appears in the Actions tab.
-name: Deploy Site to Firebase Hosting
+name: Deploy New Site to Firebase Hosting
 
-# This tells the workflow to run automatically on any push to the 'main' branch.
 on:
   push:
     branches:
@@ -9,36 +7,22 @@ on:
 
 jobs:
   build_and_deploy:
-    # Use a standard Ubuntu virtual machine for the job.
     runs-on: ubuntu-latest
-    
-    # These are the sequential steps the job will perform.
     steps:
-      # Step 1: Checks out your repository's code so the job can access it.
       - uses: actions/checkout@v3
-
-      # Step 2 (Debugging): Prints a list of all files and folders.
-      # This is useful to confirm that all your files are present.
       - name: Show all files in the repository
         run: ls -R
-
-      # Step 3 (Debugging): Displays the contents of firebase.json.
-      # This confirms that the correct configuration is being used.
       - name: Show the firebase.json configuration
         run: cat firebase.json
-
-      # Step 4: This is the main action that deploys your code to Firebase.
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GALWAY_JAM_CIRCLE_LIVE }}'
           projectId: galway-jam-circle-live
-          target: gjc-live
+          target: galwayjam
           channelId: live
-
-      # Step 5: This prints a helpful summary with a link to your live site.
       - name: Output Deployment URL
         run: |
-          echo "### ✅ Deployment Successful!" >> $GITHUB_STEP_SUMMARY
-          echo "Your site has been deployed." >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ New Site Deployed! ✅" >> $GITHUB_STEP_SUMMARY
+          echo "Your new modular site has been deployed." >> $GITHUB_STEP_SUMMARY
           echo "**Live Site URL:** https://galwayjam.web.app" >> $GITHUB_STEP_SUMMARY
