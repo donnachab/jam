@@ -97,8 +97,8 @@ async function main() {
     console.log("🚀 Initializing application...");
 
     // Get Firebase configuration and auth token from the environment
-    const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : {});
-    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    const firebaseConfig = (typeof __firebase_config !== 'undefined' && __firebase_config) ? JSON.parse(__firebase_config) : {};
+    const initialAuthToken = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) ? __initial_auth_token : null;
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
