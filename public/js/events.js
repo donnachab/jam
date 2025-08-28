@@ -1,6 +1,37 @@
 import { db } from './firebase-config.js';
 import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
+import { initFestivalCarousel } from './ui/carousels.js';
+
+const festivalLogos = [
+  { src: "../images/cleggan-fringe-festival.jpg", alt: "Cleggan Fringe Festival Logo" },
+  { src: "../images/doolin-folkfest-2025.png", alt: "Doolin FolkFest Logo" },
+  { src: "../images/galway-folk-festival.png", alt: "Galway Folk Festival Logo" },
+  { src: "../images/westport-folk-and-bluegrass-festival.jpg", alt: "Westport Folk and Bluegrass Festival Logo" },
+  { src: "../images/cahersiveen-mountain-roots.jpg", alt: "Cahersiveen Mountain Roots Music Weekend Logo" },
+  // Add new festival logos here
+];
+
+/**
+ * Renders the festival logo carousel.
+ */
+function renderFestivalLogos() {
+  const wrapper = document.getElementById("festival-carousel-wrapper");
+  if (!wrapper) return;
+  wrapper.innerHTML = '';
+  
+  // Duplicating the slides to meet the loop requirement.
+  const allLogos = festivalLogos.concat(festivalLogos);
+
+  allLogos.forEach(logo => {
+    const slide = document.createElement("div");
+    slide.className = "swiper-slide";
+    slide.innerHTML = `<img src="${logo.src}" alt="${logo.alt}"/>`;
+    wrapper.appendChild(slide);
+  });
+  
+  initFestivalCarousel(allLogos.length);
+}
 
 function renderEvents(events) {
     const eventList = document.getElementById("event-list");
@@ -52,7 +83,8 @@ export function initializeEvents(initialEvents, refreshData) {
     const addEventForm = document.getElementById("add-event-form");
     const cancelEventBtn = document.getElementById("cancel-event-btn");
     const eventList = document.getElementById("event-list");
-
+    
+    renderFestivalLogos();
     renderEvents(initialEvents);
 
     flatpickr("#event-start-date", { dateFormat: "Y-m-d", altInput: true, altFormat: "F j, Y" });
