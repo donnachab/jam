@@ -9,11 +9,13 @@ const PIN_VERIFICATION_URL = "https://script.google.com/macros/s/AKfycby34RunDhZ
  */
 async function verifyPin(pin) {
   try {
-    // The original site used a GET request with the PIN as a query parameter.
-    // This is a "simple" request that avoids CORS preflight issues with Apps Script.
+    // This is the key change. We are using a GET request with the PIN as a URL parameter,
+    // which is what the Apps Script's doGet function expects.
     const response = await fetch(`${PIN_VERIFICATION_URL}?pin=${encodeURIComponent(pin)}&action=check`);
 
-    if (!response.ok) return false;
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const result = await response.json();
     return result.success;
   } catch (error) {
@@ -50,14 +52,12 @@ function handleAdminClick(e) {
     showModal("Enter admin PIN:", "prompt", async (pin) => {
       if (!pin) return;
 
-      // Show loading state while verifying
       showModal("Verifying...", "loading");
 
       const isCorrect = await verifyPin(pin);
       if (isCorrect) {
         sessionStorage.setItem("gjc_isAdmin", "true");
         toggleAdminMode(true);
-        // Hide the loading modal after success
         showModal("PIN verified!", "alert");
       } else {
         showModal("Incorrect PIN.", "alert");
@@ -75,7 +75,6 @@ export function initializeAdminMode() {
     adminModeBtn.addEventListener("click", handleAdminClick);
   }
 
-  // Listener for any "Exit Admin Mode" buttons
   document.body.addEventListener("click", (e) => {
     if (e.target.classList.contains("exit-admin-btn")) {
       sessionStorage.removeItem("gjc_isAdmin");
@@ -83,7 +82,6 @@ export function initializeAdminMode() {
     }
   });
 
-  // Check session storage on page load
   if (sessionStorage.getItem("gjc_isAdmin") === "true") {
     toggleAdminMode(true);
   }
