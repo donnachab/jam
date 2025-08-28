@@ -2,7 +2,6 @@
 // --- 1. IMPORTS
 // -----------------------------------------------------------------------------
 import { app, db, auth } from './firebase-config.js';
-import { getFirestore, collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
 import { initializeMobileMenu } from './ui/mobile-menu.js';
 import { initFestivalCarousel } from './ui/carousels.js';
@@ -12,8 +11,8 @@ import { initializeVenueManagement } from './admin/venue-management.js';
 import { initializeJams } from './jams.js';
 import { initializeEvents } from './events.js';
 import { initializeCommunity } from './community.js';
-import { initializeGallery } as galleryModule from './gallery.js'; // Note the new alias here
-import { getStorage } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
+import { initializeGallery } from './gallery.js';
+import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // -----------------------------------------------------------------------------
 // --- 2. STATE MANAGEMENT
@@ -82,7 +81,7 @@ function renderAll() {
     initializeJams(siteData.jams, siteData.venues, loadAllData);
     initializeEvents(siteData.events, loadAllData);
     initializeCommunity(siteData.communityItems, loadAllData);
-    galleryModule.initializeGallery(siteData.photos, siteData.config, loadAllData); // Use the aliased module here
+    initializeGallery(siteData.photos, siteData.config, loadAllData);
     
     // Re-initialize admin components that depend on dynamic data
     initializeVenueManagement(siteData.venues, loadAllData);
@@ -93,29 +92,6 @@ function renderAll() {
 // -----------------------------------------------------------------------------
 async function main() {
     console.log("🚀 Initializing application...");
-
-    // Get Firebase configuration and auth token from the environment
-    const firebaseConfig = (typeof __firebase_config !== 'undefined' && __firebase_config) ? JSON.parse(__firebase_config) : {};
-    const initialAuthToken = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) ? __initial_auth_token : null;
-
-    // Check if the app is already initialized, if not initialize it.
-    if (!app.name) {
-      initializeApp(firebaseConfig);
-    }
-    
-    // Sign in with the custom token or anonymously if not available
-    try {
-        if (initialAuthToken) {
-            await signInWithCustomToken(auth, initialAuthToken);
-            console.log("✅ Signed in with custom token.");
-        } else {
-            await signInAnonymously(auth);
-            console.log("✅ Signed in anonymously.");
-        }
-    } catch (error) {
-        console.error("❌ Firebase authentication failed:", error);
-        showModal("Firebase authentication failed. Please try again.", "alert");
-    }
 
     // Load all HTML components in parallel
     await Promise.all([
