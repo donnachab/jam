@@ -1,8 +1,3 @@
-# --------------------------------------------------------------------------------
-# REPOSITORY 2: YOUR NEW MODULAR SITE
-# This repository deploys to the "galwayjam" Hosting site.
-# Place this file in your .github/workflows/ directory.
-# --------------------------------------------------------------------------------
 name: Deploy New Site to Firebase Hosting
 
 on:
