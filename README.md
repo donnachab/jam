@@ -1,6 +1,6 @@
 # Galway Jam Circle Website - Modular
 
-Welcome to the repository for the official Galway Jam Circle website. This document explains how the site is structured and why it was built this way, making it easy for anyone to maintain and update the project.
+Welcome to the repository for the official Galway Jam Circle website. This document explains how the site is structured and why it was built this way, making it easy for anyone to maintain and update the project. dd
 
 ---
 ## Table of Contents
