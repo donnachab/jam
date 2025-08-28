@@ -1,25 +1,18 @@
-// -----------------------------------------------------------------------------
-// --- 1. IMPORTS
-// -----------------------------------------------------------------------------
 import { showModal } from '../ui/modal.js';
 
-// The URL for the Google Apps Script that handles PIN verification
 const PIN_VERIFICATION_URL = "https://script.google.com/macros/s/AKfycby34RunDhZjds7M7rUA5wP-m1M2uBv3UfJ6vpCxqKhMq36oGkHTIQ1BFF3-9kStGaTyAA/exec";
 
 /**
- * Verifies the admin PIN by sending it in a POST request.
+ * Verifies the admin PIN by sending it in a GET request.
  * @param {string} pin - The PIN to verify.
  * @returns {Promise<boolean>} - True if the PIN is correct, false otherwise.
  */
 async function verifyPin(pin) {
   try {
-    const response = await fetch(PIN_VERIFICATION_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain', // As required by Google Apps Script simple POST
-      },
-      body: JSON.stringify({ pin, action: 'check' })
-    });
+    // The original site used a GET request with the PIN as a query parameter.
+    // This is a "simple" request that avoids CORS preflight issues with Apps Script.
+    const response = await fetch(`${PIN_VERIFICATION_URL}?pin=${encodeURIComponent(pin)}&action=check`);
+
     if (!response.ok) return false;
     const result = await response.json();
     return result.success;
