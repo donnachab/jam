@@ -13,7 +13,6 @@ import { initializeEvents } from './events.js';
 import { initializeCommunity } from './community.js';
 import { initializeGallery } from './gallery.js';
 import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 // -----------------------------------------------------------------------------
@@ -95,31 +94,19 @@ function renderAll() {
 async function main() {
     console.log("🚀 Initializing application...");
 
-    // Get Firebase configuration and auth token from the environment
-    const firebaseConfig = (typeof __firebase_config !== 'undefined' && __firebase_config) ? JSON.parse(__firebase_config) : {};
-    const initialAuthToken = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) ? __initial_auth_token : null;
-
-    // Initialize Firebase
-    if (!app) {
-        initializeApp(firebaseConfig);
-    }
-    
     // Sign in with the custom token or anonymously if not available
+    const initialAuthToken = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) ? __initial_auth_token : null;
     try {
         if (initialAuthToken) {
             await signInWithCustomToken(auth, initialAuthToken);
             console.log("✅ Signed in with custom token.");
-        }
-    } catch (error) {
-        console.error("❌ Firebase authentication with custom token failed:", error);
-        try {
-            // Fallback to anonymous sign-in
+        } else {
             await signInAnonymously(auth);
             console.log("✅ Signed in anonymously.");
-        } catch (anonError) {
-            console.error("❌ Anonymous sign-in failed:", anonError);
-            showModal("Authentication failed. Please check your network connection.", "alert");
         }
+    } catch (error) {
+        console.error("❌ Firebase authentication failed:", error);
+        showModal("Firebase authentication failed. Please try again.", "alert");
     }
 
     // Load all HTML components in parallel
