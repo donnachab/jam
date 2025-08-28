@@ -5,18 +5,33 @@ export function initFestivalCarousel() {
   const carouselElement = document.querySelector(".festival-carousel");
   if (carouselElement) {
     const slides = carouselElement.querySelectorAll('.swiper-slide');
-    new Swiper(carouselElement, {
-      // Only enable loop if there are enough slides to fill the view at the widest breakpoint
-      loop: slides.length >= 5, 
-      autoplay: { delay: 4000, disableOnInteraction: false },
-      pagination: { el: ".swiper-pagination", clickable: true },
-      slidesPerView: 2,
-      spaceBetween: 20,
-      breakpoints: {
-        640: { slidesPerView: 3, spaceBetween: 30 },
-        1024: { slidesPerView: 5, spaceBetween: 50 },
-      },
-    });
+    // Check if there are enough slides to fill the view at the widest breakpoint (5)
+    if (slides.length >= 5) {
+      new Swiper(carouselElement, {
+        loop: true,
+        autoplay: { delay: 4000, disableOnInteraction: false },
+        pagination: { el: ".swiper-pagination", clickable: true },
+        slidesPerView: 2,
+        spaceBetween: 20,
+        breakpoints: {
+          640: { slidesPerView: 3, spaceBetween: 30 },
+          1024: { slidesPerView: 5, spaceBetween: 50 },
+        },
+      });
+    } else {
+      // Initialize without a loop to avoid the warning
+      new Swiper(carouselElement, {
+        loop: false,
+        autoplay: { delay: 4000, disableOnInteraction: false },
+        pagination: { el: ".swiper-pagination", clickable: true },
+        slidesPerView: 2,
+        spaceBetween: 20,
+        breakpoints: {
+          640: { slidesPerView: 3, spaceBetween: 30 },
+          1024: { slidesPerView: 5, spaceBetween: 50 },
+        },
+      });
+    }
     console.log("✅ Festival carousel initialized.");
   }
 }
