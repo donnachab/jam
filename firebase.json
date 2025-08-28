@@ -1,38 +1,33 @@
-{
-  "hosting": {
-    "target": "galwayjam",
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  },
-  "hosting": {
-    "target": "gjc-live",
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
-  },
-  "targets": {
-    "hosting": {
-      "galwayjam": {
-        "projectId": "galway-jam-circle-live",
-        "site": "galwayjam"
-      },
-      "gjc-live": {
-        "projectId": "galway-jam-circle-live",
-        "site": "galway-jam-circle-live"
-      }
-    }
-  }
-}
+# --------------------------------------------------------------------------------
+# REPOSITORY 2: YOUR NEW MODULAR SITE
+# This repository deploys to the "galwayjam" Hosting site.
+# Place this file in your .github/workflows/ directory.
+# --------------------------------------------------------------------------------
+name: Deploy New Site to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Show all files in the repository
+        run: ls -R
+      - name: Show the firebase.json configuration
+        run: cat firebase.json
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GALWAY_JAM_CIRCLE_LIVE }}'
+          projectId: galway-jam-circle-live
+          target: galwayjam
+          channelId: live
+      - name: Output Deployment URL
+        run: |
+          echo "### ✅ New Site Deployed! ✅" >> $GITHUB_STEP_SUMMARY
+          echo "Your new modular site has been deployed." >> $GITHUB_STEP_SUMMARY
+          echo "**Live Site URL:** https://galwayjam.web.app" >> $GITHUB_STEP_SUMMARY
