@@ -25,8 +25,9 @@ export function initializeHeroAdmin(refreshData) {
   const editCoverPhotoForm = document.getElementById("edit-cover-photo-form");
   const cancelCoverPhotoBtn = document.getElementById("cancel-cover-photo-btn");
   const coverPhotoUrlInput = document.getElementById("cover-photo-url");
+  const coverPhotoFileInput = document.getElementById("cover-photo-file");
 
-  if (!editCoverPhotoBtn || !editCoverPhotoForm || !cancelCoverPhotoBtn || !coverPhotoUrlInput) {
+  if (!editCoverPhotoBtn || !editCoverPhotoForm || !cancelCoverPhotoBtn || !coverPhotoUrlInput || !coverPhotoFileInput) {
     console.warn("Hero admin elements not found, skipping initialization.");
     return;
   }
@@ -42,8 +43,20 @@ export function initializeHeroAdmin(refreshData) {
   editCoverPhotoForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const newUrl = coverPhotoUrlInput.value.trim();
-    if (!newUrl) return;
+    const newFile = coverPhotoFileInput.files[0];
 
+    if (newFile) {
+        // Handle file upload to Firebase Storage here
+        // For now, we'll just log it.
+        showModal("File upload functionality is not yet implemented.", "alert");
+        return;
+    }
+
+    if (!newUrl) {
+      showModal("Please enter a valid URL or upload a file.", "alert");
+      return;
+    }
+    
     // Add validation check here
     if (!isValidUrl(newUrl)) {
       showModal("Please enter a valid URL.", "alert");
