@@ -14,7 +14,6 @@ import { initializeCommunity } from './community.js';
 import { initializeGallery } from './gallery.js';
 import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 
 
 // -----------------------------------------------------------------------------
