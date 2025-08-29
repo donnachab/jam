@@ -51,7 +51,7 @@ function handleAdminClick(e) {
   } else {
     showModal("Enter admin PIN:", "prompt", async (pin) => {
       if (!pin) return;
-      
+
       showModal("Verifying...", "loading");
 
       const isCorrect = await verifyPin(pin);
