@@ -84,3 +84,80 @@ export function showModal(message, type = "alert", onConfirm = () => {}, onCance
   modal.classList.add("flex");
   if (type === "prompt") modalInput.focus();
 }
+
+const modal = document.getElementById("custom-modal");
+const modalMessage = document.getElementById("modal-message");
+const modalInput = document.getElementById("modal-input");
+const modalButtons = document.getElementById("modal-buttons");
+
+export function showModal(message, type = "alert", onConfirm = () => {}, onCancel = () => {}) {
+    modalMessage.textContent = message;
+    modalButtons.innerHTML = "";
+    modalInput.classList.add("hidden");
+
+    if (type === "alert") {
+        const okButton = document.createElement("button");
+        okButton.textContent = "OK";
+        okButton.className = "px-4 py-2 bg-accent text-primary font-bold rounded-md";
+        okButton.onclick = () => {
+            modal.classList.remove("flex");
+            modal.classList.add("hidden");
+            onConfirm();
+        };
+        modalButtons.appendChild(okButton);
+    } else if (type === "loading") {
+        // Just show the message with no buttons for loading state
+        modalMessage.textContent = message;
+    } else if (type === "confirm") {
+        const confirmButton = document.createElement("button");
+        confirmButton.textContent = "Confirm";
+        confirmButton.className = "px-4 py-2 bg-red-500 text-white rounded-md";
+        confirmButton.onclick = () => {
+            modal.classList.remove("flex");
+            modal.classList.add("hidden");
+            onConfirm();
+        };
+
+        const cancelButton = document.createElement("button");
+        cancelButton.textContent = "Cancel";
+        cancelButton.className = "px-4 py-2 bg-stone-600 text-white rounded-md";
+        cancelButton.onclick = () => {
+            modal.classList.remove("flex");
+            modal.classList.add("hidden");
+            onCancel();
+        };
+
+        modalButtons.appendChild(cancelButton);
+        modalButtons.appendChild(confirmButton);
+    } else if (type === "prompt") {
+        modalInput.classList.remove("hidden");
+        modalInput.value = "";
+        modalInput.type = "password";
+
+        const submitButton = document.createElement("button");
+        submitButton.textContent = "Submit";
+        submitButton.className = "px-4 py-2 bg-accent text-primary font-bold rounded-md";
+        submitButton.onclick = () => {
+            modal.classList.remove("flex");
+            modal.classList.add("hidden");
+            onConfirm(modalInput.value);
+        };
+
+        const cancelButton = document.createElement("button");
+        cancelButton.textContent = "Cancel";
+        cancelButton.className = "px-4 py-2 bg-stone-600 text-white rounded-md";
+        cancelButton.onclick = () => {
+            modal.classList.remove("flex");
+            modal.classList.add("hidden");
+        };
+
+        modalButtons.appendChild(cancelButton);
+        modalButtons.appendChild(submitButton);
+    }
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    
+    if (type === "prompt") modalInput.focus();
+}
+
