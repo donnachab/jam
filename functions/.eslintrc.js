@@ -3,9 +3,6 @@ module.exports = {
     es6: true,
     node: true,
   },
-  parserOptions: {
-    "ecmaVersion": 2018,
-  },
   extends: [
     "eslint:recommended",
     "google",
@@ -14,6 +11,15 @@ module.exports = {
     "no-restricted-globals": ["error", "name", "length"],
     "prefer-arrow-callback": "error",
     "quotes": ["error", "double", {"allowTemplateLiterals": true}],
+    // More lenient spacing rules
+    "object-curly-spacing": ["error", "never"],
+    "indent": ["error", 4],
+    "max-len": ["error", {"code": 100}],
+    // Safety rules
+    "no-unused-vars": "error",
+    "no-console": "warn",
+    "eqeqeq": "error",
+    "no-eval": "error",
   },
   overrides: [
     {
