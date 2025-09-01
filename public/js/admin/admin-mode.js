@@ -1,31 +1,22 @@
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-functions.js";
 import { showModal } from '../ui/modal.js';
 
-const PIN_VERIFICATION_URL = "https://script.google.com/macros/s/AKfycbxd1-ETMvGRKxouRhJagc0mFOsBm-UAeRxsSVpfG4xqa8TPxfmAoGtdT4ZC4Meqh_SAgA/exec";
 
 /**
  * Verifies the admin PIN using a secure POST request. Extra comment for dummy push.
  */
 async function verifyPin(pin) {
-    try {
-        const response = await fetch(PIN_VERIFICATION_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ pin: pin, action: 'check' })
-        });
-
-        if (!response.ok) return false;
-        const result = await response.json();
-        return result.success;
-
-    } catch (error) {
-        console.error("Error verifying PIN:", error);
-        showModal("Could not verify PIN. Please check your connection.", "alert");
-        return false;
-    }
+  const functions = getFunctions();
+  const verifyPinCallable = httpsCallable(functions, 'verifyAdminPin');
+  try {
+    const result = await verifyPinCallable({ pin: pin });
+    return result.data.success;
+  } catch (error) {
+    console.error("Error calling verifyAdminPin function:", error);
+    showModal(`Error: ${error.message}`, "alert");
+    return false;
+  }
 }
-
 /**
  * Toggles the admin mode UI on or off.
  */
