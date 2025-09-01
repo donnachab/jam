@@ -3,7 +3,7 @@ import { showModal } from '../ui/modal.js';
 const PIN_VERIFICATION_URL = "https://script.google.com/macros/s/AKfycbxBu_kdE7CuIxZLYnAfL4iUsZJlAf5-SuMSXjpetBXzphG5KEm3XLexD3EjrtKdkoD5Vw/exec";
 
 /**
- * Verifies the admin PIN using a secure POST request.
+ * Verifies the admin PIN using a secure POST request. Extra comment for dummy push.
  */
 async function verifyPin(pin) {
     try {
@@ -92,6 +92,7 @@ export function initializeAdminMode() {
 
     console.log("✅ Admin mode initialized.");
 }
+
 
 
 
