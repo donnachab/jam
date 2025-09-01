@@ -3,14 +3,22 @@ import { showModal } from '../ui/modal.js';
 const PIN_VERIFICATION_URL = "https://script.google.com/macros/s/AKfycbwGukXUyUUVnfEL-Z7FrDNT_JDyR40CR6ANEpgVYg-BWPXfUvxjXk2uipOAStQwHbgndQ/exec";
 
 /**
- * Verifies the admin PIN - EXACT COPY from working monolithic site
+ * Verifies the admin PIN using a secure POST request.
  */
 async function verifyPin(pin) {
     try {
-        const checkResponse = await fetch(`${PIN_VERIFICATION_URL}?pin=${encodeURIComponent(pin)}&action=check`);
-        if (!checkResponse.ok) return false;
-        const result = await checkResponse.json();
+        const response = await fetch(PIN_VERIFICATION_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ pin: pin, action: 'check' })
+        });
+
+        if (!response.ok) return false;
+        const result = await response.json();
         return result.success;
+
     } catch (error) {
         console.error("Error verifying PIN:", error);
         showModal("Could not verify PIN. Please check your connection.", "alert");
@@ -84,6 +92,7 @@ export function initializeAdminMode() {
 
     console.log("✅ Admin mode initialized.");
 }
+
 
 
 
