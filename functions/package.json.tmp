@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "predeploy": "npm run lint:fix"
+  }
+}

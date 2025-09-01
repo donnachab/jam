@@ -6,7 +6,17 @@ const adminPin = defineSecret("ADMIN_PIN");
 exports.verifyAdminPin = onCall(
     {secrets: [adminPin]},
     (request) => {
-        const {pin} = request.data;
+    // eslint-disable-next-line no-console
+        console.log("Request data:", request.data);
+
+        const {pin} = request.data || {};
+
+        if (!pin) {
+            throw new HttpsError(
+                "invalid-argument",
+                "PIN is required."
+            );
+        }
 
         if (!adminPin.value()) {
             throw new HttpsError(
@@ -20,11 +30,11 @@ exports.verifyAdminPin = onCall(
                 success: true,
                 message: "PIN verified successfully.",
             };
-        } else {
-            return {
-                success: false,
-                message: "Invalid PIN.",
-            };
         }
+
+        return {
+            success: false,
+            message: "Invalid PIN.",
+        };
     }
 );
