@@ -1,6 +1,6 @@
 import { showModal } from '../ui/modal.js';
 
-const PIN_VERIFICATION_URL = "https://script.google.com/macros/s/AKfycby34RunDhZjds7M7rUA5wP-m1M2uBv3UfJ6vpCxqKhMq36oGkHTIQ1BFF3-9kStGaTyAA/exec";
+const PIN_VERIFICATION_URL = "https://script.google.com/macros/s/AKfycbwGukXUyUUVnfEL-Z7FrDNT_JDyR40CR6ANEpgVYg-BWPXfUvxjXk2uipOAStQwHbgndQ/exec";
 
 /**
  * Verifies the admin PIN - EXACT COPY from working monolithic site
@@ -84,4 +84,5 @@ export function initializeAdminMode() {
 
     console.log("✅ Admin mode initialized.");
 }
+
 
