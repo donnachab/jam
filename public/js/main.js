@@ -138,12 +138,18 @@ async function main() {
     initializeMobileMenu();
     initFestivalCarousel();
 
-    // Initialize admin mode AFTER footer is loaded - wait for DOM to be ready
-    requestAnimationFrame(() => {
-       setTimeout(() => {
-           initializeAdminMode();
-       }, 50);
-    });
+// Initialize admin mode AFTER footer is loaded - wait for DOM to be ready
+function initAdminWhenReady() {
+    const adminButton = document.getElementById('admin-toggle-btn');
+    if (adminButton) {
+        console.log('✅ Admin button found, initializing...');
+        initializeAdminMode();
+    } else {
+        console.log('⏳ Admin button not ready, retrying...');
+        setTimeout(initAdminWhenReady, 50);
+    }
+}
+initAdminWhenReady();
 
     // Initialize admin modules that depend on Firebase being authenticated
     initializeHeroAdmin(loadAllData);
@@ -158,4 +164,5 @@ async function main() {
 // --- 7. SCRIPT EXECUTION
 // -----------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", main);
+
 
