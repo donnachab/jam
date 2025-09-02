@@ -137,9 +137,13 @@ async function main() {
     // Initialize UI modules that don't depend on data
     initializeMobileMenu();
     initFestivalCarousel();
-    
-    // Initialize admin mode AFTER footer is loaded
-    initializeAdminMode();
+
+    // Initialize admin mode AFTER footer is loaded - wait for DOM to be ready
+    requestAnimationFrame(() => {
+       setTimeout(() => {
+           initializeAdminMode();
+       }, 50);
+    });
 
     // Initialize admin modules that depend on Firebase being authenticated
     initializeHeroAdmin(loadAllData);
@@ -154,3 +158,4 @@ async function main() {
 // --- 7. SCRIPT EXECUTION
 // -----------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", main);
+
