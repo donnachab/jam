@@ -1,5 +1,5 @@
 import { db } from '../firebase-config.js';
-import { collection, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { collection, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 import { showModal } from '../ui/modal.js';
 
 /**

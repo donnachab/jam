@@ -3,37 +3,39 @@
  * Handles admin authentication and UI toggles using Firebase Functions
  */
 
-import { showModal } from '../ui/modal.js';
+import { getFunctions, httpsCallable, connectFunctionsEmulator } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-functions.js";
+import { app } from '../firebase-config.js';
+import { showModal, hideModal } from '../ui/modal.js';
 
 let isAdminMode = false;
+
+// Initialize Firebase Functions and point to the correct region
+const functions = getFunctions(app, 'us-central1');
+
+// Connect to emulators if the app is running locally
+if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+    console.log('Connecting to Functions emulator on localhost:5001');
+    connectFunctionsEmulator(functions, 'localhost', 5001);
+}
 
 /**
  * Verifies the admin PIN using Firebase Functions
  */
 async function verifyAdminPin(pin) {
     try {
-        // Use your Firebase emulator endpoint (change to production URL when deployed)
-        const response = await fetch('http://127.0.0.1:5001/galway-jam-circle-live/us-central1/verifyAdminPin', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                data: { pin: pin }
-            })
-        });
+        // Use the Firebase SDK to call the function. It handles the URL automatically.
+        const verifyPinCallable = httpsCallable(functions, 'verifyAdminPin');
+        const result = await verifyPinCallable({ pin: pin });
 
-        const result = await response.json();
-        
-        if (response.ok && result.result && result.result.success) {
-            return { success: true, message: result.result.message };
+        // The 'data' property of the result contains the object returned by the function.
+        if (result.data.success) {
+            return { success: true, message: result.data.message };
         } else {
-            return { success: false, message: result.error || 'Invalid PIN' };
+            return { success: false, message: result.data.message || 'Invalid PIN' };
         }
-        
     } catch (error) {
-        console.error('Firebase admin verification failed:', error);
-        return { success: false, message: 'Connection failed. Please try again.' };
+        console.error('Firebase admin verification failed:', error.message);
+        return { success: false, message: `Verification failed: ${error.message}` };
     }
 }
 
@@ -65,18 +67,24 @@ function toggleAdminMode(enable) {
 async function promptForAdminPin() {
     showModal("Enter admin PIN:", "prompt", async (pin) => {
         if (pin) {
-            // Show loading
-            showModal("Verifying PIN...", "alert");
-            
+            // Show a proper loading modal, fixing the UX flaw from spec.md
+            showModal("Verifying PIN...", "loading");
+
             const result = await verifyAdminPin(pin);
-            
-            if (result.success) {
-                showModal("🔑 " + result.message + " Welcome to Admin Mode!", "alert");
-                toggleAdminMode(true);
-            } else {
-                showModal("❌ " + result.message, "alert");
-                console.warn("Admin access denied");
-            }
+
+            // Hide the loading modal before showing the result.
+            hideModal();
+
+            // A short delay prevents the result modal from appearing too abruptly.
+            setTimeout(() => {
+                if (result.success) {
+                    showModal("🔑 " + result.message + " Welcome to Admin Mode!", "alert");
+                    toggleAdminMode(true);
+                } else {
+                    showModal("❌ " + result.message, "alert");
+                    console.warn("Admin access denied");
+                }
+            }, 150);
         }
     });
 }
@@ -121,4 +129,4 @@ function initializeAdminMode() {
 }
 
 // Export functions
-export { initializeAdminMode, toggleAdminMode, verifyAdminPin };
+export { initializeAdminMode, toggleAdminMode };
