@@ -12,7 +12,7 @@ import { initializeJams } from './jams.js';
 import { initializeEvents } from './events.js';
 import { initializeCommunity } from './community.js';
 import { initializeGallery } from './gallery.js';
-import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // -----------------------------------------------------------------------------
 // --- 2. STATE MANAGEMENT
@@ -140,7 +140,7 @@ async function main() {
 
 // Initialize admin mode AFTER footer is loaded - wait for DOM to be ready
 function initAdminWhenReady() {
-    const adminButton = document.getElementById('admin-mode-btn');
+    const adminButton = document.getElementById('admin-toggle-btn');
     if (adminButton) {
         console.log('✅ Admin button found, initializing...');
         initializeAdminMode();
@@ -164,3 +164,5 @@ initAdminWhenReady();
 // --- 7. SCRIPT EXECUTION
 // -----------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", main);
+
+
