@@ -75,37 +75,62 @@ export function initializeCommunity(initialItems, refreshData) {
     addBtn.addEventListener("click", () => showForm("add"));
     cancelBtn.addEventListener("click", () => form.style.display = "none");
     
+    // This listener now also manages the `required` attribute for native browser validation.
     typeInput.addEventListener("change", (e) => {
         const isCharity = e.target.value === "charity";
-        document.getElementById("charity-fields-wrapper").classList.toggle("hidden", !isCharity);
-        document.getElementById("community-headline-wrapper").classList.toggle("hidden", isCharity);
+        const headlineWrapper = document.getElementById("community-headline-wrapper");
+        const charityWrapper = document.getElementById("charity-fields-wrapper");
+        const headlineInput = document.getElementById("community-headline");
+        const amountInput = document.getElementById("community-amount");
+        const charityNameInput = document.getElementById("community-charity-name");
+
+        headlineWrapper.classList.toggle("hidden", isCharity);
+        charityWrapper.classList.toggle("hidden", !isCharity);
+
+        // Toggle the 'required' attribute for better UX and native validation.
+        headlineInput.required = !isCharity;
+        amountInput.required = isCharity;
+        charityNameInput.required = isCharity;
     });
 
+    // This handler is refactored for better validation and data integrity.
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
+
+        // Use native browser validation, which respects the `required` attribute.
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
         const id = document.getElementById("edit-community-id").value || String(Date.now());
-        const itemData = {
+        const type = typeInput.value;
+
+        // Start with base data, which is always required.
+        const dataToSave = {
             id,
+            type,
             imageUrl: document.getElementById("community-image-url").value.trim(),
             description: document.getElementById("community-description").value.trim(),
-            type: typeInput.value,
-            headline: document.getElementById("community-headline").value.trim(),
-            amountRaised: document.getElementById("community-amount").value.trim(),
-            charityName: document.getElementById("community-charity-name").value.trim(),
         };
-        // Add validation logic here
-        if (!itemData.imageUrl || !itemData.description) {
-            return showModal("Image URL and Description are required.", "alert");
+
+        // Add type-specific fields, ensuring no empty/irrelevant fields are saved.
+        if (type === "community") {
+            dataToSave.headline = document.getElementById("community-headline").value.trim();
+        } else if (type === "charity") {
+            dataToSave.amountRaised = document.getElementById("community-amount").value.trim();
+            dataToSave.charityName = document.getElementById("community-charity-name").value.trim();
         }
-        if (itemData.type === "community" && !itemData.headline) {
-            return showModal("Headline is required for community events.", "alert");
+
+        try {
+            await setDoc(doc(db, "community", id), dataToSave);
+            form.style.display = "none";
+            form.reset();
+            await refreshData();
+        } catch (error) {
+            console.error("Error saving community item:", error);
+            showModal("Failed to save item. Please try again.", "alert");
         }
-        if (itemData.type === "charity" && (!itemData.amountRaised || !itemData.charityName)) {
-            return showModal("Amount Raised and Charity Name are required for charity fundraisers.", "alert");
-        }
-        await setDoc(doc(db, "community", id), itemData);
-        form.style.display = "none";
-        await refreshData();
     });
 
     wrapper.addEventListener("click", async (e) => {

@@ -1,5 +1,5 @@
 import { db } from '../firebase-config.js';
-import { doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 import { showModal } from '../ui/modal.js';
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
@@ -7,9 +7,6 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-aut
 // Get a reference to Firebase Storage and Auth
 const storage = getStorage();
 const auth = getAuth();
-
-const MAX_FILE_SIZE_MB = 5;
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 /**
  * Checks if a string is a valid URL.
@@ -51,55 +48,59 @@ export function initializeHeroAdmin(refreshData) {
 
   editCoverPhotoForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    showModal("Updating...", "loading");
+    const newUrl = coverPhotoUrlInput.value.trim();
+    const newFile = coverPhotoFileInput.files[0];
 
+    // Check for authentication before attempting upload
     const user = auth.currentUser;
     if (!user) {
-        showModal("Authentication error. Please log out and log in again.", "alert");
+        showModal("You must be logged in as an admin to upload files.", "alert");
         return;
     }
 
-    const newFile = coverPhotoFileInput.files[0];
-    let finalUrl = coverPhotoUrlInput.value.trim();
-
+    // Check if a file has been uploaded
     if (newFile) {
-        // Validate file before uploading
-        if (newFile.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-            showModal(`File is too large. Maximum size is ${MAX_FILE_SIZE_MB}MB.`, "alert");
-            return;
-        }
-        if (!ALLOWED_TYPES.includes(newFile.type)) {
-            showModal("Invalid file type. Please upload a JPG, PNG, WEBP, or GIF.", "alert");
-            return;
-        }
+      // Handle file upload to Firebase Storage
+      try {
+        showModal("Uploading image...", "loading");
+        const fileExtension = newFile.name.split('.').pop();
+        const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
+        const fileRef = ref(storage, `images/${fileName}`);
+        
+        // Upload the file to Firebase Storage
+        await uploadBytes(fileRef, newFile);
 
-        try {
-            showModal("Uploading image...", "loading");
-            const fileExtension = newFile.name.split('.').pop();
-            const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
-            const fileRef = ref(storage, `images/${fileName}`);
-            
-            await uploadBytes(fileRef, newFile);
-            finalUrl = await getDownloadURL(fileRef);
-        } catch (error) {
-            console.error("Error uploading cover photo:", error);
-            showModal("Failed to upload cover photo. Please try again.", "alert");
-            return;
-        }
+        // Get the public download URL
+        const downloadURL = await getDownloadURL(fileRef);
+
+        // Update the cover photo URL in Firestore
+        await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: downloadURL }, { merge: true });
+        
+        showModal("Cover photo updated successfully!", "alert", refreshData);
+        editCoverPhotoForm.style.display = "none";
+      } catch (error) {
+        console.error("Error uploading cover photo:", error);
+        showModal("Failed to upload cover photo. Please try again.", "alert");
+      }
+      return;
     }
 
-    // After potentially getting a URL from the upload, validate it.
-    if (!finalUrl || !isValidUrl(finalUrl)) {
-      showModal("Please provide a valid URL or upload a file.", "alert");
+    // Fallback to URL input if no file is provided
+    if (!newUrl) {
+      showModal("Please enter a valid URL or upload a file.", "alert");
+      return;
+    }
+    
+    // Add validation check here
+    if (!isValidUrl(newUrl)) {
+      showModal("Please enter a valid URL.", "alert");
       return;
     }
 
     try {
-      // Use updateDoc for clarity, as we are only changing one field.
-      await updateDoc(doc(db, "site_config", "main"), { coverPhotoUrl: finalUrl });
+      await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: newUrl }, { merge: true });
       showModal("Cover photo updated successfully!", "alert", refreshData);
       editCoverPhotoForm.style.display = "none";
-      editCoverPhotoForm.reset();
     } catch (error) {
       console.error("Error updating cover photo:", error);
       showModal("Failed to update cover photo.", "alert");

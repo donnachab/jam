@@ -51,15 +51,10 @@ export function initializeVenueManagement(initialVenues, refreshData) {
     const name = nameInput.value.trim();
     const mapLink = mapLinkInput.value.trim();
 
-    if (!name) {
-        showModal("Venue name cannot be empty.", "alert");
-        return;
-    }
-
+    if (!name) return;
+    const id = String(Date.now());
     try {
-      // Let Firestore generate a unique ID for the new venue.
-      const newVenueRef = doc(collection(db, "venues"));
-      await setDoc(newVenueRef, { id: newVenueRef.id, name, mapLink });
+      await setDoc(doc(db, "venues", id), { id, name, mapLink });
       addVenueForm.reset();
       await refreshData();
     } catch (error) {
