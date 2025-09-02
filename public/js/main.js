@@ -76,7 +76,7 @@ async function loadAllData() {
 // -----------------------------------------------------------------------------
 function renderAll() {
     console.log("🎨 Rendering all page components with fresh data...");
-
+    
     // Initialize all the feature modules with the data they need
     initializeJams(siteData.jams, siteData.venues, loadAllData);
     initializeEvents(siteData.events, loadAllData);
@@ -85,6 +85,9 @@ function renderAll() {
 
     // Re-initialize admin components that depend on dynamic data
     initializeVenueManagement(siteData.venues, loadAllData);
+    
+    // Initialize admin mode AFTER components are loaded
+    initializeAdminMode();
 }
 
 // -----------------------------------------------------------------------------
@@ -95,6 +98,7 @@ async function main() {
 
     // Sign in with the custom token or anonymously if not available
     const initialAuthToken = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) ? __initial_auth_token : null;
+
     try {
         if (initialAuthToken) {
             await auth.signInWithCustomToken(initialAuthToken);
@@ -130,6 +134,7 @@ async function main() {
         loadComponent('components/footer.html', 'footer-container'),
         loadComponent('components/ui/modal.html', 'modal-container')
     ]);
+
     console.log("👍 All HTML components loaded.");
 
     // Initialize UI modules that don't depend on data
@@ -137,7 +142,6 @@ async function main() {
     initFestivalCarousel();
 
     // Initialize admin modules that depend on Firebase being authenticated
-    initializeAdminMode();
     initializeHeroAdmin(loadAllData);
 
     // Load initial data from Firestore, which will then trigger all data-dependent rendering
