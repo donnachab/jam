@@ -8,7 +8,6 @@ import { app } from '../firebase-config.js';
 import { showModal, hideModal } from '../ui/modal.js';
 
 let isAdminMode = false;
-const ADMIN_SESSION_KEY = 'jam_admin_mode';
 
 // Initialize Firebase Functions and point to the correct region
 const functions = getFunctions(app, 'us-central1');
@@ -17,14 +16,6 @@ const functions = getFunctions(app, 'us-central1');
 if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
     console.log('Connecting to Functions emulator on localhost:5001');
     connectFunctionsEmulator(functions, 'localhost', 5001);
-}
-
-/**
- * Returns the current admin mode status.
- * @returns {boolean} True if admin mode is active.
- */
-export function getIsAdminMode() {
-    return isAdminMode;
 }
 
 /**
@@ -53,11 +44,6 @@ async function verifyAdminPin(pin) {
  */
 function toggleAdminMode(enable) {
     isAdminMode = enable;
-    if (enable) {
-        sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
-    } else {
-        sessionStorage.removeItem(ADMIN_SESSION_KEY);
-    }
     document.body.classList.toggle("admin-mode", enable);
     
     const adminModeBtn = document.getElementById("admin-mode-btn");
@@ -109,11 +95,6 @@ async function promptForAdminPin() {
 function initializeAdminMode() {
     console.log("🔧 Initializing Admin Mode with Firebase...");
     
-    // Check for an active admin session on page load
-    if (sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true') {
-        toggleAdminMode(true);
-    }
-    
     // Find admin button (could be in footer or navigation)
     const adminModeBtn = document.getElementById("admin-mode-btn");
     
@@ -148,4 +129,4 @@ function initializeAdminMode() {
 }
 
 // Export functions
-export { initializeAdminMode, toggleAdminMode, getIsAdminMode };
+export { initializeAdminMode, toggleAdminMode };
