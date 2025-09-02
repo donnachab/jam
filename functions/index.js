@@ -1,8 +1,7 @@
 const functions = require("firebase-functions");
 
-// This is the final, corrected function definition.
-// The .runWith({ secrets: ["ADMIN_PIN"] }) part explicitly links the secret.
-exports.verifyAdminPin = functions.runWith({secrets: ["ADMIN_PIN"]})
+exports.verifyAdminPin = functions
+    .runWith({secrets: ["ADMIN_PIN"]})
     .https.onCall((data, context) => {
       // This line correctly reads the secret from the environment.
       const correctPin = process.env.ADMIN_PIN;
@@ -21,3 +20,4 @@ exports.verifyAdminPin = functions.runWith({secrets: ["ADMIN_PIN"]})
         return {success: false, message: "Incorrect PIN."};
       }
     });
+    
