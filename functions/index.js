@@ -1,40 +1,23 @@
-const {onCall, HttpsError} = require("firebase-functions/v2/https");
-const {defineSecret} = require("firebase-functions/params");
+const functions = require("firebase-functions");
 
-const adminPin = defineSecret("ADMIN_PIN");
+// This is the final, corrected function definition.
+// The .runWith({ secrets: ["ADMIN_PIN"] }) part explicitly links the secret.
+exports.verifyAdminPin = functions.runWith({secrets: ["ADMIN_PIN"]})
+    .https.onCall((data, context) => {
+      // This line correctly reads the secret from the environment.
+      const correctPin = process.env.ADMIN_PIN;
+      const submittedPin = data.pin;
 
-exports.verifyAdminPin = onCall(
-    {secrets: [adminPin]},
-    (request) => {
-    // eslint-disable-next-line no-console
-        console.log("Request data:", request.data);
+      if (!correctPin) {
+        throw new functions.https.HttpsError(
+            "internal",
+            "The admin PIN is not configured on the server.",
+        );
+      }
 
-        const {pin} = request.data || {};
-
-        if (!pin) {
-            throw new HttpsError(
-                "invalid-argument",
-                "PIN is required."
-            );
-        }
-
-        if (!adminPin.value()) {
-            throw new HttpsError(
-                "failed-precondition",
-                "PIN not configured."
-            );
-        }
-
-        if (pin === adminPin.value()) {
-            return {
-                success: true,
-                message: "PIN verified successfully.",
-            };
-        }
-
-        return {
-            success: false,
-            message: "Invalid PIN.",
-        };
-    }
-);
+      if (submittedPin === correctPin) {
+        return {success: true, message: "PIN verified successfully."};
+      } else {
+        return {success: false, message: "Incorrect PIN."};
+      }
+    });
