@@ -1,93 +1,124 @@
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-functions.js";
+/**
+ * Admin Mode Management
+ * Handles admin authentication and UI toggles using Firebase Functions
+ */
+
 import { showModal } from '../ui/modal.js';
 
+let isAdminMode = false;
+
 /**
- * Verifies the admin PIN using a secure POST request. Extra comment for dummy push.
+ * Verifies the admin PIN using Firebase Functions
  */
-async function verifyPin(pin) {
-  const functions = getFunctions();
-  const verifyPinCallable = httpsCallable(functions, 'verifyAdminPin');
-  try {
-    const result = await verifyPinCallable({ pin: pin });
-    return result.data.success;
-  } catch (error) {
-    console.error("Error calling verifyAdminPin function:", error);
-    showModal(`Error: ${error.message}`, "alert");
-    return false;
-  }
+async function verifyAdminPin(pin) {
+    try {
+        // Use your Firebase emulator endpoint (change to production URL when deployed)
+        const response = await fetch('http://127.0.0.1:5001/galway-jam-circle-live/us-central1/verifyAdminPin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                data: { pin: pin }
+            })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok && result.result && result.result.success) {
+            return { success: true, message: result.result.message };
+        } else {
+            return { success: false, message: result.error || 'Invalid PIN' };
+        }
+        
+    } catch (error) {
+        console.error('Firebase admin verification failed:', error);
+        return { success: false, message: 'Connection failed. Please try again.' };
+    }
 }
 
 /**
  * Toggles the admin mode UI on or off.
  */
 function toggleAdminMode(enable) {
+    isAdminMode = enable;
     document.body.classList.toggle("admin-mode", enable);
+    
     const adminModeBtn = document.getElementById("admin-mode-btn");
     if (adminModeBtn) {
-        adminModeBtn.textContent = enable ? "Exit Admin" : "Admin";
+        adminModeBtn.textContent = enable ? "Exit Admin" : "Admin Mode";
+        adminModeBtn.classList.toggle("active", enable);
     }
+    
+    // Show/hide admin controls
+    const adminControls = document.querySelectorAll('.admin-control, .admin-only');
+    adminControls.forEach(control => {
+        control.style.display = enable ? 'block' : 'none';
+    });
+    
+    console.log(enable ? "🔑 Admin mode activated" : "👤 Admin mode deactivated");
 }
 
 /**
- * Shows the admin login prompt - MISSING FUNCTION RESTORED!
+ * Prompts for admin PIN and verifies using Firebase
  */
-function showAdminLogin() {
+async function promptForAdminPin() {
     showModal("Enter admin PIN:", "prompt", async (pin) => {
-        if (!pin) return;
-        
-        showModal("Verifying...", "loading");
-        const isCorrect = await verifyPin(pin);
-        
-        if (isCorrect) {
-            sessionStorage.setItem("gjc_isAdmin", "true");
-            toggleAdminMode(true);
-            showModal("PIN verified! You are now in admin mode.", "alert");
-        } else {
-            showModal("Incorrect PIN.", "alert");
+        if (pin) {
+            // Show loading
+            showModal("Verifying PIN...", "alert");
+            
+            const result = await verifyAdminPin(pin);
+            
+            if (result.success) {
+                showModal("🔑 " + result.message + " Welcome to Admin Mode!", "alert");
+                toggleAdminMode(true);
+            } else {
+                showModal("❌ " + result.message, "alert");
+                console.warn("Admin access denied");
+            }
         }
     });
 }
 
 /**
- * Handles the logic when the main admin button is clicked.
+ * Initialize admin mode functionality
  */
-function handleAdminClick(e) {
-    e.preventDefault();
-    const isAdmin = document.body.classList.contains("admin-mode");
-    if (isAdmin) {
-        // Exit admin mode
-        sessionStorage.removeItem("gjc_isAdmin");
-        toggleAdminMode(false);
-    } else {
-        // Enter admin mode
-        showAdminLogin();
-    }
-}
-
-/**
- * Initializes all admin mode event listeners.
- */
-export function initializeAdminMode() {
+function initializeAdminMode() {
+    console.log("🔧 Initializing Admin Mode with Firebase...");
+    
+    // Find admin button (could be in footer or navigation)
     const adminModeBtn = document.getElementById("admin-mode-btn");
     
     if (adminModeBtn) {
-        adminModeBtn.addEventListener("click", handleAdminClick);
+        adminModeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            if (isAdminMode) {
+                // Exit admin mode
+                toggleAdminMode(false);
+                showModal("Admin mode deactivated.", "alert");
+            } else {
+                // Enter admin mode
+                promptForAdminPin();
+            }
+        });
+        
+        console.log("✅ Admin button found and configured");
+    } else {
+        console.warn("⚠️ Admin button not found");
     }
-    // Handle exit admin buttons
-    document.body.addEventListener("click", (e) => {
-        if (e.target.classList.contains("exit-admin-btn")) {
-            sessionStorage.removeItem("gjc_isAdmin");
-            toggleAdminMode(false);
+    
+    // Keyboard shortcut for admin (Ctrl+Alt+A)
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.altKey && e.key === 'a') {
+            e.preventDefault();
+            if (!isAdminMode) {
+                promptForAdminPin();
+            }
         }
     });
-    // Check initial state on page load
-    if (sessionStorage.getItem("gjc_isAdmin") === "true") {
-        toggleAdminMode(true);
-    }
-    console.log("✅ Admin mode initialized.");
 }
 
-// 🚀 MAKE FUNCTIONS GLOBALLY ACCESSIBLE
-window.showAdminLogin = showAdminLogin;
-window.toggleAdminMode = toggleAdminMode;
-window.verifyPin = verifyPin;
+// Export functions
+export { initializeAdminMode, toggleAdminMode, verifyAdminPin };
