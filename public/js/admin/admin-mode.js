@@ -1,92 +1,103 @@
 /**
  * Admin Mode Management
- * Handles admin authentication and UI toggles using Firebase Functions
+ * Handles admin authentication via a PIN, custom auth tokens, and UI toggles.
  */
 
 import { getFunctions, httpsCallable, connectFunctionsEmulator } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-functions.js";
+import { getAuth, signInWithCustomToken, onAuthStateChanged, signOut, connectAuthEmulator } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 import { app } from '../firebase-config.js';
 import { showModal, hideModal } from '../ui/modal.js';
 
-let isAdminMode = false;
-
-// Initialize Firebase Functions and point to the correct region
+// Firebase Services
 const functions = getFunctions(app, 'us-central1');
+const auth = getAuth(app);
+
+// This UID must match the one defined in the `verifyAdminPin` cloud function.
+const ADMIN_UID = "gjc-admin-user";
 
 // Connect to emulators if the app is running locally
 if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
     console.log('Connecting to Functions emulator on localhost:5001');
     connectFunctionsEmulator(functions, 'localhost', 5001);
+    console.log('Connecting to Auth emulator on localhost:9099');
+    connectAuthEmulator(auth, 'http://localhost:9099');
 }
 
 /**
- * Verifies the admin PIN using Firebase Functions
+ * Calls the cloud function to verify PIN and get a custom auth token.
+ * @param {string} pin The admin PIN entered by the user.
+ * @returns {Promise<object>} The result from the cloud function.
  */
-async function verifyAdminPin(pin) {
+async function getAdminToken(pin) {
     try {
-        // Use the Firebase SDK to call the function. It handles the URL automatically.
         const verifyPinCallable = httpsCallable(functions, 'verifyAdminPin');
         const result = await verifyPinCallable({ pin: pin });
-
-        // The 'data' property of the result contains the object returned by the function.
-        if (result.data.success) {
-            return { success: true, message: result.data.message };
-        } else {
-            return { success: false, message: result.data.message || 'Invalid PIN' };
-        }
+        return result.data;
     } catch (error) {
-        console.error('Firebase admin verification failed:', error.message);
-        return { success: false, message: `Verification failed: ${error.message}` };
+        console.error('Error calling verifyAdminPin function:', error.message);
+        return { success: false, message: `Verification failed: ${error.code}` };
     }
 }
 
 /**
- * Toggles the admin mode UI on or off.
+ * Toggles the admin mode UI elements on or off.
+ * @param {boolean} isAdmin - Whether to enable or disable the admin UI.
  */
-function toggleAdminMode(enable) {
-    isAdminMode = enable;
-    document.body.classList.toggle("admin-mode", enable);
-    
+function setAdminUi(isAdmin) {
+    document.body.classList.toggle("admin-mode", isAdmin);
+
     const adminModeBtn = document.getElementById("admin-mode-btn");
     if (adminModeBtn) {
-        adminModeBtn.textContent = enable ? "Exit Admin" : "Admin Mode";
-        adminModeBtn.classList.toggle("active", enable);
+        adminModeBtn.textContent = isAdmin ? "Exit Admin" : "Admin Mode";
+        adminModeBtn.classList.toggle("active", isAdmin);
     }
-    
+
     // Show/hide admin controls
     const adminControls = document.querySelectorAll('.admin-control, .admin-only');
     adminControls.forEach(control => {
-        control.style.display = enable ? 'block' : 'none';
+        control.style.display = isAdmin ? 'block' : 'none';
     });
-    
-    console.log(enable ? "🔑 Admin mode activated" : "👤 Admin mode deactivated");
+
+    console.log(isAdmin ? "🔑 Admin mode activated" : "👤 Admin mode deactivated");
 }
 
 /**
- * Prompts for admin PIN and verifies using Firebase
+ * Handles the PIN submission, token exchange, and sign-in process.
+ * @param {string} pin The PIN from the modal prompt.
  */
-async function promptForAdminPin() {
-    showModal("Enter admin PIN:", "prompt", async (pin) => {
-        if (pin) {
-            // Show a proper loading modal, fixing the UX flaw from spec.md
-            showModal("Verifying PIN...", "loading");
+async function handlePinSubmit(pin) {
+    if (!pin) return;
 
-            const result = await verifyAdminPin(pin);
+    // Show a proper loading modal, fixing the UX flaw from spec.md
+    showModal("Verifying PIN...", "loading");
+    const result = await getAdminToken(pin);
+    hideModal();
 
-            // Hide the loading modal before showing the result.
-            hideModal();
-
-            // A short delay prevents the result modal from appearing too abruptly.
-            setTimeout(() => {
-                if (result.success) {
-                    showModal("🔑 " + result.message + " Welcome to Admin Mode!", "alert");
-                    toggleAdminMode(true);
-                } else {
-                    showModal("❌ " + result.message, "alert");
-                    console.warn("Admin access denied");
-                }
-            }, 150);
+    // A short delay prevents the result modal from appearing too abruptly.
+    setTimeout(async () => {
+        if (result.success && result.token) {
+            try {
+                await signInWithCustomToken(auth, result.token);
+                // Set a session flag to re-enable admin mode on page reload.
+                sessionStorage.setItem('gjc_admin_requested', 'true');
+                showModal("✅ Welcome to Admin Mode!", "alert");
+                // onAuthStateChanged will now handle enabling the UI.
+            } catch (error) {
+                console.error("Admin sign-in failed:", error);
+                showModal("❌ Admin sign-in failed. Check console for details.", "alert");
+            }
+        } else {
+            showModal("❌ " + (result.message || "Incorrect PIN."), "alert");
+            console.warn("Admin access denied");
         }
-    });
+    }, 150);
+}
+
+/**
+ * Prompts for admin PIN.
+ */
+function enterAdminMode() {
+    showModal("Enter admin PIN:", "prompt", handlePinSubmit);
 }
 
 /**
@@ -94,39 +105,57 @@ async function promptForAdminPin() {
  */
 function initializeAdminMode() {
     console.log("🔧 Initializing Admin Mode with Firebase...");
-    
-    // Find admin button (could be in footer or navigation)
+
+    // onAuthStateChanged is the single source of truth for the user's auth state.
+    onAuthStateChanged(auth, (user) => {
+        const isAdminSessionRequested = sessionStorage.getItem('gjc_admin_requested') === 'true';
+
+        if (user && user.uid === ADMIN_UID && isAdminSessionRequested) {
+            // User is the admin and has actively tried to log in this session.
+            setAdminUi(true);
+        } else {
+            // User is not the admin, or hasn't tried to log in this session.
+            setAdminUi(false);
+            // If there's a lingering user session that isn't our admin, clear it.
+            if (user) {
+                signOut(auth);
+            }
+        }
+    });
+
     const adminModeBtn = document.getElementById("admin-mode-btn");
-    
+
     if (adminModeBtn) {
         adminModeBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            
-            if (isAdminMode) {
-                // Exit admin mode
-                toggleAdminMode(false);
-                showModal("Admin mode deactivated.", "alert");
+            const currentUser = auth.currentUser;
+
+            if (currentUser && currentUser.uid === ADMIN_UID) {
+                // If admin is logged in, sign them out.
+                sessionStorage.removeItem('gjc_admin_requested');
+                signOut(auth).then(() => {
+                    showModal("Admin mode deactivated.", "alert");
+                });
             } else {
-                // Enter admin mode
-                promptForAdminPin();
+                // Otherwise, prompt for the PIN to sign in.
+                enterAdminMode();
             }
         });
-        
         console.log("✅ Admin button found and configured");
     } else {
         console.warn("⚠️ Admin button not found");
     }
-    
+
     // Keyboard shortcut for admin (Ctrl+Alt+A)
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.altKey && e.key === 'a') {
             e.preventDefault();
-            if (!isAdminMode) {
-                promptForAdminPin();
+            const currentUser = auth.currentUser;
+            if (!currentUser || currentUser.uid !== ADMIN_UID) {
+                enterAdminMode();
             }
         }
     });
 }
 
-// Export functions
-export { initializeAdminMode, toggleAdminMode };
+export { initializeAdminMode };
