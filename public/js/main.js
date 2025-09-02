@@ -85,9 +85,6 @@ function renderAll() {
 
     // Re-initialize admin components that depend on dynamic data
     initializeVenueManagement(siteData.venues, loadAllData);
-    
-    // Initialize admin mode AFTER components are loaded
-    initializeAdminMode();
 }
 
 // -----------------------------------------------------------------------------
@@ -140,6 +137,9 @@ async function main() {
     // Initialize UI modules that don't depend on data
     initializeMobileMenu();
     initFestivalCarousel();
+    
+    // Initialize admin mode AFTER footer is loaded
+    initializeAdminMode();
 
     // Initialize admin modules that depend on Firebase being authenticated
     initializeHeroAdmin(loadAllData);
