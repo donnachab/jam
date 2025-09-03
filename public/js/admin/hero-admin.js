@@ -1,12 +1,12 @@
-import { db } from '../firebase-config.js';
+import { db, app } from '../firebase-config.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-functions.js";
 import { showModal } from '../ui/modal.js';
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+import { getIsAdminMode } from './admin-mode.js';
 
-// Get a reference to Firebase Storage and Auth
-const storage = getStorage();
-const auth = getAuth();
+const storage = getStorage(app);
+const functions = getFunctions(app, 'us-central1');
 
 /**
  * Checks if a string is a valid URL.
@@ -51,37 +51,63 @@ export function initializeHeroAdmin(refreshData) {
     const newUrl = coverPhotoUrlInput.value.trim();
     const newFile = coverPhotoFileInput.files[0];
 
-    // Check for authentication before attempting upload
-    const user = auth.currentUser;
-    if (!user) {
-        showModal("You must be logged in as an admin to upload files.", "alert");
-        return;
+    if (!getIsAdminMode()) {
+      showModal("You must be in admin mode to perform this action.", "alert");
+      return;
     }
 
     // Check if a file has been uploaded
     if (newFile) {
-      // Handle file upload to Firebase Storage
-      try {
-        showModal("Uploading image...", "loading");
-        const fileExtension = newFile.name.split('.').pop();
-        const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
-        const fileRef = ref(storage, `images/${fileName}`);
-        
-        // Upload the file to Firebase Storage
-        await uploadBytes(fileRef, newFile);
+      // New flow: prompt for PIN, get signed URL, then upload
+      showModal("For security, please re-enter your PIN to upload the file.", "prompt", async (pin) => {
+        if (!pin) return;
 
-        // Get the public download URL
-        const downloadURL = await getDownloadURL(fileRef);
+        try {
+          showModal("Preparing upload...", "loading");
 
-        // Update the cover photo URL in Firestore
-        await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: downloadURL }, { merge: true });
-        
-        showModal("Cover photo updated successfully!", "alert", refreshData);
-        editCoverPhotoForm.style.display = "none";
-      } catch (error) {
-        console.error("Error uploading cover photo:", error);
-        showModal("Failed to upload cover photo. Please try again.", "alert");
-      }
+          const generateSignedUrlCallable = httpsCallable(functions, 'generateSignedUploadUrl');
+          const fileExtension = newFile.name.split('.').pop();
+          const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
+
+          const result = await generateSignedUrlCallable({
+            pin: pin,
+            fileName: fileName,
+            contentType: newFile.type
+          });
+
+          if (!result.data.success) {
+            throw new Error(result.data.message || 'Could not get upload URL. Check PIN.');
+          }
+
+          const signedUrl = result.data.url;
+
+          showModal("Uploading image...", "loading");
+          const uploadResponse = await fetch(signedUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': newFile.type },
+            body: newFile
+          });
+
+          if (!uploadResponse.ok) {
+            const errorText = await uploadResponse.text();
+            console.error("Upload failed with status:", uploadResponse.status, errorText);
+            throw new Error('File upload to storage failed.');
+          }
+
+          const bucketName = storage.app.options.storageBucket;
+          const publicUrl = `https://storage.googleapis.com/${bucketName}/images/${fileName}`;
+
+          await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: publicUrl }, { merge: true });
+          
+          showModal("Cover photo updated successfully!", "alert", refreshData);
+          editCoverPhotoForm.style.display = "none";
+          editCoverPhotoForm.reset();
+
+        } catch (error) {
+          console.error("Error during file upload process:", error);
+          showModal(error.message || "An unexpected error occurred. Please try again.", "alert");
+        }
+      });
       return;
     }
 

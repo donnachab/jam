@@ -140,7 +140,7 @@ async function main() {
 
 // Initialize admin mode AFTER footer is loaded - wait for DOM to be ready
 function initAdminWhenReady() {
-    const adminButton = document.getElementById('admin-toggle-btn');
+    const adminButton = document.getElementById('admin-mode-btn');
     if (adminButton) {
         console.log('✅ Admin button found, initializing...');
         initializeAdminMode();

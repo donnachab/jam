@@ -128,5 +128,9 @@ function initializeAdminMode() {
     });
 }
 
+function getIsAdminMode() {
+    return isAdminMode;
+}
+
 // Export functions
-export { initializeAdminMode, toggleAdminMode };
+export { initializeAdminMode, toggleAdminMode, getIsAdminMode };

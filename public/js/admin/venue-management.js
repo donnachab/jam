@@ -1,7 +1,6 @@
 import { db } from '../firebase-config.js';
 import { collection, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 import { showModal } from '../ui/modal.js';
-import { getIsAdminMode } from './admin-mode.js';
 
 /**
  * Renders the list of venues in the admin panel.
@@ -52,11 +51,6 @@ export function initializeVenueManagement(initialVenues, refreshData) {
     const name = nameInput.value.trim();
     const mapLink = mapLinkInput.value.trim();
 
-    if (!getIsAdminMode()) {
-      showModal("You must be in admin mode to add a venue.", "alert");
-      return;
-    }
-
     if (!name) return;
     const id = String(Date.now());
     try {
@@ -72,12 +66,6 @@ export function initializeVenueManagement(initialVenues, refreshData) {
   venueListAdmin.addEventListener("click", async (e) => {
     if (e.target.classList.contains("delete-venue-btn")) {
       const venueId = e.target.dataset.id;
-
-      if (!getIsAdminMode()) {
-        showModal("You must be in admin mode to delete a venue.", "alert");
-        return;
-      }
-
       showModal("Are you sure you want to delete this venue?", "confirm", async () => {
         try {
           await deleteDoc(doc(db, "venues", venueId));
