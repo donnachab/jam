@@ -1,7 +1,7 @@
 import { db, app } from '../firebase-config.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-functions.js";
+import { getFunctions } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-functions.js";
 import { showModal } from '../ui/modal.js';
 import { getIsAdminMode } from './admin-mode.js';
 
@@ -69,20 +69,30 @@ export function initializeHeroAdmin(refreshData) {
 
               showModal("Preparing upload...", "loading");
   
-              const generateSignedUrlCallable = httpsCallable(functions, 'generateSignedUploadUrl');
+              const functionUrl = 'https://us-central1-galway-jam-circle-live.cloudfunctions.net/generateSignedUploadUrl';
               const fileExtension = newFile.name.split('.').pop();
               const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
-  
-              const result = await generateSignedUrlCallable({
-                pin: pin, // The PIN is now required by the function
-                fileName: fileName,
-                contentType: newFile.type
+
+              const response = await fetch(functionUrl, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  data: {
+                    pin: pin,
+                    fileName: fileName,
+                    contentType: newFile.type
+                  }
+                })
               });
-  
-              if (!result.data.success) {
-                throw new Error(result.data.message || 'Could not get upload URL. Check PIN.');
+
+              if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error.message || 'Could not get upload URL. Check PIN.');
               }
-  
+
+              const result = await response.json();
               const signedUrl = result.data.url;
   
               showModal("Uploading image...", "loading");

@@ -2,14 +2,15 @@
   id="custom-modal"
   class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center"
 >
-  <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
+  <form id="modal-form" class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
     <p id="modal-message" class="text-lg mb-4"></p>
     <input
       type="password"
       id="modal-input"
       class="w-full p-2 border rounded mb-4 hidden"
       placeholder="Enter PIN..."
+      autocomplete="current-password"
     />
     <div id="modal-buttons" class="flex justify-end space-x-4"></div>
-  </div>
+  </form>
 </div>

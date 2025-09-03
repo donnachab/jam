@@ -34,40 +34,57 @@ exports.verifyAdminPin = functions
         }
     });
 
+const cors = require("cors")({origin: true});
+
 exports.generateSignedUploadUrl = functions
     .runWith({secrets: ["ADMIN_PIN"]})
-    .https.onCall(async (data, context) => {
-        const correctPin = process.env.ADMIN_PIN;
+    .https.onRequest((req, res) => {
+        cors(req, res, async () => {
+            const correctPin = process.env.ADMIN_PIN;
 
-        if (!data.pin || data.pin !== correctPin) {
-            throw new functions.https.HttpsError(
-                "permission-denied",
-                "Incorrect PIN provided."
-            );
-        }
+            if (req.method !== "POST") {
+                return res.status(405).send("Method Not Allowed");
+            }
 
-        if (!data.fileName || !data.contentType) {
-            throw new functions.https.HttpsError(
-                "invalid-argument",
-                "The function must be called with 'fileName' and 'contentType'."
-            );
-        }
+            if (!req.body.data.pin || req.body.data.pin !== correctPin) {
+                return res.status(403).json({
+                    error: {
+                        status: "PERMISSION_DENIED",
+                        message: "Incorrect PIN provided.",
+                    },
+                });
+            }
 
-        const bucket = getStorage().bucket();
-        const file = bucket.file(`images/${data.fileName}`);
+            if (!req.body.data.fileName || !req.body.data.contentType) {
+                return res.status(400).json({
+                    error: {
+                        status: "INVALID_ARGUMENT",
+                        message: "The function must be called with 'fileName' and 'contentType'.",
+                    },
+                });
+            }
 
-        const options = {
-            version: 'v4',
-            action: 'write',
-            expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-            contentType: data.contentType,
-        };
+            const bucket = getStorage().bucket();
+            const file = bucket.file(`images/${req.body.data.fileName}`);
 
-        try {
-            const [url] = await file.getSignedUrl(options);
-            return {success: true, url: url};
-        } catch (error) {
-            console.error("Error generating signed URL:", error);
-            throw new functions.https.HttpsError("internal", "Could not generate upload URL.");
-        }
+            const options = {
+                version: 'v4',
+                action: 'write',
+                expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+                contentType: req.body.data.contentType,
+            };
+
+            try {
+                const [url] = await file.getSignedUrl(options);
+                return res.status(200).json({data: {success: true, url: url}});
+            } catch (error) {
+                console.error("Error generating signed URL:", error);
+                return res.status(500).json({
+                    error: {
+                        status: "INTERNAL",
+                        message: "Could not generate upload URL.",
+                    },
+                });
+            }
+        });
     });
