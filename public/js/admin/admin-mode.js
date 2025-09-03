@@ -53,7 +53,7 @@ function toggleAdminMode(enable) {
     }
     
     // Show/hide admin controls
-    const adminControls = document.querySelectorAll('.admin-control, .admin-only');
+    const adminControls = document.querySelectorAll('.admin-control, .admin-controls, .admin-controls-inline, .admin-only');
     adminControls.forEach(control => {
         control.style.display = enable ? 'block' : 'none';
     });
