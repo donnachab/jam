@@ -54,6 +54,8 @@ function toggleAdminMode(enable) {
     
     // Show/hide admin controls
     const adminControls = document.querySelectorAll('.admin-control, .admin-controls, .admin-controls-inline, .admin-only');
+    console.log(`Found ${adminControls.length} admin controls to toggle.`);
+    console.log(adminControls);
     adminControls.forEach(control => {
         control.style.display = enable ? 'block' : 'none';
     });
