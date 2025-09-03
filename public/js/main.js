@@ -188,6 +188,7 @@ initAdminWhenReady();
     initializeHeroAdmin(loadAllData);
 
     // Load initial data from Firestore, which will then trigger all data-dependent rendering
+    console.log("Inspecting db object:", db);
     await loadAllData();
 
     console.log("🎉 Application initialization complete.");
