@@ -47,28 +47,61 @@ async function loadComponent(componentPath, containerId) {
 async function loadAllData() {
     console.log("🔄 Loading all data from Firestore...");
     try {
-        const [jamSnap, eventSnap, photoSnap, venueSnap, communitySnap, configDoc] = await Promise.all([
-            getDocs(collection(db, "jams")),
-            getDocs(collection(db, "events")),
-            getDocs(collection(db, "photos")),
-            getDocs(collection(db, "venues")),
-            getDocs(collection(db, "community")),
-            getDoc(doc(db, "site_config", "main")),
-        ]);
-
+        const jamSnap = await getDocs(collection(db, "jams"));
         siteData.jams = jamSnap.docs.map(doc => doc.data());
-        siteData.events = eventSnap.docs.map(doc => doc.data());
-        siteData.photos = photoSnap.docs.map(doc => doc.data());
-        siteData.venues = venueSnap.docs.map(doc => doc.data());
-        siteData.communityItems = communitySnap.docs.map(doc => doc.data());
-        siteData.config = configDoc.exists() ? configDoc.data() : {};
-
-        console.log("✅ All data loaded successfully.");
-        renderAll();
     } catch (error) {
-        console.error("❌ Error loading data from Firestore:", error);
-        showModal("Could not load data from the database. Please try refreshing the page.", "alert");
+        console.error("❌ Error loading jams:", error);
+        showModal("Could not load jam data from the database. Please try refreshing the page.", "alert");
+        return;
     }
+
+    try {
+        const eventSnap = await getDocs(collection(db, "events"));
+        siteData.events = eventSnap.docs.map(doc => doc.data());
+    } catch (error) {
+        console.error("❌ Error loading events:", error);
+        showModal("Could not load event data from the database. Please try refreshing the page.", "alert");
+        return;
+    }
+
+    try {
+        const photoSnap = await getDocs(collection(db, "photos"));
+        siteData.photos = photoSnap.docs.map(doc => doc.data());
+    } catch (error) {
+        console.error("❌ Error loading photos:", error);
+        showModal("Could not load photo data from the database. Please try refreshing the page.", "alert");
+        return;
+    }
+
+    try {
+        const venueSnap = await getDocs(collection(db, "venues"));
+        siteData.venues = venueSnap.docs.map(doc => doc.data());
+    } catch (error) {
+        console.error("❌ Error loading venues:", error);
+        showModal("Could not load venue data from the database. Please try refreshing the page.", "alert");
+        return;
+    }
+
+    try {
+        const communitySnap = await getDocs(collection(db, "community"));
+        siteData.communityItems = communitySnap.docs.map(doc => doc.data());
+    } catch (error) {
+        console.error("❌ Error loading community items:", error);
+        showModal("Could not load community data from the database. Please try refreshing the page.", "alert");
+        return;
+    }
+
+    try {
+        const configDoc = await getDoc(doc(db, "site_config", "main"));
+        siteData.config = configDoc.exists() ? configDoc.data() : {};
+    } catch (error) {
+        console.error("❌ Error loading site config:", error);
+        showModal("Could not load site configuration from the database. Please try refreshing the page.", "alert");
+        return;
+    }
+
+    console.log("✅ All data loaded successfully.");
+    renderAll();
 }
 
 // -----------------------------------------------------------------------------
