@@ -12,7 +12,7 @@ import { initializeJams } from './jams.js';
 import { initializeEvents } from './events.js';
 import { initializeCommunity } from './community.js';
 import { initializeGallery } from './gallery.js';
-import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
 // -----------------------------------------------------------------------------
 // --- 2. STATE MANAGEMENT
