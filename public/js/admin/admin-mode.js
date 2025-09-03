@@ -43,6 +43,7 @@ async function verifyAdminPin(pin) {
  * Toggles the admin mode UI on or off.
  */
 function toggleAdminMode(enable) {
+    console.log("toggleAdminMode called with enable =", enable);
     isAdminMode = enable;
     document.body.classList.toggle("admin-mode", enable);
     
