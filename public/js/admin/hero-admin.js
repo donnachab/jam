@@ -58,55 +58,65 @@ export function initializeHeroAdmin(refreshData) {
 
     // Check if a file has been uploaded
     if (newFile) {
-      // New flow: prompt for PIN, get signed URL, then upload
+      // This function will be called after getting a PIN, if needed.
+      const uploadFile = async (pin) => {
+          try {
+              // Check for admin mode right before the sensitive operation.
+              if (!getIsAdminMode()) {
+                showModal("You must be in admin mode to perform this action.", "alert");
+                return;
+              }
+
+              showModal("Preparing upload...", "loading");
+  
+              const generateSignedUrlCallable = httpsCallable(functions, 'generateSignedUploadUrl');
+              const fileExtension = newFile.name.split('.').pop();
+              const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
+  
+              const result = await generateSignedUrlCallable({
+                pin: pin, // The PIN is now required by the function
+                fileName: fileName,
+                contentType: newFile.type
+              });
+  
+              if (!result.data.success) {
+                throw new Error(result.data.message || 'Could not get upload URL. Check PIN.');
+              }
+  
+              const signedUrl = result.data.url;
+  
+              showModal("Uploading image...", "loading");
+              const uploadResponse = await fetch(signedUrl, {
+                method: 'PUT',
+                headers: { 'Content-Type': newFile.type },
+                body: newFile
+              });
+  
+              if (!uploadResponse.ok) {
+                const errorText = await uploadResponse.text();
+                console.error("Upload failed with status:", uploadResponse.status, errorText);
+                throw new Error('File upload to storage failed.');
+              }
+  
+              const bucketName = storage.app.options.storageBucket;
+              const publicUrl = `https://storage.googleapis.com/${bucketName}/images/${fileName}`;
+  
+              await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: publicUrl }, { merge: true });
+              
+              showModal("Cover photo updated successfully!", "alert", refreshData);
+              editCoverPhotoForm.style.display = "none";
+              editCoverPhotoForm.reset();
+  
+            } catch (error) {
+              console.error("Error during file upload process:", error);
+              showModal(error.message || "An unexpected error occurred. Please try again.", "alert");
+            }
+      };
+
+      // The user is already in admin mode, so we need a PIN for the function call.
+      // Prompt for the PIN to authorize the secure action.
       showModal("For security, please re-enter your PIN to upload the file.", "prompt", async (pin) => {
-        if (!pin) return;
-
-        try {
-          showModal("Preparing upload...", "loading");
-
-          const generateSignedUrlCallable = httpsCallable(functions, 'generateSignedUploadUrl');
-          const fileExtension = newFile.name.split('.').pop();
-          const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
-
-          const result = await generateSignedUrlCallable({
-            pin: pin,
-            fileName: fileName,
-            contentType: newFile.type
-          });
-
-          if (!result.data.success) {
-            throw new Error(result.data.message || 'Could not get upload URL. Check PIN.');
-          }
-
-          const signedUrl = result.data.url;
-
-          showModal("Uploading image...", "loading");
-          const uploadResponse = await fetch(signedUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': newFile.type },
-            body: newFile
-          });
-
-          if (!uploadResponse.ok) {
-            const errorText = await uploadResponse.text();
-            console.error("Upload failed with status:", uploadResponse.status, errorText);
-            throw new Error('File upload to storage failed.');
-          }
-
-          const bucketName = storage.app.options.storageBucket;
-          const publicUrl = `https://storage.googleapis.com/${bucketName}/images/${fileName}`;
-
-          await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: publicUrl }, { merge: true });
-          
-          showModal("Cover photo updated successfully!", "alert", refreshData);
-          editCoverPhotoForm.style.display = "none";
-          editCoverPhotoForm.reset();
-
-        } catch (error) {
-          console.error("Error during file upload process:", error);
-          showModal(error.message || "An unexpected error occurred. Please try again.", "alert");
-        }
+        if (pin) uploadFile(pin);
       });
       return;
     }
