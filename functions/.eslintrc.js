@@ -7,6 +7,9 @@ module.exports = {
         "eslint:recommended",
         "google",
     ],
+    parserOptions: {
+        ecmaVersion: 2020,
+    },
     rules: {
         "no-restricted-globals": ["error", "name", "length"],
         "prefer-arrow-callback": "error",
