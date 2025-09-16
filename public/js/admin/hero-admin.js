@@ -39,6 +39,7 @@ export function initializeHeroAdmin(refreshData) {
   }
 
   editCoverPhotoBtn.addEventListener("click", () => {
+    console.log("Edit cover photo button clicked");
     editCoverPhotoForm.classList.remove("hidden");
   });
 
