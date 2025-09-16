@@ -39,11 +39,11 @@ export function initializeHeroAdmin(refreshData) {
   }
 
   editCoverPhotoBtn.addEventListener("click", () => {
-    editCoverPhotoForm.style.display = "block";
+    editCoverPhotoForm.classList.remove("hidden");
   });
 
   cancelCoverPhotoBtn.addEventListener("click", () => {
-    editCoverPhotoForm.style.display = "none";
+    editCoverPhotoForm.classList.add("hidden");
   });
 
   editCoverPhotoForm.addEventListener("submit", async (e) => {
@@ -61,12 +61,6 @@ export function initializeHeroAdmin(refreshData) {
       // This function will be called after getting a PIN, if needed.
       const uploadFile = async (pin) => {
           try {
-              // Check for admin mode right before the sensitive operation.
-              if (!getIsAdminMode()) {
-                showModal("You must be in admin mode to perform this action.", "alert");
-                return;
-              }
-
               showModal("Preparing upload...", "loading");
   
               const functionUrl = 'https://us-central1-galway-jam-circle-live.cloudfunctions.net/generateSignedUploadUrl';
@@ -114,7 +108,7 @@ export function initializeHeroAdmin(refreshData) {
               await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: publicUrl }, { merge: true });
               
               showModal("Cover photo updated successfully!", "alert", refreshData);
-              editCoverPhotoForm.style.display = "none";
+              editCoverPhotoForm.classList.add("hidden");
               editCoverPhotoForm.reset();
   
             } catch (error) {
@@ -146,7 +140,7 @@ export function initializeHeroAdmin(refreshData) {
     try {
       await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: newUrl }, { merge: true });
       showModal("Cover photo updated successfully!", "alert", refreshData);
-      editCoverPhotoForm.style.display = "none";
+      editCoverPhotoForm.classList.add("hidden");
     } catch (error) {
       console.error("Error updating cover photo:", error);
       showModal("Failed to update cover photo.", "alert");

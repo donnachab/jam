@@ -36,6 +36,20 @@ body.admin-mode .admin-controls-inline { display: inline-flex; }
   display: none;
 }
 
+.hidden {
+  display: none;
+}
+
+body.admin-mode #add-jam-form,
+body.admin-mode #add-event-form,
+body.admin-mode #add-photo-form,
+body.admin-mode #edit-cover-photo-form,
+body.admin-mode #edit-featured-video-form,
+body.admin-mode #venue-management-section,
+body.admin-mode #add-community-form {
+  display: block;
+}
+
 .jam-cancelled { background-color: #fee2e2 !important; }
 .jam-cancelled .jam-info { text-decoration: line-through; }
 
