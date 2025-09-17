@@ -151,6 +151,9 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
 
     addJamBtn.addEventListener("click", () => showJamForm("add"));
     cancelJamBtn.addEventListener("click", () => addJamForm.style.display = "none");
+    manageVenuesBtn.addEventListener("click", () => {
+        venueManagementSection.style.display = "block";
+    });
 
     addJamForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -213,4 +216,6 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
     });
     
     console.log("✅ Jams module initialized.");
+}
+ole.log("✅ Jams module initialized.");
 }
