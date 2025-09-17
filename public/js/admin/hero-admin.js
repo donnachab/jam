@@ -1,4 +1,3 @@
-
 import { db, app } from '../firebase-config.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
@@ -28,7 +27,8 @@ function isValidUrl(url) {
  * @param {function} refreshData - A callback function to reload all site data.
  */
 function showCoverPhotoModal(refreshData) {
-  const modalContent = `
+  const modalContent = document.createElement('div');
+  modalContent.innerHTML = `
     <form id="edit-cover-photo-form">
       <div class="mb-4">
         <label for="cover-photo-url" class="block text-sm font-medium text-gray-700">Image URL</label>
@@ -41,9 +41,12 @@ function showCoverPhotoModal(refreshData) {
     </form>
   `;
 
-  showModal(modalContent, 'confirm', async () => {
-    const newUrl = document.getElementById('cover-photo-url').value.trim();
-    const newFile = document.getElementById('cover-photo-file').files[0];
+  const coverPhotoUrlInput = modalContent.querySelector('#cover-photo-url');
+  const coverPhotoFileInput = modalContent.querySelector('#cover-photo-file');
+
+  showModal(modalContent.innerHTML, 'confirm', async () => {
+    const newUrl = coverPhotoUrlInput.value.trim();
+    const newFile = coverPhotoFileInput.files[0];
 
     if (!getIsAdminMode()) {
       showModal("You must be in admin mode to perform this action.", "alert");
