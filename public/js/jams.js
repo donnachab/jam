@@ -105,6 +105,8 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
     const addJamForm = document.getElementById("add-jam-form");
     const cancelJamBtn = document.getElementById("cancel-jam-btn");
     const jamList = document.getElementById("jam-list");
+    const manageVenuesBtn = document.getElementById("manage-venues-btn");
+    const venueManagementSection = document.getElementById("venue-management-section");
     
     manageJamSchedule(initialJams);
     renderJams();
@@ -216,6 +218,4 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
     });
     
     console.log("✅ Jams module initialized.");
-}
-ole.log("✅ Jams module initialized.");
 }
