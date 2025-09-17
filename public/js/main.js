@@ -38,6 +38,7 @@ async function loadComponent(componentPath, containerId) {
         document.getElementById(containerId).innerHTML = await response.text();
     } catch (error) {
         console.error(`Error loading component: ${error}`);
+        showModal(`Failed to load a critical part of the page (${componentPath}). Please check the console for details and try refreshing.`, "alert");
     }
 }
 
