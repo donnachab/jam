@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:css": "node /home/donnachab/jam/node_modules/postcss/lib/postcss.js public/css/tailwind.css -o public/css/styles.css",
+    "build:css": "postcss public/css/tailwind.css -o public/css/styles.css",
     "watch:css": "postcss public/css/tailwind.css -o public/css/styles.css --watch"
   },
   "keywords": [],
@@ -14,5 +14,8 @@
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3"
+  },
+  "dependencies": {
+    "postcss-cli": "^11.0.1"
   }
 }

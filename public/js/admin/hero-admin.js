@@ -45,8 +45,8 @@ function showCoverPhotoModal(refreshData) {
   const coverPhotoFileInput = modalContent.querySelector('#cover-photo-file');
 
   showModal(modalContent.innerHTML, 'confirm', async () => {
-    const newUrl = coverPhotoUrlInput.value.trim();
-    const newFile = coverPhotoFileInput.files[0];
+    const newUrl = document.getElementById('cover-photo-url').value.trim();
+    const newFile = document.getElementById('cover-photo-file').files[0];
 
     if (!getIsAdminMode()) {
       showModal("You must be in admin mode to perform this action.", "alert");

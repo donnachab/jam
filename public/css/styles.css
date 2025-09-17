@@ -499,6 +499,13 @@ video {
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
+  :root {
+    --primary-color: #371087; /* Correct Purple */
+    --accent-color: #f3ead3; /* Warm Cream */
+    --background-color: #ffffff;
+    --text-dark: #1f2937;
+    --text-light: #ffffff;
+  }
 .container {
   width: 100%;
 }
