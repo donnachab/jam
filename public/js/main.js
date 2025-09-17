@@ -5,7 +5,7 @@ import { app, db, auth } from './firebase-config.js';
 import { showModal } from './ui/modal.js';
 import { initializeMobileMenu } from './ui/mobile-menu.js';
 import { initFestivalCarousel } from './ui/carousels.js';
-import { initializeAdminMode } from './admin/admin-mode.js';
+import { initializeAdminMode } from './admin/admin-mode.js?v=2.0';
 import { initializeHeroAdmin } from './admin/hero-admin.js';
 import { initializeVenueManagement } from './admin/venue-management.js';
 import { initializeJams } from './jams.js';

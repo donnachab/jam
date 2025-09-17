@@ -7,35 +7,44 @@ admin.initializeApp();
 
 setGlobalOptions({secrets: ["ADMIN_PIN"]});
 
-exports.verifyAdminPin = onCall((request) => {
+/**
+ * Sets a custom claim on the user's token to grant admin privileges.
+ * Requires the user to be authenticated and provide the correct admin PIN.
+ */
+exports.setAdminClaim = onCall(async (request) => {
+    if (!request.auth) {
+        throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
+    }
+
     const correctPin = process.env.ADMIN_PIN;
     if (!correctPin) {
-        throw new HttpsError(
-            "internal",
-            "The admin PIN is not configured on the server.",
-        );
+        throw new HttpsError("internal", "The admin PIN is not configured on the server.");
     }
 
-    if (!request.data || !request.data.pin) {
-        throw new HttpsError(
-            "invalid-argument",
-            "The function must be called with a 'pin' argument.",
-        );
+    if (request.data.pin !== correctPin) {
+        throw new HttpsError("permission-denied", "Incorrect PIN provided.");
     }
 
-    if (request.data.pin === correctPin) {
-        return {success: true, message: "PIN verified successfully."};
-    } else {
-        return {success: false, message: "Incorrect PIN."};
+    const uid = request.auth.uid;
+    try {
+        await admin.auth().setCustomUserClaims(uid, {admin: true});
+        return {success: true, message: "Admin claim set successfully."};
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error setting custom claim:", error);
+        throw new HttpsError("internal", "Could not set admin claim.");
     }
 });
 
+/**
+ * Generates a signed URL for uploading a file.
+ * Requires the user to be an admin (verified via custom claim).
+ */
 exports.generateSignedUploadUrl = onCall(async (request) => {
-    const correctPin = process.env.ADMIN_PIN;
-    if (request.data.pin !== correctPin) {
+    if (!request.auth || !request.auth.token.admin) {
         throw new HttpsError(
             "permission-denied",
-            "Incorrect PIN provided.",
+            "You must be an admin to perform this action.",
         );
     }
 
@@ -60,10 +69,8 @@ exports.generateSignedUploadUrl = onCall(async (request) => {
         const [url] = await file.getSignedUrl(options);
         return {success: true, url: url};
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error("Error generating signed URL:", error);
-        throw new HttpsError(
-            "internal",
-            "Could not generate upload URL.",
-        );
+        throw new HttpsError("internal", "Could not generate upload URL.");
     }
 });

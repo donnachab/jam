@@ -1,41 +1,71 @@
 /**
- * Admin Mode Management
- * Handles admin authentication, state persistence, and UI toggles.
+ * Admin Mode Management V2
+ * Handles admin authentication using Firebase Auth custom claims.
  */
 
 import { getFunctions, httpsCallable, connectFunctionsEmulator } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { getAuth, signInAnonymously, onIdTokenChanged, connectAuthEmulator } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { app } from '../firebase-config.js';
 import { showModal, hideModal } from '../ui/modal.js';
 
-const ADMIN_MODE_KEY = 'isAdminMode';
 let isAdmin = false;
+let currentUser = null;
 
-// Initialize Firebase Functions
+// Initialize Firebase Services
 const functions = getFunctions(app, 'us-central1');
+const auth = getAuth(app);
 
 // Connect to emulators in local development
 if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
     console.log('🔌 Connecting to Functions emulator on localhost:5001');
     connectFunctionsEmulator(functions, 'localhost', 5001);
+    console.log('🔌 Connecting to Auth emulator on localhost:9099');
+    connectAuthEmulator(auth, 'http://localhost:9099');
 }
 
-async function verifyAdminPin(pin) {
-    console.log(`Verifying PIN: ${pin}`);
+/**
+ * Ensures the user is signed in anonymously to provide a UID for custom claims.
+ */
+async function ensureAnonymousAuth() {
+    if (auth.currentUser) {
+        console.log('👤 User already signed in.', auth.currentUser.uid);
+        currentUser = auth.currentUser;
+        return;
+    }
     try {
-        const verifyPinCallable = httpsCallable(functions, 'verifyAdminPin');
-        const result = await verifyPinCallable({ pin });
-        console.log('✅ PIN verification result:', result.data);
+        console.log('👤 No user found, signing in anonymously...');
+        const userCredential = await signInAnonymously(auth);
+        currentUser = userCredential.user;
+        console.log('✅ Anonymous sign-in successful.', currentUser.uid);
+    } catch (error) {
+        console.error('❌ Anonymous sign-in failed:', error);
+        showModal('Could not authenticate. Please refresh the page.', 'alert');
+    }
+}
+
+/**
+ * Calls the backend function to set an admin claim on the user's token.
+ * @param {string} pin The admin PIN.
+ */
+async function setAdminClaim(pin) {
+    console.log('Attempting to set admin claim...');
+    try {
+        const setAdminClaimCallable = httpsCallable(functions, 'setAdminClaim');
+        const result = await setAdminClaimCallable({ pin });
+        console.log('✅ Admin claim function result:', result.data);
         return result.data;
     } catch (error) {
-        console.error('❌ Firebase admin verification failed:', error);
+        console.error('❌ Firebase setAdminClaim failed:', error);
         return { success: false, message: `Verification failed: ${error.message}` };
     }
 }
 
-function setAdminMode(enable) {
-    console.log(`Setting admin mode to: ${enable}`);
+/**
+ * Toggles the UI to reflect the user's admin status.
+ * @param {boolean} enable Whether to enable or disable admin mode UI.
+ */
+function setAdminModeUI(enable) {
     isAdmin = enable;
-    sessionStorage.setItem(ADMIN_MODE_KEY, enable);
     document.body.classList.toggle('admin-mode', enable);
 
     const adminModeBtn = document.getElementById('admin-mode-btn');
@@ -43,51 +73,81 @@ function setAdminMode(enable) {
         adminModeBtn.textContent = enable ? 'Exit Admin' : 'Admin Mode';
         adminModeBtn.classList.toggle('active', enable);
     }
-    
-    console.log(enable ? '🔑 Admin mode activated' : '👤 Admin mode deactivated');
+    console.log(enable ? '🔑 Admin mode UI activated' : '👤 Admin mode UI deactivated');
 }
 
-function getIsAdminMode() {
-    return isAdmin;
+/**
+ * Logs the user out of admin mode by forcing a token refresh.
+ */
+async function exitAdminMode() {
+    if (!currentUser) return;
+    console.log('Exiting admin mode...');
+    // By setting the claim to null and refreshing, we ensure the user is no longer an admin.
+    await admin.auth().setCustomUserClaims(currentUser.uid, null);
+    await currentUser.getIdToken(true); // Force refresh
+    setAdminModeUI(false);
+    showModal('Admin mode deactivated.', 'alert');
 }
 
+
+/**
+ * Prompts the user for the admin PIN and attempts to elevate their privileges.
+ */
 async function promptForAdminPin() {
     console.log('Prompting for admin PIN...');
     showModal('Enter admin PIN:', 'prompt', async (pin) => {
         if (pin) {
             console.log('PIN entered, verifying...');
             showModal('Verifying PIN...', 'loading');
-            const result = await verifyAdminPin(pin);
+            const result = await setAdminClaim(pin);
             hideModal();
 
-            setTimeout(() => {
-                if (result.success) {
-                    console.log('PIN verification successful.');
-                    showModal(`🔑 ${result.message} Welcome to Admin Mode!`, 'alert');
-                    setAdminMode(true);
-                } else {
-                    console.warn('Admin access denied:', result.message);
-                    showModal(`❌ ${result.message}`, 'alert');
-                }
-            }, 150);
+            if (result.success) {
+                console.log('Admin claim successful, forcing token refresh...');
+                // Force a refresh of the ID token to get the new custom claim.
+                await currentUser.getIdToken(true);
+                showModal('🔑 Welcome to Admin Mode!', 'alert');
+            } else {
+                console.warn('Admin access denied:', result.message);
+                showModal(`❌ ${result.message}`, 'alert');
+            }
         }
     });
 }
 
-function initializeAdminMode() {
-    console.log('🔧 Initializing Admin Mode...');
+/**
+ * Main initialization function for admin mode.
+ */
+async function initializeAdminMode() {
+    console.log('🔧 Initializing Admin Mode V2...');
+    
+    await ensureAnonymousAuth();
 
-    const isAdminFromStorage = sessionStorage.getItem(ADMIN_MODE_KEY) === 'true';
-    console.log(`Initial admin state from session storage: ${isAdminFromStorage}`);
-    setAdminMode(isAdminFromStorage);
+    onIdTokenChanged(auth, async (user) => {
+        if (user) {
+            currentUser = user;
+            const idTokenResult = await user.getIdTokenResult();
+            const newIsAdmin = idTokenResult.claims.admin === true;
+            
+            if (isAdmin !== newIsAdmin) {
+                console.log(`Admin status changed to: ${newIsAdmin}`);
+                setAdminModeUI(newIsAdmin);
+            }
+        } else {
+            currentUser = null;
+            if (isAdmin) {
+                console.log('User logged out, deactivating admin mode.');
+                setAdminModeUI(false);
+            }
+        }
+    });
 
     const adminModeBtn = document.getElementById('admin-mode-btn');
     if (adminModeBtn) {
         adminModeBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            if (getIsAdminMode()) {
-                setAdminMode(false);
-                showModal('Admin mode deactivated.', 'alert');
+            if (isAdmin) {
+                exitAdminMode();
             } else {
                 promptForAdminPin();
             }
@@ -100,9 +160,8 @@ function initializeAdminMode() {
     document.body.addEventListener('click', (e) => {
         if (e.target.classList.contains('exit-admin-btn')) {
             e.preventDefault();
-            if (getIsAdminMode()) {
-                setAdminMode(false);
-                showModal('Admin mode deactivated.', 'alert');
+            if (isAdmin) {
+                exitAdminMode();
             }
         }
     });
@@ -110,11 +169,15 @@ function initializeAdminMode() {
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.altKey && e.key === 'a') {
             e.preventDefault();
-            if (!getIsAdminMode()) {
+            if (!isAdmin) {
                 promptForAdminPin();
             }
         }
     });
+}
+
+function getIsAdminMode() {
+    return isAdmin;
 }
 
 export { initializeAdminMode, getIsAdminMode };
