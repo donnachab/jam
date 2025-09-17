@@ -77,16 +77,22 @@ function setAdminModeUI(enable) {
 }
 
 /**
- * Logs the user out of admin mode by forcing a token refresh.
+ * Logs the user out of admin mode by calling the revokeAdminClaim function.
  */
 async function exitAdminMode() {
     if (!currentUser) return;
-    console.log('Exiting admin mode...');
-    // By setting the claim to null and refreshing, we ensure the user is no longer an admin.
-    await admin.auth().setCustomUserClaims(currentUser.uid, null);
-    await currentUser.getIdToken(true); // Force refresh
-    setAdminModeUI(false);
-    showModal('Admin mode deactivated.', 'alert');
+    console.log('Calling revokeAdminClaim function...');
+    try {
+        const revokeAdminClaimCallable = httpsCallable(functions, 'revokeAdminClaim');
+        await revokeAdminClaimCallable();
+        console.log('✅ Admin claim revoked, forcing token refresh...');
+        // Force a refresh of the ID token to remove the custom claim.
+        await currentUser.getIdToken(true);
+        showModal('Admin mode deactivated.', 'alert');
+    } catch (error) {
+        console.error('❌ Firebase revokeAdminClaim failed:', error);
+        showModal(`Could not exit admin mode: ${error.message}`, 'alert');
+    }
 }
 
 

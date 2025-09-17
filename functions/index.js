@@ -74,3 +74,22 @@ exports.generateSignedUploadUrl = onCall(async (request) => {
         throw new HttpsError("internal", "Could not generate upload URL.");
     }
 });
+
+/**
+ * Revokes the admin custom claim from the calling user.
+ */
+exports.revokeAdminClaim = onCall(async (request) => {
+    if (!request.auth) {
+        throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
+    }
+
+    const uid = request.auth.uid;
+    try {
+        await admin.auth().setCustomUserClaims(uid, null);
+        return {success: true, message: "Admin claim revoked successfully."};
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error revoking custom claim:", error);
+        throw new HttpsError("internal", "Could not revoke admin claim.");
+    }
+});
