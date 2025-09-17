@@ -13,3 +13,16 @@
 #header-container nav {
     display: flex;
 }
+
+/* 
+  Admin Mode Visibility Rules
+  - Hide admin controls by default.
+  - Show them only when the body has the 'admin-mode' class.
+*/
+.admin-controls-inline {
+  display: none;
+}
+
+body.admin-mode .admin-controls-inline {
+  display: flex;
+}
