@@ -60,7 +60,9 @@ function setAdminMode(enable) {
  * @returns {boolean}
  */
 function getIsAdminMode() {
-    const isAdmin = sessionStorage.getItem(ADMIN_MODE_KEY) === 'true';
+    const isAdminFromStorage = sessionStorage.getItem(ADMIN_MODE_KEY);
+    console.log(`Value of isAdminMode from session storage: '${isAdminFromStorage}' (type: ${typeof isAdminFromStorage})`);
+    const isAdmin = isAdminFromStorage === 'true';
     console.log(`Checking admin mode status: ${isAdmin}`);
     return isAdmin;
 }
