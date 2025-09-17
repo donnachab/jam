@@ -841,10 +841,6 @@ video {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
 }
-.border-gray-300 {
-  --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
-}
 .border-stone-200 {
   --tw-border-opacity: 1;
   border-color: rgb(231 229 228 / var(--tw-border-opacity, 1));
@@ -925,10 +921,6 @@ video {
 .p-8 {
   padding: 2rem;
 }
-.px-3 {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-}
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -999,9 +991,6 @@ video {
 }
 .font-bold {
   font-weight: 700;
-}
-.font-medium {
-  font-weight: 500;
 }
 .font-semibold {
   font-weight: 600;
@@ -1122,38 +1111,6 @@ video {
 .duration-500 {
   transition-duration: 500ms;
 }
-.file\:mr-4::file-selector-button {
-  margin-right: 1rem;
-}
-.file\:rounded-full::file-selector-button {
-  border-radius: 9999px;
-}
-.file\:border-0::file-selector-button {
-  border-width: 0px;
-}
-.file\:bg-violet-50::file-selector-button {
-  --tw-bg-opacity: 1;
-  background-color: rgb(245 243 255 / var(--tw-bg-opacity, 1));
-}
-.file\:px-4::file-selector-button {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-.file\:py-2::file-selector-button {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-.file\:text-sm::file-selector-button {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-.file\:font-semibold::file-selector-button {
-  font-weight: 600;
-}
-.file\:text-violet-700::file-selector-button {
-  --tw-text-opacity: 1;
-  color: rgb(109 40 217 / var(--tw-text-opacity, 1));
-}
 .hover\:scale-105:hover {
   --tw-scale-x: 1.05;
   --tw-scale-y: 1.05;
@@ -1216,21 +1173,9 @@ video {
 .hover\:opacity-90:hover {
   opacity: 0.9;
 }
-.hover\:file\:bg-violet-100::file-selector-button:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(237 233 254 / var(--tw-bg-opacity, 1));
-}
-.focus\:border-indigo-500:focus {
-  --tw-border-opacity: 1;
-  border-color: rgb(99 102 241 / var(--tw-border-opacity, 1));
-}
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
-}
-.focus\:ring-indigo-500:focus {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(99 102 241 / var(--tw-ring-opacity, 1));
 }
 @media (min-width: 640px) {
 
@@ -1301,11 +1246,6 @@ video {
   .sm\:text-5xl {
     font-size: 3rem;
     line-height: 1;
-  }
-
-  .sm\:text-sm {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
   }
 
   .sm\:text-xl {
