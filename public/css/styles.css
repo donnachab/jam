@@ -499,7 +499,7 @@ video {
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
-  :root {
+  :root { /* Correct Purple */ /* Warm Cream */
     --primary-color: #371087; /* Correct Purple */
     --accent-color: #f3ead3; /* Warm Cream */
     --background-color: #ffffff;
