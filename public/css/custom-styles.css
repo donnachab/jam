@@ -1,0 +1,15 @@
+/* Fix for oversized footer icons */
+#footer-container svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+/* Fix for footer text size */
+#footer-container, #footer-container a {
+    font-size: 1rem;
+}
+
+/* Fix for broken menu bar */
+#header-container nav {
+    display: flex;
+}
