@@ -13,6 +13,7 @@ import { initializeEvents } from './events.js';
 import { initializeCommunity } from './community.js';
 import { initializeGallery } from './gallery.js';
 import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 // -----------------------------------------------------------------------------
 // --- 2. STATE MANAGEMENT
@@ -145,11 +146,11 @@ async function main() {
     try {
         if (initialAuthToken) {
             console.log("Attempting to sign in with custom token...");
-            await auth.signInWithCustomToken(initialAuthToken);
+            await signInWithCustomToken(auth, initialAuthToken);
             console.log("✅ Signed in with custom token.");
         } else {
             console.log("No custom token, attempting anonymous sign-in...");
-            await auth.signInAnonymously();
+            await signInAnonymously(auth);
             console.log("✅ Signed in anonymously.");
         }
     } catch (error) {
