@@ -13,7 +13,7 @@ import { initializeEvents } from './events.js';
 import { initializeCommunity } from './community.js';
 import { initializeGallery } from './gallery.js';
 import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
 
 // -----------------------------------------------------------------------------
 // --- 2. STATE MANAGEMENT
@@ -212,6 +212,9 @@ initAdminWhenReady();
 }
 
 // -----------------------------------------------------------------------------
+// --- 7. SCRIPT EXECUTION
+// -----------------------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", main);
 // --- 7. SCRIPT EXECUTION
 // -----------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", main);

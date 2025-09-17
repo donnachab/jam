@@ -1,7 +1,7 @@
 // Import the necessary functions from the Firebase SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 // --- Your Firebase Configuration ---
 // IMPORTANT: Replace this with your actual Firebase project configuration
@@ -23,4 +23,4 @@ const auth = getAuth(app); // Get the auth instance
 console.log("✅ Firebase initialized successfully.");
 
 // Export the app, database, and auth instances to be used in other modules
-export { app, db, auth };
+export { app, db, auth, signInAnonymously, signInWithCustomToken };
