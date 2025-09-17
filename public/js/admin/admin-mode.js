@@ -42,9 +42,11 @@ async function verifyAdminPin(pin) {
  * @param {boolean} enable - Whether to enable or disable admin mode.
  */
 function setAdminMode(enable) {
-    console.log(`Setting admin mode to: ${enable}`);
-    sessionStorage.setItem(ADMIN_MODE_KEY, enable);
+    console.log(`Calling setAdminMode with enable=${enable}`);
+    console.log('Body classList before toggle:', document.body.classList.toString());
     document.body.classList.toggle('admin-mode', enable);
+    console.log('Body classList after toggle:', document.body.classList.toString());
+    sessionStorage.setItem(ADMIN_MODE_KEY, enable);
 
     const adminModeBtn = document.getElementById('admin-mode-btn');
     if (adminModeBtn) {
