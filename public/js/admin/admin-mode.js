@@ -146,4 +146,3 @@ function initializeAdminMode() {
 
 // Export the necessary functions
 export { initializeAdminMode, getIsAdminMode };
-nMode, getIsAdminMode };
