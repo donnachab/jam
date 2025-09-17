@@ -11,13 +11,3 @@
     --text-light: #ffffff;
   }
 }
-
-@layer base {
-  :root {
-    --primary-color: #371087; /* Correct Purple */
-    --accent-color: #f3ead3; /* Warm Cream */
-    --background-color: #ffffff;
-    --text-dark: #1f2937;
-    --text-light: #ffffff;
-  }
-}
