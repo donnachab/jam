@@ -1,7 +1,7 @@
 import { db, app } from '../firebase-config.js';
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-functions.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { showModal } from '../ui/modal.js';
 import { getIsAdminMode } from './admin-mode.js';
 
@@ -27,37 +27,39 @@ function isValidUrl(url) {
  * @param {function} refreshData - A callback function to reload all site data.
  */
 function showCoverPhotoModal(refreshData) {
-  const modalContent = document.createElement('div');
-  modalContent.innerHTML = `
-    <form id="edit-cover-photo-form">
-      <div class="mb-4">
-        <label for="cover-photo-url" class="block text-sm font-medium text-gray-700">Image URL</label>
-        <input type="text" id="cover-photo-url" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-      </div>
-      <div class="mb-4">
-        <label for="cover-photo-file" class="block text-sm font-medium text-gray-700">Or upload a file</label>
-        <input type="file" id="cover-photo-file" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100">
-      </div>
-    </form>
-  `;
+  console.log('Opening cover photo modal...');
+  const form = document.getElementById('edit-cover-photo-form');
+  if (!form) {
+    console.error("Could not find the cover photo form.");
+    return;
+  }
 
-  const coverPhotoUrlInput = modalContent.querySelector('#cover-photo-url');
-  const coverPhotoFileInput = modalContent.querySelector('#cover-photo-file');
+  // Clone the form to avoid issues with repeated modal openings
+  const formClone = form.cloneNode(true);
+  formClone.style.display = 'block';
 
-  showModal(modalContent.innerHTML, 'confirm', async () => {
-    const newUrl = document.getElementById('cover-photo-url').value.trim();
-    const newFile = document.getElementById('cover-photo-file').files[0];
+  const coverPhotoUrlInput = formClone.querySelector('#cover-photo-url');
+  const coverPhotoFileInput = formClone.querySelector('#cover-photo-file');
+
+  showModal(formClone, 'confirm', async () => {
+    console.log('Confirm button clicked in cover photo modal.');
+    const newUrl = coverPhotoUrlInput.value.trim();
+    const newFile = coverPhotoFileInput.files[0];
+    console.log(`New URL: ${newUrl}, New File: ${newFile ? newFile.name : 'none'}`);
 
     if (!getIsAdminMode()) {
+      console.warn('User is not in admin mode.');
       showModal("You must be in admin mode to perform this action.", "alert");
       return;
     }
 
     if (newFile) {
+      console.log('New file selected, starting upload process...');
       const uploadFile = async (pin) => {
+        console.log('uploadFile function called.');
         try {
           showModal("Preparing upload...", "loading");
-
+          console.log('Calling generateSignedUploadUrl cloud function...');
           const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
           const fileExtension = newFile.name.split('.').pop();
           const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
@@ -67,14 +69,17 @@ function showCoverPhotoModal(refreshData) {
             fileName: fileName,
             contentType: newFile.type
           });
+          console.log('generateSignedUploadUrl result:', result.data);
 
           if (!result.data.success) {
             throw new Error(result.data.message || 'Could not get upload URL. Check PIN.');
           }
 
           const signedUrl = result.data.url;
+          console.log(`Got signed URL: ${signedUrl}`);
 
           showModal("Uploading image...", "loading");
+          console.log('Uploading file to signed URL...');
           const uploadResponse = await fetch(signedUrl, {
             method: 'PUT',
             headers: { 'Content-Type': newFile.type },
@@ -86,43 +91,55 @@ function showCoverPhotoModal(refreshData) {
             console.error("Upload failed with status:", uploadResponse.status, errorText);
             throw new Error('File upload to storage failed.');
           }
+          console.log('✅ File uploaded successfully.');
 
           const bucketName = storage.app.options.storageBucket;
           const publicUrl = `https://storage.googleapis.com/${bucketName}/images/${fileName}`;
+          console.log(`New public URL: ${publicUrl}`);
 
+          console.log('Updating site_config with new cover photo URL...');
           await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: publicUrl }, { merge: true });
+          console.log('✅ site_config updated.');
 
           showModal("Cover photo updated successfully!", "alert", refreshData);
         } catch (error) {
-          console.error("Error during file upload process:", error);
+          console.error("❌ Error during file upload process:", error);
           showModal(error.message || "An unexpected error occurred. Please try again.", "alert");
         }
       };
 
       showModal("For security, please re-enter your PIN to upload the file.", "prompt", async (pin) => {
-        if (pin) uploadFile(pin);
+        if (pin) {
+          console.log('PIN entered for upload, calling uploadFile...');
+          uploadFile(pin);
+        }
       });
       return;
     }
 
     if (!newUrl) {
-      showModal("Please enter a valid URL or upload a file.", "alert");
+      console.warn('No new URL or file provided.');
+      showModal("Please upload a file or use a valid URL.", "alert");
       return;
     }
 
     if (!isValidUrl(newUrl)) {
+      console.warn(`Invalid URL provided: ${newUrl}`);
       showModal("Please enter a valid URL.", "alert");
       return;
     }
 
     try {
+      console.log(`Updating site_config with new cover photo URL: ${newUrl}`);
       await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: newUrl }, { merge: true });
+      console.log('✅ site_config updated.');
       showModal("Cover photo updated successfully!", "alert", refreshData);
     } catch (error) {
-      console.error("Error updating cover photo:", error);
+      console.error("❌ Error updating cover photo:", error);
       showModal("Failed to update cover photo.", "alert");
     }
   }, () => {
+    console.log('Cancel button clicked in cover photo modal.');
     // onCancel
   });
 }
@@ -133,6 +150,7 @@ function showCoverPhotoModal(refreshData) {
  * @param {function} refreshData - A callback function to reload all site data.
  */
 export function initializeHeroAdmin(refreshData) {
+  console.log('🔧 Initializing Hero Admin controls...');
   const editCoverPhotoBtn = document.getElementById("edit-cover-photo-btn");
 
   if (!editCoverPhotoBtn) {
@@ -141,6 +159,7 @@ export function initializeHeroAdmin(refreshData) {
   }
 
   editCoverPhotoBtn.addEventListener("click", () => {
+    console.log('Edit cover photo button clicked.');
     showCoverPhotoModal(refreshData);
   });
 

@@ -3,7 +3,7 @@
  * Handles admin authentication, state persistence, and UI toggles.
  */
 
-import { getFunctions, httpsCallable, connectFunctionsEmulator } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-functions.js";
+import { getFunctions, httpsCallable, connectFunctionsEmulator } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { app } from '../firebase-config.js';
 import { showModal, hideModal } from '../ui/modal.js';
 
@@ -14,7 +14,7 @@ const functions = getFunctions(app, 'us-central1');
 
 // Connect to emulators in local development
 if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
-    console.log('Connecting to Functions emulator on localhost:5001');
+    console.log('🔌 Connecting to Functions emulator on localhost:5001');
     connectFunctionsEmulator(functions, 'localhost', 5001);
 }
 
@@ -24,12 +24,14 @@ if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'lo
  * @returns {Promise<{success: boolean, message: string}>}
  */
 async function verifyAdminPin(pin) {
+    console.log(`Verifying PIN: ${pin}`);
     try {
         const verifyPinCallable = httpsCallable(functions, 'verifyAdminPin');
         const result = await verifyPinCallable({ pin });
+        console.log('✅ PIN verification result:', result.data);
         return result.data;
     } catch (error) {
-        console.error('Firebase admin verification failed:', error.message);
+        console.error('❌ Firebase admin verification failed:', error);
         return { success: false, message: `Verification failed: ${error.message}` };
     }
 }
@@ -40,6 +42,7 @@ async function verifyAdminPin(pin) {
  * @param {boolean} enable - Whether to enable or disable admin mode.
  */
 function setAdminMode(enable) {
+    console.log(`Setting admin mode to: ${enable}`);
     sessionStorage.setItem(ADMIN_MODE_KEY, enable);
     document.body.classList.toggle('admin-mode', enable);
 
@@ -57,26 +60,31 @@ function setAdminMode(enable) {
  * @returns {boolean}
  */
 function getIsAdminMode() {
-    return sessionStorage.getItem(ADMIN_MODE_KEY) === 'true';
+    const isAdmin = sessionStorage.getItem(ADMIN_MODE_KEY) === 'true';
+    console.log(`Checking admin mode status: ${isAdmin}`);
+    return isAdmin;
 }
 
 /**
  * Prompts for the admin PIN and verifies it.
  */
 async function promptForAdminPin() {
+    console.log('Prompting for admin PIN...');
     showModal('Enter admin PIN:', 'prompt', async (pin) => {
         if (pin) {
+            console.log('PIN entered, verifying...');
             showModal('Verifying PIN...', 'loading');
             const result = await verifyAdminPin(pin);
             hideModal();
 
             setTimeout(() => {
                 if (result.success) {
+                    console.log('PIN verification successful.');
                     showModal(`🔑 ${result.message} Welcome to Admin Mode!`, 'alert');
                     setAdminMode(true);
                 } else {
+                    console.warn('Admin access denied:', result.message);
                     showModal(`❌ ${result.message}`, 'alert');
-                    console.warn('Admin access denied');
                 }
             }, 150);
         }
@@ -92,6 +100,7 @@ function initializeAdminMode() {
 
     // Check for persisted admin state on page load
     if (getIsAdminMode()) {
+        console.log('Persisted admin state found. Activating admin mode.');
         setAdminMode(true);
     }
 
@@ -99,6 +108,7 @@ function initializeAdminMode() {
     if (adminModeBtn) {
         adminModeBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            console.log('Admin button clicked.');
             if (getIsAdminMode()) {
                 setAdminMode(false);
                 showModal('Admin mode deactivated.', 'alert');
@@ -114,6 +124,7 @@ function initializeAdminMode() {
     // Keyboard shortcut for admin (Ctrl+Alt+A)
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.altKey && e.key === 'a') {
+            console.log('Admin keyboard shortcut detected.');
             e.preventDefault();
             if (!getIsAdminMode()) {
                 promptForAdminPin();
