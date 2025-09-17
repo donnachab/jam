@@ -8,6 +8,7 @@ import { app } from '../firebase-config.js';
 import { showModal, hideModal } from '../ui/modal.js';
 
 const ADMIN_MODE_KEY = 'isAdminMode';
+let isAdmin = false;
 
 // Initialize Firebase Functions
 const functions = getFunctions(app, 'us-central1');
@@ -18,11 +19,6 @@ if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'lo
     connectFunctionsEmulator(functions, 'localhost', 5001);
 }
 
-/**
- * Verifies the admin PIN using a Firebase Cloud Function.
- * @param {string} pin - The PIN to verify.
- * @returns {Promise<{success: boolean, message: string}>}
- */
 async function verifyAdminPin(pin) {
     console.log(`Verifying PIN: ${pin}`);
     try {
@@ -36,17 +32,11 @@ async function verifyAdminPin(pin) {
     }
 }
 
-/**
- * Enables or disables admin mode.
- * This is the single source of truth for admin state.
- * @param {boolean} enable - Whether to enable or disable admin mode.
- */
 function setAdminMode(enable) {
-    console.log(`Calling setAdminMode with enable=${enable}`);
-    console.log('Body classList before toggle:', document.body.classList.toString());
-    document.body.classList.toggle('admin-mode', enable);
-    console.log('Body classList after toggle:', document.body.classList.toString());
+    console.log(`Setting admin mode to: ${enable}`);
+    isAdmin = enable;
     sessionStorage.setItem(ADMIN_MODE_KEY, enable);
+    document.body.classList.toggle('admin-mode', enable);
 
     const adminModeBtn = document.getElementById('admin-mode-btn');
     if (adminModeBtn) {
@@ -57,21 +47,10 @@ function setAdminMode(enable) {
     console.log(enable ? '🔑 Admin mode activated' : '👤 Admin mode deactivated');
 }
 
-/**
- * Checks if admin mode is currently active.
- * @returns {boolean}
- */
 function getIsAdminMode() {
-    const isAdminFromStorage = sessionStorage.getItem(ADMIN_MODE_KEY);
-    console.log(`Value of isAdminMode from session storage: '${isAdminFromStorage}' (type: ${typeof isAdminFromStorage})`);
-    const isAdmin = isAdminFromStorage === 'true';
-    console.log(`Checking admin mode status: ${isAdmin}`);
     return isAdmin;
 }
 
-/**
- * Prompts for the admin PIN and verifies it.
- */
 async function promptForAdminPin() {
     console.log('Prompting for admin PIN...');
     showModal('Enter admin PIN:', 'prompt', async (pin) => {
@@ -95,24 +74,17 @@ async function promptForAdminPin() {
     });
 }
 
-/**
- * Initializes all admin mode functionality, including event listeners
- * and checking for persisted admin state.
- */
 function initializeAdminMode() {
     console.log('🔧 Initializing Admin Mode...');
 
-    // Check for persisted admin state on page load
-    if (getIsAdminMode()) {
-        console.log('Persisted admin state found. Activating admin mode.');
-        setAdminMode(true);
-    }
+    const isAdminFromStorage = sessionStorage.getItem(ADMIN_MODE_KEY) === 'true';
+    console.log(`Initial admin state from session storage: ${isAdminFromStorage}`);
+    setAdminMode(isAdminFromStorage);
 
     const adminModeBtn = document.getElementById('admin-mode-btn');
     if (adminModeBtn) {
         adminModeBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log('Admin button clicked.');
             if (getIsAdminMode()) {
                 setAdminMode(false);
                 showModal('Admin mode deactivated.', 'alert');
@@ -125,29 +97,24 @@ function initializeAdminMode() {
         console.warn('⚠️ Admin button not found');
     }
 
-    // Keyboard shortcut for admin (Ctrl+Alt+A)
-    document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.altKey && e.key === 'a') {
-            console.log('Admin keyboard shortcut detected.');
-            e.preventDefault();
-            if (!getIsAdminMode()) {
-                promptForAdminPin();
-            }
-        }
-    });
-
-    // Handle all exit admin buttons
     document.body.addEventListener('click', (e) => {
         if (e.target.classList.contains('exit-admin-btn')) {
             e.preventDefault();
-            console.log('Exit admin button clicked. Current admin status:', getIsAdminMode());
             if (getIsAdminMode()) {
                 setAdminMode(false);
                 showModal('Admin mode deactivated.', 'alert');
             }
         }
     });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.altKey && e.key === 'a') {
+            e.preventDefault();
+            if (!getIsAdminMode()) {
+                promptForAdminPin();
+            }
+        }
+    });
 }
 
-// Export the necessary functions
 export { initializeAdminMode, getIsAdminMode };
