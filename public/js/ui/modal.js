@@ -16,7 +16,11 @@ export function showModal(message, type = "alert", onConfirm = () => {}, onCance
     return;
   }
 
-  modalMessage.innerHTML = message;
+  if (typeof message === 'string') {
+    modalMessage.innerHTML = message;
+  } else if (message instanceof HTMLElement) {
+    modalMessage.appendChild(message);
+  }
   modalButtons.innerHTML = "";
   modalInput.classList.add("hidden");
 

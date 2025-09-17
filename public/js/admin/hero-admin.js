@@ -41,7 +41,7 @@ function showCoverPhotoModal(refreshData) {
   const coverPhotoUrlInput = formClone.querySelector('#cover-photo-url');
   const coverPhotoFileInput = formClone.querySelector('#cover-photo-file');
 
-  showModal(formClone.outerHTML, 'confirm', async () => {
+  showModal(formClone, 'confirm', async () => {
     console.log('Confirm button clicked in cover photo modal.');
     const newUrl = coverPhotoUrlInput.value.trim();
     const newFile = coverPhotoFileInput.files[0];
