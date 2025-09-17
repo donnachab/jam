@@ -137,7 +137,7 @@ function initializeAdminMode() {
     // Handle all exit admin buttons
     document.body.addEventListener('click', (e) => {
         if (e.target.classList.contains('exit-admin-btn')) {
-            console.log('Exit admin button clicked.');
+            console.log('Exit admin button clicked. Current admin status:', getIsAdminMode());
             setAdminMode(false);
             showModal('Admin mode deactivated.', 'alert');
         }
@@ -146,3 +146,4 @@ function initializeAdminMode() {
 
 // Export the necessary functions
 export { initializeAdminMode, getIsAdminMode };
+nMode, getIsAdminMode };
