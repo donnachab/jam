@@ -1,3 +1,4 @@
+
 import { db, app } from '../firebase-config.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
@@ -23,106 +24,89 @@ function isValidUrl(url) {
 }
 
 /**
- * Initializes the hero section admin controls.
+ * Shows a modal for editing the cover photo.
  * @param {function} refreshData - A callback function to reload all site data.
  */
-export function initializeHeroAdmin(refreshData) {
-  const editCoverPhotoBtn = document.getElementById("edit-cover-photo-btn");
-  const editCoverPhotoForm = document.getElementById("edit-cover-photo-form");
-  const cancelCoverPhotoBtn = document.getElementById("cancel-cover-photo-btn");
-  const coverPhotoUrlInput = document.getElementById("cover-photo-url");
-  const coverPhotoFileInput = document.getElementById("cover-photo-file");
+function showCoverPhotoModal(refreshData) {
+  const modalContent = `
+    <form id="edit-cover-photo-form">
+      <div class="mb-4">
+        <label for="cover-photo-url" class="block text-sm font-medium text-gray-700">Image URL</label>
+        <input type="text" id="cover-photo-url" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+      </div>
+      <div class="mb-4">
+        <label for="cover-photo-file" class="block text-sm font-medium text-gray-700">Or upload a file</label>
+        <input type="file" id="cover-photo-file" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100">
+      </div>
+    </form>
+  `;
 
-  if (!editCoverPhotoBtn || !editCoverPhotoForm || !cancelCoverPhotoBtn || !coverPhotoUrlInput || !coverPhotoFileInput) {
-    console.warn("Hero admin elements not found, skipping initialization.");
-    return;
-  }
-
-  editCoverPhotoBtn.addEventListener("click", () => {
-    console.log("Edit cover photo button clicked");
-    editCoverPhotoForm.classList.remove("hidden");
-  });
-
-  cancelCoverPhotoBtn.addEventListener("click", () => {
-    editCoverPhotoForm.classList.add("hidden");
-  });
-
-  editCoverPhotoForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const newUrl = coverPhotoUrlInput.value.trim();
-    const newFile = coverPhotoFileInput.files[0];
+  showModal(modalContent, 'confirm', async () => {
+    const newUrl = document.getElementById('cover-photo-url').value.trim();
+    const newFile = document.getElementById('cover-photo-file').files[0];
 
     if (!getIsAdminMode()) {
       showModal("You must be in admin mode to perform this action.", "alert");
       return;
     }
 
-    // Check if a file has been uploaded
     if (newFile) {
-      // This function will be called after getting a PIN, if needed.
       const uploadFile = async (pin) => {
-          try {
-              showModal("Preparing upload...", "loading");
-  
-              const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
-              const fileExtension = newFile.name.split('.').pop();
-              const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
+        try {
+          showModal("Preparing upload...", "loading");
 
-              const result = await generateSignedUploadUrl({
-                pin: pin,
-                fileName: fileName,
-                contentType: newFile.type
-              });
+          const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
+          const fileExtension = newFile.name.split('.').pop();
+          const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
 
-              if (!result.data.success) {
-                throw new Error(result.data.message || 'Could not get upload URL. Check PIN.');
-              }
+          const result = await generateSignedUploadUrl({
+            pin: pin,
+            fileName: fileName,
+            contentType: newFile.type
+          });
 
-              const signedUrl = result.data.url;
-  
-              showModal("Uploading image...", "loading");
-              const uploadResponse = await fetch(signedUrl, {
-                method: 'PUT',
-                headers: { 'Content-Type': newFile.type },
-                body: newFile
-              });
-  
-              if (!uploadResponse.ok) {
-                const errorText = await uploadResponse.text();
-                console.error("Upload failed with status:", uploadResponse.status, errorText);
-                throw new Error('File upload to storage failed.');
-              }
-  
-              const bucketName = storage.app.options.storageBucket;
-              const publicUrl = `https://storage.googleapis.com/${bucketName}/images/${fileName}`;
-  
-              await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: publicUrl }, { merge: true });
-              
-              showModal("Cover photo updated successfully!", "alert", refreshData);
-              editCoverPhotoForm.classList.add("hidden");
-              editCoverPhotoForm.reset();
-  
-            } catch (error) {
-              console.error("Error during file upload process:", error);
-              showModal(error.message || "An unexpected error occurred. Please try again.", "alert");
-            }
+          if (!result.data.success) {
+            throw new Error(result.data.message || 'Could not get upload URL. Check PIN.');
+          }
+
+          const signedUrl = result.data.url;
+
+          showModal("Uploading image...", "loading");
+          const uploadResponse = await fetch(signedUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': newFile.type },
+            body: newFile
+          });
+
+          if (!uploadResponse.ok) {
+            const errorText = await uploadResponse.text();
+            console.error("Upload failed with status:", uploadResponse.status, errorText);
+            throw new Error('File upload to storage failed.');
+          }
+
+          const bucketName = storage.app.options.storageBucket;
+          const publicUrl = `https://storage.googleapis.com/${bucketName}/images/${fileName}`;
+
+          await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: publicUrl }, { merge: true });
+
+          showModal("Cover photo updated successfully!", "alert", refreshData);
+        } catch (error) {
+          console.error("Error during file upload process:", error);
+          showModal(error.message || "An unexpected error occurred. Please try again.", "alert");
+        }
       };
 
-      // The user is already in admin mode, so we need a PIN for the function call.
-      // Prompt for the PIN to authorize the secure action.
       showModal("For security, please re-enter your PIN to upload the file.", "prompt", async (pin) => {
         if (pin) uploadFile(pin);
       });
       return;
     }
 
-    // Fallback to URL input if no file is provided
     if (!newUrl) {
       showModal("Please enter a valid URL or upload a file.", "alert");
       return;
     }
-    
-    // Add validation check here
+
     if (!isValidUrl(newUrl)) {
       showModal("Please enter a valid URL.", "alert");
       return;
@@ -131,11 +115,30 @@ export function initializeHeroAdmin(refreshData) {
     try {
       await setDoc(doc(db, "site_config", "main"), { coverPhotoUrl: newUrl }, { merge: true });
       showModal("Cover photo updated successfully!", "alert", refreshData);
-      editCoverPhotoForm.classList.add("hidden");
     } catch (error) {
       console.error("Error updating cover photo:", error);
       showModal("Failed to update cover photo.", "alert");
     }
+  }, () => {
+    // onCancel
+  });
+}
+
+
+/**
+ * Initializes the hero section admin controls.
+ * @param {function} refreshData - A callback function to reload all site data.
+ */
+export function initializeHeroAdmin(refreshData) {
+  const editCoverPhotoBtn = document.getElementById("edit-cover-photo-btn");
+
+  if (!editCoverPhotoBtn) {
+    console.warn("Hero admin elements not found, skipping initialization.");
+    return;
+  }
+
+  editCoverPhotoBtn.addEventListener("click", () => {
+    showCoverPhotoModal(refreshData);
   });
 
   console.log("✅ Hero admin controls initialized.");

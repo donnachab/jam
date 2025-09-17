@@ -1,6 +1,6 @@
 /**
  * Displays a modal with a message and custom buttons.
- * @param {string} message - The text to display in the modal.
+ * @param {string} message - The text or HTML to display in the modal.
  * @param {'alert' | 'confirm' | 'prompt' | 'loading'} type - The type of modal to show.
  * @param {function} [onConfirm=()=>{}] - Callback function when the confirm/submit/ok button is clicked.
  * @param {function} [onCancel=()=>{}] - Callback function when the cancel button is clicked.
@@ -16,7 +16,7 @@ export function showModal(message, type = "alert", onConfirm = () => {}, onCance
     return;
   }
 
-  modalMessage.textContent = message;
+  modalMessage.innerHTML = message;
   modalButtons.innerHTML = "";
   modalInput.classList.add("hidden");
 
