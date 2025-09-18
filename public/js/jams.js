@@ -79,20 +79,14 @@ function renderJams() {
 
         li.className = `p-4 rounded-lg shadow-sm border-l-4 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center bg-white ${jam.cancelled ? 'jam-cancelled' : ''} ${!isSaturday && !jam.isProposal ? 'jam-special' : 'border-gray-200'}`;
 
-
-        let adminButtons = '';
-        if (!jam.isProposal) {
-            adminButtons = `
-                <button data-id="${jam.id}" class="edit-jam-btn text-blue-500 hover:text-blue-700">Edit</button>
-                ${jam.cancelled
-                    ? `<button data-id="${jam.id}" class="reinstate-jam-btn text-green-600 hover:text-green-800 ml-2">Reinstate</button>`
-                    : `<button data-id="${jam.id}" class="cancel-jam-btn text-yellow-600 hover:text-yellow-800 ml-2">Cancel</button>`
-                }
-                <button data-id="${jam.id}" class="delete-jam-btn text-red-500 hover:text-red-700 ml-2">Delete</button>
-            `;
-        } else {
-             adminButtons = `<button data-id="${jam.date}" class="edit-jam-btn text-blue-500 hover:text-blue-700">Confirm</button>`;
-        }
+        let adminButtons = `
+            <button data-id="${jam.id}" class="edit-jam-btn text-blue-500 hover:text-blue-700">Edit</button>
+            ${jam.cancelled
+                ? `<button data-id="${jam.id}" class="reinstate-jam-btn text-green-600 hover:text-green-800 ml-2">Reinstate</button>`
+                : `<button data-id="${jam.id}" class="cancel-jam-btn text-yellow-600 hover:text-yellow-800 ml-2">Cancel</button>`
+            }
+            <button data-id="${jam.id}" class="delete-jam-btn text-red-500 hover:text-red-700 ml-2">Delete</button>
+        `;
 
         const mapLink = jam.mapLink ? ` <a href="${jam.mapLink}" target="_blank" class="text-blue-500 hover:underline whitespace-nowrap">(Map)</a>` : "";
         
@@ -211,20 +205,29 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
         } else if (button.classList.contains("delete-jam-btn")) {
             console.log('Delete button clicked for jamId:', jamId);
             console.log('Jam object:', jam);
-            showModal("Delete this jam permanently?", "confirm", async () => {
-                console.log('Deleting jam with id:', jamId);
-                await deleteDoc(doc(db, "jams", jamId));
-                console.log('Jam deleted from Firestore.');
-                await refreshData();
-            });
+            if (jam.isProposal) {
+                jamsToDisplay = jamsToDisplay.filter(j => j.id !== jamId);
+                renderJams();
+            } else {
+                showModal("Delete this jam permanently?", "confirm", async () => {
+                    console.log('Deleting jam with id:', jamId);
+                    await deleteDoc(doc(db, "jams", jamId));
+                    console.log('Jam deleted from Firestore.');
+                    await refreshData();
+                });
+            }
         } else if (button.classList.contains("cancel-jam-btn")) {
             console.log('Cancel button clicked');
-            await setDoc(doc(db, "jams", jamId), { cancelled: true }, { merge: true });
-            await refreshData();
+            if (!jam.isProposal) {
+                await setDoc(doc(db, "jams", jamId), { cancelled: true }, { merge: true });
+                await refreshData();
+            }
         } else if (button.classList.contains("reinstate-jam-btn")) {
             console.log('Reinstate button clicked');
-            await setDoc(doc(db, "jams", jamId), { cancelled: false }, { merge: true });
-            await refreshData();
+            if (!jam.isProposal) {
+                await setDoc(doc(db, "jams", jamId), { cancelled: false }, { merge: true });
+                await refreshData();
+            }
         }
     });
 
