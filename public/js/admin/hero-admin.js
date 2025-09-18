@@ -51,11 +51,7 @@ function showCoverPhotoModal(refreshData) {
     const newFile = coverPhotoFileInput.files[0];
     console.log(`New URL: ${newUrl}, New File: ${newFile ? newFile.name : 'none'}`);
 
-    if (!getIsAdminMode()) {
-      console.warn('User is not in admin mode.');
-      showModal("You must be in admin mode to perform this action.", "alert");
-      return;
-    }
+
 
     if (newFile) {
       console.log('New file selected, starting upload process...');
