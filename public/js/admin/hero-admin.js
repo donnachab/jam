@@ -40,11 +40,13 @@ function showCoverPhotoModal(refreshData) {
   const formClone = form.cloneNode(true);
   formClone.style.display = 'block';
 
-  const coverPhotoUrlInput = formClone.querySelector('#cover-photo-url');
-  const coverPhotoFileInput = formClone.querySelector('#cover-photo-file');
-
   showModal(formClone.outerHTML, 'confirm', async () => {
+    const modal = document.getElementById('custom-modal');
+    const coverPhotoUrlInput = modal.querySelector('#cover-photo-url');
+    const coverPhotoFileInput = modal.querySelector('#cover-photo-file');
+
     console.log('Confirm button clicked in cover photo modal.');
+    console.log('File input files:', coverPhotoFileInput.files);
     const newUrl = coverPhotoUrlInput.value.trim();
     const newFile = coverPhotoFileInput.files[0];
     console.log(`New URL: ${newUrl}, New File: ${newFile ? newFile.name : 'none'}`);
