@@ -2,11 +2,13 @@ import { db, app } from '../firebase-config.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { showModal } from '../ui/modal.js';
 import { getIsAdminMode } from './admin-mode.js';
 
 const storage = getStorage(app);
 const functions = getFunctions(app, 'us-central1');
+const auth = getAuth(app);
 
 /**
  * Checks if a string is a valid URL.
@@ -59,6 +61,7 @@ function showCoverPhotoModal(refreshData) {
         console.log('uploadFile function called.');
         try {
           showModal("Preparing upload...", "loading");
+          await auth.currentUser.getIdToken(true);
           console.log('Calling generateSignedUploadUrl cloud function...');
           const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
           const fileExtension = newFile.name.split('.').pop();
