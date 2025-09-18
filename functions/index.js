@@ -7,6 +7,7 @@ admin.initializeApp();
 
 setGlobalOptions({secrets: ["ADMIN_PIN"]});
 
+
 /**
  * Sets a custom claim on the user's token to grant admin privileges.
  * Requires the user to be authenticated and provide the correct admin PIN.
