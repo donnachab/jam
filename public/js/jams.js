@@ -25,7 +25,7 @@ let jamsToDisplay = [];
 let jamDatepicker = null;
 
 function manageJamSchedule(confirmedJams, testDate = null) {
-    console.log('Confirmed Jams:', confirmedJams);
+    console.log('Confirmed Jams:', JSON.stringify(confirmedJams, null, 2));
     const today = testDate ? new Date(testDate) : new Date();
     today.setHours(0, 0, 0, 0);
 
