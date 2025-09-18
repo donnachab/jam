@@ -20,7 +20,6 @@
   - Show them only when the body has the 'admin-mode' class.
 */
 .admin-controls-inline {
-  display: none;
 }
 
 body.admin-mode .admin-controls-inline {
