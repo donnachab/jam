@@ -50,10 +50,7 @@ export function initializeVenueManagement(initialVenues, refreshData) {
   addVenueForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    if (!getIsAdminMode()) {
-        showModal("You must be in admin mode to perform this action.", "alert");
-        return;
-    }
+
 
     const nameInput = document.getElementById("new-venue-name");
     const mapLinkInput = document.getElementById("new-venue-map-link");
@@ -74,10 +71,7 @@ export function initializeVenueManagement(initialVenues, refreshData) {
 
   venueListAdmin.addEventListener("click", async (e) => {
     if (e.target.classList.contains("delete-venue-btn")) {
-        if (!getIsAdminMode()) {
-            showModal("You must be in admin mode to perform this action.", "alert");
-            return;
-        }
+
 
       const venueId = e.target.dataset.id;
       showModal("Are you sure you want to delete this venue?", "confirm", async () => {
