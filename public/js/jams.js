@@ -7,8 +7,9 @@ const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Frida
 
 function parseDate(dateString) {
     if (dateString.includes('-')) {
-        // This function now expects a reliable "YYYY-MM-DD" format.
-        return new Date(dateString);
+        const parts = dateString.split('-');
+        // new Date(year, monthIndex, day)
+        return new Date(parts[0], parts[1] - 1, parts[2]);
     }
     const currentYear = new Date().getFullYear();
     const dateWithoutColon = dateString.replace(':', '');
@@ -30,7 +31,6 @@ let jamsToDisplay = [];
 let jamDatepicker = null;
 
 function manageJamSchedule(confirmedJams, testDate = null) {
-    console.log('Processing Confirmed Jams:', JSON.stringify(confirmedJams, null, 2));
     const today = testDate ? new Date(testDate) : new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -38,8 +38,6 @@ function manageJamSchedule(confirmedJams, testDate = null) {
         .map(jam => ({...jam, dateObj: parseDate(jam.date)}))
         .filter(jam => jam.dateObj >= today)
         .sort((a, b) => a.dateObj - b.dateObj);
-
-    console.log('Upcoming Confirmed Jams:', upcomingConfirmed);
 
     jamsToDisplay = [...upcomingConfirmed];
 
@@ -60,7 +58,6 @@ function manageJamSchedule(confirmedJams, testDate = null) {
         }
     }
     jamsToDisplay = jamsToDisplay.slice(0, 5);
-    console.log('Jams to Display:', jamsToDisplay);
 }
 
 // --- Render Function ---
@@ -70,7 +67,6 @@ function renderJams() {
     jamList.innerHTML = "";
 
     jamsToDisplay.forEach(jam => {
-        console.log(`Jam: ${jam.date}, isProposal: ${jam.isProposal}`);
         const li = document.createElement("li");
         const isSaturday = jam.day === "Saturday";
         const dateObj = parseDate(jam.date);
