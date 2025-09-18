@@ -31,7 +31,6 @@ let jamsToDisplay = [];
 let jamDatepicker = null;
 
 function manageJamSchedule(confirmedJams, testDate = null) {
-    console.log('Processing Confirmed Jams:', JSON.stringify(confirmedJams, null, 2));
     const today = testDate ? new Date(testDate) : new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -40,11 +39,10 @@ function manageJamSchedule(confirmedJams, testDate = null) {
         .filter(jam => jam.dateObj >= today)
         .sort((a, b) => a.dateObj - b.dateObj);
 
-    console.log('Upcoming Confirmed Jams:', upcomingConfirmed);
-
     jamsToDisplay = [...upcomingConfirmed];
 
-    let lastDate = jamsToDisplay.length > 0 ? new Date(jamsToDisplay[jamsToDisplay.length - 1].dateObj) : new Date(today);
+    let lastJam = jamsToDisplay.length > 0 ? jamsToDisplay[jamsToDisplay.length - 1] : null;
+    let lastDate = lastJam ? new Date(lastJam.dateObj) : new Date(today);
 
     while (jamsToDisplay.length < 5) {
         lastDate.setDate(lastDate.getDate() + 1);
@@ -54,14 +52,13 @@ function manageJamSchedule(confirmedJams, testDate = null) {
                 id: `proposal-${dateString}`,
                 date: dateString,
                 day: "Saturday",
-                venue: "To be decided...",
-                time: "2:00 PM",
+                venue: lastJam ? lastJam.venue : "To be decided...",
+                time: lastJam ? lastJam.time : "2:00 PM",
                 isProposal: true,
             });
         }
     }
     jamsToDisplay = jamsToDisplay.slice(0, 5);
-    console.log('Jams to Display:', jamsToDisplay);
 }
 
 // --- Render Function ---
@@ -71,7 +68,6 @@ function renderJams() {
     jamList.innerHTML = "";
 
     jamsToDisplay.forEach(jam => {
-        console.log(`Rendering Jam:`, jam);
         const li = document.createElement("li");
         const isSaturday = jam.day === "Saturday";
         const dateObj = parseDate(jam.date);
