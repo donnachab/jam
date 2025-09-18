@@ -33,6 +33,12 @@ function manageJamSchedule(confirmedJams, testDate = null) {
     const today = testDate ? new Date(testDate) : new Date();
     today.setHours(0, 0, 0, 0);
 
+    console.log('Processing Confirmed Jams:');
+    confirmedJams.forEach(jam => {
+        const dateObj = parseDate(jam.date);
+        console.log(`- Jam Date: "${jam.date}", Parsed Date: ${dateObj}, Is Upcoming: ${dateObj >= today}`);
+    });
+
     let upcomingConfirmed = confirmedJams
         .map(jam => ({...jam, dateObj: parseDate(jam.date)}))
         .filter(jam => jam.dateObj >= today)
