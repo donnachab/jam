@@ -122,6 +122,11 @@ async function loadAllData() {
 // -----------------------------------------------------------------------------
 function renderAll() {
     console.log("🎨 Rendering all page components with fresh data...");
+
+    const coverPhoto = document.getElementById('cover-photo');
+    if (coverPhoto && siteData.config.coverPhotoUrl) {
+        coverPhoto.src = siteData.config.coverPhotoUrl;
+    }
     
     // Initialize all the feature modules with the data they need
     initializeJams(siteData.jams, siteData.venues, loadAllData);
