@@ -22,6 +22,8 @@ exports.setAdminClaim = onCall(async (request) => {
     }
 
     if (request.data.pin !== correctPin) {
+        // eslint-disable-next-line no-console
+        console.log(`Received PIN: '${request.data.pin}', Correct PIN: '${correctPin}'`);
         throw new HttpsError("permission-denied", "Incorrect PIN provided.");
     }
 
