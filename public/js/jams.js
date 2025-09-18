@@ -200,9 +200,12 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
             console.log('Edit button clicked');
             showJamForm("edit", jam);
         } else if (button.classList.contains("delete-jam-btn")) {
-            console.log('Delete button clicked');
+            console.log('Delete button clicked for jamId:', jamId);
+            console.log('Jam object:', jam);
             showModal("Delete this jam permanently?", "confirm", async () => {
+                console.log('Deleting jam with id:', jamId);
                 await deleteDoc(doc(db, "jams", jamId));
+                console.log('Jam deleted from Firestore.');
                 await refreshData();
             });
         } else if (button.classList.contains("cancel-jam-btn")) {
