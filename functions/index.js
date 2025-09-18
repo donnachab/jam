@@ -18,6 +18,8 @@ exports.setAdminClaim = onCall(async (request) => {
     }
 
     const correctPin = process.env.ADMIN_PIN;
+    // eslint-disable-next-line no-console
+    console.log(`Received PIN: '${request.data.pin}', Correct PIN from env: '${correctPin}'`);
     if (!correctPin) {
         throw new HttpsError("internal", "The admin PIN is not configured on the server.");
     }
