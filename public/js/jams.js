@@ -6,8 +6,13 @@ import { showModal } from './ui/modal.js';
 const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function parseDate(dateString) {
-    // This function now expects a reliable "YYYY-MM-DD" format.
-    return new Date(dateString);
+    if (dateString.includes('-')) {
+        // This function now expects a reliable "YYYY-MM-DD" format.
+        return new Date(dateString);
+    }
+    const currentYear = new Date().getFullYear();
+    const dateWithoutColon = dateString.replace(':', '');
+    return new Date(`${dateWithoutColon} ${currentYear}`);
 }
 
 function formatTime(timeStr) {
@@ -25,37 +30,7 @@ let jamsToDisplay = [];
 let jamDatepicker = null;
 
 function manageJamSchedule(confirmedJams, testDate = null) {
-    console.log('Confirmed Jams:', JSON.stringify(confirmedJams, null, 2));
-    const today = testDate ? new Date(testDate) : new Date();
-    today.setHours(0, 0, 0, 0);
 
-    let upcomingConfirmed = confirmedJams
-        .map(jam => ({...jam, dateObj: parseDate(jam.date)}))
-        .filter(jam => jam.dateObj >= today)
-        .sort((a, b) => a.dateObj - b.dateObj);
-
-    console.log('Upcoming Confirmed Jams:', upcomingConfirmed);
-
-    jamsToDisplay = [...upcomingConfirmed];
-
-    let lastDate = jamsToDisplay.length > 0 ? new Date(jamsToDisplay[jamsToDisplay.length - 1].dateObj) : new Date(today);
-
-    while (jamsToDisplay.length < 5) {
-        lastDate.setDate(lastDate.getDate() + 1);
-        if (lastDate.getDay() === 6) { // It's a Saturday
-            const dateString = lastDate.toISOString().split('T')[0];
-            jamsToDisplay.push({
-                id: `proposal-${dateString}`,
-                date: dateString,
-                day: "Saturday",
-                venue: "To be decided...",
-                time: "2:00 PM",
-                isProposal: true,
-            });
-        }
-    }
-    console.log('Jams to Display:', jamsToDisplay);
-}
 
 // --- Render Function ---
 function renderJams() {
@@ -71,7 +46,7 @@ function renderJams() {
 
         li.className = `p-4 rounded-lg shadow-sm border-l-4 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center bg-white ${jam.cancelled ? 'jam-cancelled' : ''} ${!isSaturday && !jam.isProposal ? 'jam-special' : 'border-gray-200'}`;
 
-        console.log(`Jam: ${jam.date}, isProposal: ${jam.isProposal}`);
+
         let adminButtons = '';
         if (!jam.isProposal) {
             adminButtons = `
