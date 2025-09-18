@@ -25,6 +25,7 @@ let jamsToDisplay = [];
 let jamDatepicker = null;
 
 function manageJamSchedule(confirmedJams, testDate = null) {
+    console.log('Confirmed Jams:', confirmedJams);
     const today = testDate ? new Date(testDate) : new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -32,6 +33,8 @@ function manageJamSchedule(confirmedJams, testDate = null) {
         .map(jam => ({...jam, dateObj: parseDate(jam.date)}))
         .filter(jam => jam.dateObj >= today)
         .sort((a, b) => a.dateObj - b.dateObj);
+
+    console.log('Upcoming Confirmed Jams:', upcomingConfirmed);
 
     jamsToDisplay = [...upcomingConfirmed];
 
@@ -51,6 +54,7 @@ function manageJamSchedule(confirmedJams, testDate = null) {
             });
         }
     }
+    console.log('Jams to Display:', jamsToDisplay);
 }
 
 // --- Render Function ---
