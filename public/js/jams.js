@@ -141,10 +141,13 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
         if (mode === 'edit') {
             formTitle.textContent = "Edit Jam";
             document.getElementById("edit-jam-id").value = jam.id;
-            jamDatepicker.setDate(jam.date, true);
+            const dateObj = parseDate(jam.date);
+            const formattedDate = dateObj.toISOString().split('T')[0];
+            jamDatepicker.setDate(formattedDate, true);
             document.getElementById("jam-time").value = jam.time;
             venueInput.value = jam.venue;
             document.getElementById("jam-map-link").value = jam.mapLink || '';
+            addJamForm.scrollIntoView({ behavior: 'smooth' });
         } else {
             formTitle.textContent = "Add New Jam";
             addJamForm.reset();
