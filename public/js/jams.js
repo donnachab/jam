@@ -186,22 +186,28 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
     // Event delegation for jam list buttons
     jamList.addEventListener("click", async (e) => {
         const button = e.target.closest("button");
+        console.log('Button clicked:', button);
         if (!button) return;
 
         const jamId = button.dataset.id;
         const jam = jamsToDisplay.find(j => j.id === jamId || j.date === jamId);
+        console.log('Jam:', jam);
 
         if (button.classList.contains("edit-jam-btn")) {
+            console.log('Edit button clicked');
             showJamForm("edit", jam);
         } else if (button.classList.contains("delete-jam-btn")) {
+            console.log('Delete button clicked');
             showModal("Delete this jam permanently?", "confirm", async () => {
                 await deleteDoc(doc(db, "jams", jamId));
                 await refreshData();
             });
         } else if (button.classList.contains("cancel-jam-btn")) {
+            console.log('Cancel button clicked');
             await setDoc(doc(db, "jams", jamId), { cancelled: true }, { merge: true });
             await refreshData();
         } else if (button.classList.contains("reinstate-jam-btn")) {
+            console.log('Reinstate button clicked');
             await setDoc(doc(db, "jams", jamId), { cancelled: false }, { merge: true });
             await refreshData();
         }
