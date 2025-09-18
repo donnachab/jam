@@ -67,6 +67,7 @@ function renderJams() {
 
         li.className = `p-4 rounded-lg shadow-sm border-l-4 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center bg-white ${jam.cancelled ? 'jam-cancelled' : ''} ${!isSaturday && !jam.isProposal ? 'jam-special' : 'border-gray-200'}`;
 
+        console.log(`Jam: ${jam.date}, isProposal: ${jam.isProposal}`);
         let adminButtons = '';
         if (!jam.isProposal) {
             adminButtons = `
