@@ -126,7 +126,9 @@ async function promptForAdminPin() {
  */
 async function initializeAdminMode() {
     console.log('🔧 Initializing Admin Mode V2...');
-    
+
+    let isInitialLoad = true;
+
     await ensureAnonymousAuth();
 
     onIdTokenChanged(auth, async (user) => {
@@ -134,8 +136,16 @@ async function initializeAdminMode() {
             currentUser = user;
             const idTokenResult = await user.getIdTokenResult();
             const newIsAdmin = idTokenResult.claims.admin === true;
-            
-            if (isAdmin !== newIsAdmin) {
+
+            if (isInitialLoad) {
+                console.log('✨ Initial page load. Ensuring user is not in admin mode.');
+                if (newIsAdmin) {
+                    // If the user has an admin claim on load, revoke it to ensure they start fresh.
+                    await exitAdminMode(); 
+                }
+                setAdminModeUI(false); // Always start with admin mode off.
+                isInitialLoad = false;
+            } else if (isAdmin !== newIsAdmin) {
                 console.log(`Admin status changed to: ${newIsAdmin}`);
                 setAdminModeUI(newIsAdmin);
             }
