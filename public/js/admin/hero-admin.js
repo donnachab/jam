@@ -55,7 +55,7 @@ function showCoverPhotoModal(refreshData) {
 
     if (newFile) {
       console.log('New file selected, starting upload process...');
-      const uploadFile = async (pin) => {
+      const uploadFile = async () => {
         console.log('uploadFile function called.');
         try {
           showModal("Preparing upload...", "loading");
@@ -65,14 +65,13 @@ function showCoverPhotoModal(refreshData) {
           const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
 
           const result = await generateSignedUploadUrl({
-            pin: pin,
             fileName: fileName,
             contentType: newFile.type
           });
           console.log('generateSignedUploadUrl result:', result.data);
 
           if (!result.data.success) {
-            throw new Error(result.data.message || 'Could not get upload URL. Check PIN.');
+            throw new Error(result.data.message || 'Could not get upload URL.');
           }
 
           const signedUrl = result.data.url;
@@ -108,12 +107,7 @@ function showCoverPhotoModal(refreshData) {
         }
       };
 
-      showModal("For security, please re-enter your PIN to upload the file.", "prompt", async (pin) => {
-        if (pin) {
-          console.log('PIN entered for upload, calling uploadFile...');
-          uploadFile(pin);
-        }
-      });
+      uploadFile();
       return;
     }
 
