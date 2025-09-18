@@ -26,3 +26,11 @@
 body.admin-mode .admin-controls-inline {
   display: flex;
 }
+
+/* 
+  Jam Cancellation Styling
+*/
+.jam-cancelled .jam-info {
+  text-decoration: line-through;
+  color: #9ca3af; /* gray-400 */
+}
