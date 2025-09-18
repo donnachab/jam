@@ -30,9 +30,33 @@ let jamsToDisplay = [];
 let jamDatepicker = null;
 
 function manageJamSchedule(confirmedJams, testDate = null) {
+    const today = testDate ? new Date(testDate) : new Date();
+    today.setHours(0, 0, 0, 0);
 
+    let upcomingConfirmed = confirmedJams
+        .map(jam => ({...jam, dateObj: parseDate(jam.date)}))
+        .filter(jam => jam.dateObj >= today)
+        .sort((a, b) => a.dateObj - b.dateObj);
 
-// --- Render Function ---
+    jamsToDisplay = [...upcomingConfirmed];
+
+    let lastDate = jamsToDisplay.length > 0 ? new Date(jamsToDisplay[jamsToDisplay.length - 1].dateObj) : new Date(today);
+
+    while (jamsToDisplay.length < 5) {
+        lastDate.setDate(lastDate.getDate() + 1);
+        if (lastDate.getDay() === 6) { // It's a Saturday
+            const dateString = lastDate.toISOString().split('T')[0];
+            jamsToDisplay.push({
+                id: `proposal-${dateString}`,
+                date: dateString,
+                day: "Saturday",
+                venue: "To be decided...",
+                time: "2:00 PM",
+                isProposal: true,
+            });
+        }
+    }
+}
 function renderJams() {
     const jamList = document.getElementById("jam-list");
     if (!jamList) return;
