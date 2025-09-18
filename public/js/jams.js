@@ -71,6 +71,7 @@ function renderJams() {
     jamList.innerHTML = "";
 
     jamsToDisplay.forEach(jam => {
+        console.log(`Rendering Jam:`, jam);
         const li = document.createElement("li");
         const isSaturday = jam.day === "Saturday";
         const dateObj = parseDate(jam.date);
