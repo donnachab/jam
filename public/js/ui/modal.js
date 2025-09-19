@@ -31,6 +31,7 @@ export function showModal(message, type = "alert", onConfirm = () => {}, onCance
 
   if (type === "alert") {
     const okButton = document.createElement("button");
+    okButton.type = "button";
     okButton.textContent = "OK";
     okButton.className = "px-4 py-2 bg-accent text-primary font-bold rounded-md";
     okButton.onclick = () => {
@@ -40,6 +41,7 @@ export function showModal(message, type = "alert", onConfirm = () => {}, onCance
     modalButtons.appendChild(okButton);
   } else if (type === "confirm") {
     const confirmButton = document.createElement("button");
+    confirmButton.type = "button";
     confirmButton.textContent = "Confirm";
     confirmButton.className = "px-4 py-2 bg-red-500 text-white rounded-md";
     confirmButton.onclick = () => {
@@ -48,6 +50,7 @@ export function showModal(message, type = "alert", onConfirm = () => {}, onCance
     };
 
     const cancelButton = document.createElement("button");
+    cancelButton.type = "button";
     cancelButton.textContent = "Cancel";
     cancelButton.className = "px-4 py-2 bg-stone-600 text-white rounded-md";
     cancelButton.onclick = () => {
@@ -63,6 +66,7 @@ export function showModal(message, type = "alert", onConfirm = () => {}, onCance
     modalInput.type = "password";
 
     const submitButton = document.createElement("button");
+    submitButton.type = "button";
     submitButton.textContent = "Submit";
     submitButton.className = "px-4 py-2 bg-accent text-primary font-bold rounded-md";
     submitButton.onclick = () => {
@@ -71,6 +75,7 @@ export function showModal(message, type = "alert", onConfirm = () => {}, onCance
     };
 
     const cancelButton = document.createElement("button");
+    cancelButton.type = "button";
     cancelButton.textContent = "Cancel";
     cancelButton.className = "px-4 py-2 bg-stone-600 text-white rounded-md";
     cancelButton.onclick = () => {
