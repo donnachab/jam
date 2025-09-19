@@ -80,7 +80,7 @@ function manageJamSchedule(confirmedJams, config) {
     jamsToDisplay = jamsToDisplay.slice(0, 5);
 }
 
-export function renderJams(jams, config) {
+export function renderJams(jams, venues, config) {
     manageJamSchedule(jams, config);
     
     const jamList = document.getElementById("jam-list");
@@ -92,10 +92,13 @@ export function renderJams(jams, config) {
         const dateObj = parseDate(jam.date);
         if (!dateObj) return;
 
+        const venue = venues.find(v => v.name === jam.venue);
+        const imageUrl = venue ? venue.imageUrl : null;
+
         const isSaturday = dateObj.getDay() === 6;
         const formattedDate = `${dateObj.getDate()} ${dateObj.toLocaleString('default', { month: 'short' })}`;
 
-        li.className = `p-4 rounded-lg shadow-sm border-l-4 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center bg-white ${jam.cancelled ? 'jam-cancelled' : ''} ${!isSaturday && !jam.isProposal ? 'jam-special' : 'border-gray-200'}`;
+        li.className = `p-4 rounded-lg shadow-sm border-l-4 flex items-center bg-white ${jam.cancelled ? 'jam-cancelled' : ''} ${!isSaturday && !jam.isProposal ? 'jam-special' : 'border-gray-200'}`;
 
         let adminButtons = `
             <button data-id="${jam.id}" class="edit-jam-btn text-blue-500 hover:text-blue-700">Edit</button>
@@ -108,7 +111,10 @@ export function renderJams(jams, config) {
 
         const mapLink = jam.mapLink ? ` <a href="${jam.mapLink}" target="_blank" class="text-blue-500 hover:underline whitespace-nowrap">(Map)</a>` : "";
         
+        const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${jam.venue}" class="w-16 h-16 object-cover rounded-md mr-4">` : '';
+
         li.innerHTML = `
+            ${imageHtml}
             <div class="flex-grow jam-info">
                 <div class="flex flex-col sm:flex-row sm:items-baseline sm:space-x-2">
                     <span class="font-bold text-lg ${isSaturday ? "text-gray-500" : "text-violet-600"}">${jam.day}</span>

@@ -29,7 +29,7 @@ function renderFestivalLogos() {
   initFestivalCarousel(allLogos.length);
 }
 
-export function renderEvents(events) {
+export function renderEvents(events, venues) {
     const eventList = document.getElementById("event-list");
     if (!eventList) return;
     eventList.innerHTML = "";
@@ -47,7 +47,10 @@ export function renderEvents(events) {
 
     upcomingEvents.forEach(event => {
         const div = document.createElement("div");
-        div.className = "bg-white p-6 rounded-lg shadow-md relative border border-gray-200";
+        const venue = venues.find(v => v.name === event.venue);
+        const imageUrl = venue ? venue.imageUrl : null;
+
+        div.className = "bg-white p-6 rounded-lg shadow-md relative border border-gray-200 flex items-start";
         
         const startDate = new Date(event.startDate + 'T00:00:00');
         const endDate = new Date(event.endDate + 'T00:00:00');
@@ -57,18 +60,23 @@ export function renderEvents(events) {
             dateDisplay += ` - ${endDate.toLocaleDateString('en-US', formatOpts)}`;
         }
 
+        const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${event.venue}" class="w-24 h-24 object-cover rounded-md mr-6">` : '';
+
         div.innerHTML = `
-            <div class="admin-controls-inline absolute top-2 right-2 space-x-2">
-                <button data-id="${event.id}" class="edit-event-btn text-blue-500 hover:text-blue-700">Edit</button>
-                <button data-id="${event.id}" class="delete-event-btn text-red-500 hover:text-red-700">Delete</button>
+            ${imageHtml}
+            <div class="flex-grow">
+                <div class="admin-controls-inline absolute top-2 right-2 space-x-2">
+                    <button data-id="${event.id}" class="edit-event-btn text-blue-500 hover:text-blue-700">Edit</button>
+                    <button data-id="${event.id}" class="delete-event-btn text-red-500 hover:text-red-700">Delete</button>
+                </div>
+                <h3 class="text-2xl font-bold text-primary">${event.title}</h3>
+                <div class="flex items-center space-x-4 mt-1">
+                    <p class="text-lg font-semibold text-gray-700">${dateDisplay}</p>
+                    ${event.time ? `<span class="text-gray-600 font-semibold">${event.time}</span>` : ''}
+                    ${event.mapLink ? `<a href="${event.mapLink}" target="_blank" class="text-blue-500 hover:underline whitespace-nowrap">(Map)</a>` : ''}
+                </div>
+                <p class="mt-4 text-gray-600">${event.description}</p>
             </div>
-            <h3 class="text-2xl font-bold text-primary">${event.title}</h3>
-            <div class="flex items-center space-x-4 mt-1">
-                <p class="text-lg font-semibold text-gray-700">${dateDisplay}</p>
-                ${event.time ? `<span class="text-gray-600 font-semibold">${event.time}</span>` : ''}
-                ${event.mapLink ? `<a href="${event.mapLink}" target="_blank" class="text-blue-500 hover:underline whitespace-nowrap">(Map)</a>` : ''}
-            </div>
-            <p class="mt-4 text-gray-600">${event.description}</p>
         `;
         eventList.appendChild(div);
     });

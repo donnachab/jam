@@ -57,11 +57,24 @@
                     <div id="venue-management-section" class="mt-8 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
                         <h3 class="text-xl font-bold text-primary mb-4">Manage Venues</h3>
                         <ul id="venue-list-admin" class="space-y-2 mb-4"></ul>
-                        <form id="add-venue-form">
-                            <h4 class="text-lg font-bold text-primary mb-2">Add New Venue</h4>
-                            <div class="mb-2"><input type="text" id="new-venue-name" class="w-full p-2 border rounded" placeholder="Venue Name" /></div>
+                        <form id="add-venue-form" class="p-4 border rounded bg-white">
+                            <h4 class="text-lg font-bold text-primary mb-2" id="venue-form-title">Add New Venue</h4>
+                            <input type="hidden" id="edit-venue-id" />
+                            <div class="mb-2"><input type="text" id="new-venue-name" class="w-full p-2 border rounded" placeholder="Venue Name" required/></div>
                             <div class="mb-2"><input type="url" id="new-venue-map-link" class="w-full p-2 border rounded" placeholder="Google Maps Link" /></div>
-                            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Add Venue</button>
+                            <div class="mb-4">
+                                <label for="venue-photo-file" class="block text-gray-700 font-bold mb-2 text-left">Venue Photo</label>
+                                <input type="file" id="venue-photo-file" class="w-full p-2 border rounded" accept="image/*"/>
+                                <p class="text-sm text-gray-500 mt-1 text-left">Or paste a URL below...</p>
+                            </div>
+                            <div class="mb-4">
+                                <label for="venue-photo-url" class="block text-gray-700 font-bold mb-2 text-left">Photo URL</label>
+                                <input type="url" id="venue-photo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
+                            </div>
+                            <div class="flex justify-end space-x-2">
+                                <button type="button" id="cancel-venue-edit-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Save Venue</button>
+                            </div>
                         </form>
                     </div>
                 </div>

@@ -115,7 +115,7 @@ function initializeAllModules() {
     initializeEvents(siteData.venues, loadAllData);
     initializeCommunity(loadAllData);
     initializeGallery(loadAllData);
-    initializeVenueManagement(loadAllData);
+    initializeVenueManagement(siteData.venues, loadAllData);
     initializeDefaultJamAdmin(siteData.config, siteData.venues, loadAllData);
     initializeHeroAdmin(loadAllData);
     console.log("✅ All modules initialized.");
@@ -129,8 +129,8 @@ function renderAll() {
         coverPhoto.src = siteData.config.coverPhotoUrl;
     }
     
-    renderJams(siteData.jams, siteData.config);
-    renderEvents(siteData.events);
+    renderJams(siteData.jams, siteData.venues, siteData.config);
+    renderEvents(siteData.events, siteData.venues);
     renderCommunity(siteData.communityItems);
     renderGallery(siteData.photos, siteData.config);
     renderVenueList(siteData.venues);
