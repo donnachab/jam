@@ -60,7 +60,7 @@ export function renderEvents(events, venues) {
             dateDisplay += ` - ${endDate.toLocaleDateString('en-US', formatOpts)}`;
         }
 
-        const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${event.venue}" class="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-md mr-0 sm:mr-6 mb-4 sm:mb-0 flex-shrink-0">` : '';
+        const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${event.venue}" class="w-32 h-auto max-h-32 object-contain rounded-md mr-6 flex-shrink-0">` : '';
 
         div.innerHTML = `
             ${imageHtml}

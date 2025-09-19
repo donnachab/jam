@@ -111,9 +111,10 @@ export function renderJams(jams, venues, config) {
 
         const mapLink = jam.mapLink ? ` <a href="${jam.mapLink}" target="_blank" class="text-blue-500 hover:underline whitespace-nowrap">(Map)</a>` : "";
         
-        const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${jam.venue}" class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md mr-0 sm:mr-4 mb-4 sm:mb-0 flex-shrink-0">` : '';
+        const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${jam.venue}" class="w-24 h-auto max-h-24 object-contain rounded-md mr-4 flex-shrink-0">` : '';
 
         li.innerHTML = `
+            <div class="flex items-center">
             ${imageHtml}
             <div class="flex-grow jam-info">
                 <div class="flex flex-col sm:flex-row sm:items-baseline sm:space-x-2">
@@ -123,6 +124,7 @@ export function renderJams(jams, venues, config) {
                 </div>
                 <span class="text-gray-700 text-lg">${jam.venue}${mapLink}</span>
                 ${jam.cancelled ? '<span class="font-bold text-red-600 mt-1 sm:ml-4">(CANCELLED)</span>' : ""}
+            </div>
             </div>
             <div class="admin-controls-inline space-x-2 mt-2 sm:mt-0">${adminButtons}</div>
         `;
