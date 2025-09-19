@@ -213,10 +213,15 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
                 renderJams();
             } else {
                 showModal("Delete this jam permanently?", "confirm", async () => {
-                    console.log('Deleting jam with id:', jamId);
-                    await deleteDoc(doc(db, "jams", jamId));
-                    console.log('Jam deleted from Firestore.');
-                    await refreshData();
+                    try {
+                        console.log('Attempting to delete jam with id:', jamId);
+                        await deleteDoc(doc(db, "jams", jamId));
+                        console.log('Jam deleted from Firestore.');
+                        await refreshData();
+                    } catch (error) {
+                        console.error('Error deleting jam:', error);
+                        showModal(`Failed to delete jam. Error: ${error.message}`, 'alert');
+                    }
                 });
             }
         } else if (button.classList.contains("cancel-jam-btn")) {
