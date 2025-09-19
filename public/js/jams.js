@@ -98,7 +98,7 @@ export function renderJams(jams, venues, config) {
         const isSaturday = dateObj.getDay() === 6;
         const formattedDate = `${dateObj.getDate()} ${dateObj.toLocaleString('default', { month: 'short' })}`;
 
-        li.className = `p-4 rounded-lg shadow-sm border-l-4 flex items-center bg-white ${jam.cancelled ? 'jam-cancelled' : ''} ${!isSaturday && !jam.isProposal ? 'jam-special' : 'border-gray-200'}`;
+        li.className = `p-4 rounded-lg shadow-sm border-l-4 flex flex-col sm:flex-row items-center bg-white ${jam.cancelled ? 'jam-cancelled' : ''} ${!isSaturday && !jam.isProposal ? 'jam-special' : 'border-gray-200'}`;
 
         let adminButtons = `
             <button data-id="${jam.id}" class="edit-jam-btn text-blue-500 hover:text-blue-700">Edit</button>
@@ -111,7 +111,7 @@ export function renderJams(jams, venues, config) {
 
         const mapLink = jam.mapLink ? ` <a href="${jam.mapLink}" target="_blank" class="text-blue-500 hover:underline whitespace-nowrap">(Map)</a>` : "";
         
-        const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${jam.venue}" class="w-16 h-16 object-cover rounded-md mr-4">` : '';
+        const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${jam.venue}" class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md mr-0 sm:mr-4 mb-4 sm:mb-0 flex-shrink-0">` : '';
 
         li.innerHTML = `
             ${imageHtml}
