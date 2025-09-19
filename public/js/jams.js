@@ -110,6 +110,15 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
     const jamList = document.getElementById("jam-list");
     const manageVenuesBtn = document.getElementById("manage-venues-btn");
     const venueManagementSection = document.getElementById("venue-management-section");
+    const venueInput = document.getElementById("jam-venue");
+
+    venueInput.addEventListener('change', (e) => {
+        const selectedVenueName = e.target.value;
+        const venue = initialVenues.find(v => v.name === selectedVenueName);
+        if (venue) {
+            document.getElementById('jam-map-link').value = venue.mapLink || '';
+        }
+    });
     
     manageJamSchedule(initialJams);
     renderJams();
