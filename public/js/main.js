@@ -131,10 +131,11 @@ function renderAll() {
     }
 
     const siteLogo = document.getElementById('site-logo');
-    if (siteLogo && siteData.config.logoUrl) {
-        siteLogo.src = siteData.config.logoUrl;
+    const activeTheme = localStorage.getItem('selectedTheme') || 'default';
+    if (siteLogo && siteData.config.logoUrls && siteData.config.logoUrls[activeTheme]) {
+        siteLogo.src = siteData.config.logoUrls[activeTheme];
     } else if (siteLogo) {
-        // Fallback to default static logo if no dynamic logo is set
+        // Fallback to default static logo if no dynamic logo is set for the theme
         siteLogo.src = 'images/logo.svg';
     }
     
@@ -204,6 +205,7 @@ async function main() {
             if (maroonThemeLink) maroonThemeLink.disabled = true;
         }
         localStorage.setItem('selectedTheme', themeName);
+        renderAll(); // Re-render to update logo based on new theme
     }
 
     if (themeSelect) {

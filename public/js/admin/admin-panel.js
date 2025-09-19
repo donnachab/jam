@@ -1,5 +1,5 @@
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { db } from '../firebase-config.js';
 import { showModal } from '../ui/modal.js';
 
@@ -31,11 +31,29 @@ export function initializeAdminPanel(loadAllData) {
     const editSiteLogoForm = document.getElementById('edit-site-logo-form');
     const cancelSiteLogoBtn = document.getElementById('cancel-site-logo-btn');
     const siteLogoFile = document.getElementById('site-logo-file');
-    const siteLogoUrl = document.getElementById('site-logo-url');
+    const siteLogoUrlInput = document.getElementById('site-logo-url');
+    const siteLogoThemeSelect = document.getElementById('site-logo-theme-select');
+
+    const siteConfigRef = doc(db, "site_config", "main");
+
+    async function loadLogoForSelectedTheme() {
+        const selectedTheme = siteLogoThemeSelect.value;
+        const configSnap = await getDoc(siteConfigRef);
+        if (configSnap.exists()) {
+            const configData = configSnap.data();
+            const logoUrls = configData.logoUrls || {};
+            siteLogoUrlInput.value = logoUrls[selectedTheme] || '';
+        }
+    }
+
+    if (siteLogoThemeSelect) {
+        siteLogoThemeSelect.addEventListener('change', loadLogoForSelectedTheme);
+    }
 
     if (editSiteLogoBtn) {
         editSiteLogoBtn.addEventListener('click', () => {
             editSiteLogoForm.style.display = 'block';
+            loadLogoForSelectedTheme(); // Load current logo for selected theme
         });
     }
 
@@ -49,12 +67,13 @@ export function initializeAdminPanel(loadAllData) {
     if (editSiteLogoForm) {
         editSiteLogoForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            let logoUrl = siteLogoUrl.value;
+            const selectedTheme = siteLogoThemeSelect.value;
+            let logoUrl = siteLogoUrlInput.value;
 
             if (siteLogoFile.files.length > 0) {
                 const file = siteLogoFile.files[0];
                 const storage = getStorage();
-                const storageRef = ref(storage, `site_config/logo/${file.name}`);
+                const storageRef = ref(storage, `site_config/logo/${selectedTheme}/${file.name}`);
                 try {
                     await uploadBytes(storageRef, file);
                     logoUrl = await getDownloadURL(storageRef);
@@ -68,9 +87,9 @@ export function initializeAdminPanel(loadAllData) {
 
             if (logoUrl) {
                 try {
-                    const configRef = doc(db, "site_config", "main");
-                    await updateDoc(configRef, {
-                        logoUrl: logoUrl
+                    // Update nested field in Firestore
+                    await updateDoc(siteConfigRef, {
+                        [`logoUrls.${selectedTheme}`]: logoUrl
                     });
                     showModal('Site logo updated successfully!', 'success');
                     editSiteLogoForm.style.display = 'none';
