@@ -111,7 +111,7 @@ async function loadAllData() {
 // -----------------------------------------------------------------------------
 function initializeAllModules() {
     console.log("🚀 Initializing all modules with event listeners...");
-    initializeJams(siteData.venues, loadAllData);
+    initializeJams(siteData.jams, siteData.venues, siteData.config, loadAllData);
     initializeEvents(siteData.events, siteData.venues, loadAllData);
     initializeCommunity(siteData.communityItems, loadAllData);
     initializeGallery(loadAllData);
@@ -129,7 +129,7 @@ function renderAll() {
         coverPhoto.src = siteData.config.coverPhotoUrl;
     }
     
-    renderJams(siteData.jams, siteData.venues, siteData.config);
+    renderJams(siteData.jams, siteData.config);
     renderEvents(siteData.events);
     renderCommunity(siteData.communityItems);
     renderGallery(siteData.photos, siteData.config);
