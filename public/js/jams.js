@@ -199,7 +199,7 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
         if (!button) return;
 
         const jamId = button.dataset.id;
-        const jam = jamsToDisplay.find(j => j.id === jamId || j.date === jamId);
+        const jam = jamsToDisplay.find(j => j.id === jamId);
         console.log('Jam:', jam);
 
         if (button.classList.contains("edit-jam-btn")) {
