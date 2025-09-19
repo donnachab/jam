@@ -54,6 +54,7 @@ function manageJamSchedule(confirmedJams, testDate = null) {
                 day: "Saturday",
                 venue: lastJam ? lastJam.venue : "To be decided...",
                 time: lastJam ? lastJam.time : "2:00 PM",
+                mapLink: lastJam ? lastJam.mapLink : null,
                 isProposal: true,
             });
         }
@@ -114,7 +115,7 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
 
     venueInput.addEventListener('change', (e) => {
         const selectedVenueName = e.target.value;
-        const venue = initialVenues.find(v => v.name === selectedVenueName);
+        const venue = initialVenues.find(v => v.name.toLowerCase() === selectedVenueName.toLowerCase());
         if (venue) {
             document.getElementById('jam-map-link').value = venue.mapLink || '';
         }
