@@ -1,11 +1,27 @@
-import { db } from './firebase-config.js';
+import { db, app } from './firebase-config.js';
 import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { showModal } from './ui/modal.js';
+
+const storage = getStorage(app);
+const functions = getFunctions(app, 'us-central1');
+const auth = getAuth(app);
 
 function getYouTubeID(url) {
     const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gi;
     const match = regex.exec(url);
     return match ? match[1] : null;
+}
+
+function isValidUrl(url) {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 export function renderGallery(photos, config) {
@@ -57,12 +73,79 @@ export function initializeGallery(refreshData) {
     if (addPhotoForm) {
         addPhotoForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const url = document.getElementById("photo-url").value.trim();
-            const caption = document.getElementById("photo-caption").value.trim();
-            if (!url || !caption) return;
+            const urlInput = document.getElementById("photo-url");
+            const fileInput = document.getElementById("photo-file");
+            const captionInput = document.getElementById("photo-caption");
+
+            const caption = captionInput.value.trim();
+            const newUrl = urlInput.value.trim();
+            const newFile = fileInput.files[0];
+
+            if (!caption) {
+                return showModal("Please enter a caption for the photo.", "alert");
+            }
+
+            if (newFile) {
+                const uploadFile = async () => {
+                    try {
+                        showModal("Preparing upload...", "loading");
+                        await auth.currentUser.getIdToken(true);
+                        const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
+                        const fileExtension = newFile.name.split('.').pop();
+                        const fileName = `gallery-${Date.now()}.${fileExtension}`;
+
+                        const result = await generateSignedUploadUrl({
+                            fileName: fileName,
+                            contentType: newFile.type
+                        });
+
+                        if (!result.data.success) {
+                            throw new Error(result.data.message || 'Could not get upload URL.');
+                        }
+
+                        const signedUrl = result.data.url;
+                        showModal("Uploading image...", "loading");
+                        const uploadResponse = await fetch(signedUrl, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': newFile.type },
+                            body: newFile
+                        });
+
+                        if (!uploadResponse.ok) {
+                            throw new Error('File upload to storage failed.');
+                        }
+
+                        const bucketName = storage.app.options.storageBucket;
+                        const publicUrl = `https://storage.googleapis.com/${bucketName}/images/${fileName}`;
+                        
+                        const id = String(Date.now());
+                        await setDoc(doc(db, "photos", id), { id, url: publicUrl, caption });
+                        
+                        addPhotoForm.style.display = "none";
+                        addPhotoForm.reset();
+                        await refreshData();
+                        showModal("Photo added successfully!", "alert");
+
+                    } catch (error) {
+                        console.error("❌ Error during file upload process:", error);
+                        showModal(error.message || "An unexpected error occurred. Please try again.", "alert");
+                    }
+                };
+                uploadFile();
+                return;
+            }
+
+            if (!newUrl) {
+                return showModal("Please upload a file or provide a URL.", "alert");
+            }
+            if (!isValidUrl(newUrl)) {
+                return showModal("Please enter a valid URL.", "alert");
+            }
+
             const id = String(Date.now());
-            await setDoc(doc(db, "photos", id), { id, url, caption });
+            await setDoc(doc(db, "photos", id), { id, url: newUrl, caption });
             addPhotoForm.style.display = "none";
+            addPhotoForm.reset();
             await refreshData();
         });
     }
