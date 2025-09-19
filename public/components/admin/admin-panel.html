@@ -164,7 +164,16 @@
                             <div><label for="event-end-date" class="block text-gray-700 font-bold mb-2 text-left">End Date</label><input type="text" id="event-end-date" class="w-full p-2 border rounded"/></div>
                         </div>
                         <div class="mb-4"><label for="event-time" class="block text-gray-700 font-bold mb-2 text-left">Time (Optional)</label><input type="text" id="event-time" class="w-full p-2 border rounded"/></div>
-                        <div class="mb-4"><label for="event-map-link" class="block text-gray-700 font-bold mb-2 text-left">Google Maps Link (Optional)</label><input type="url" id="event-map-link" class="w-full p-2 border rounded"/></div>
+                        <div class="mb-4">
+                            <label for="event-venue" class="block text-gray-700 font-bold mb-2 text-left">Venue (Optional)</label>
+                            <select id="event-venue" class="w-full p-2 border rounded">
+                                <option value="">Select a venue...</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="event-map-link" class="block text-gray-700 font-bold mb-2 text-left">Google Maps Link (Auto-populated)</label>
+                            <input type="url" id="event-map-link" class="w-full p-2 border rounded bg-gray-200" readonly placeholder="Select a venue to populate map link"/>
+                        </div>
                         <div class="mb-4"><label for="event-description" class="block text-gray-700 font-bold mb-2 text-left">Description</label><textarea id="event-description" class="w-full p-2 border rounded" rows="4"></textarea></div>
                         <div class="flex justify-end space-x-4">
                             <button type="button" id="cancel-event-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>

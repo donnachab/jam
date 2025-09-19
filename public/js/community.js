@@ -1,11 +1,11 @@
 import { db } from './firebase-config.js';
-import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
 import { initCommunityCarousel } from './ui/carousels.js';
 
 let communitySwiper = null;
 
-function renderCommunitySlider(items) {
+export function renderCommunity(items) {
     const wrapper = document.getElementById("community-swiper-wrapper");
     if (!wrapper) return;
     wrapper.innerHTML = "";
@@ -44,9 +44,7 @@ function renderCommunitySlider(items) {
     communitySwiper = initCommunityCarousel(items);
 }
 
-export function initializeCommunity(initialItems, refreshData) {
-    renderCommunitySlider(initialItems);
-
+export function initializeCommunity(items, refreshData) {
     const addBtn = document.getElementById("add-community-item-btn");
     const form = document.getElementById("add-community-form");
     const cancelBtn = document.getElementById("cancel-community-btn");
@@ -75,7 +73,6 @@ export function initializeCommunity(initialItems, refreshData) {
     addBtn.addEventListener("click", () => showForm("add"));
     cancelBtn.addEventListener("click", () => form.style.display = "none");
     
-    // This listener now also manages the `required` attribute for native browser validation.
     typeInput.addEventListener("change", (e) => {
         const isCharity = e.target.value === "charity";
         const headlineWrapper = document.getElementById("community-headline-wrapper");
@@ -87,17 +84,14 @@ export function initializeCommunity(initialItems, refreshData) {
         headlineWrapper.classList.toggle("hidden", isCharity);
         charityWrapper.classList.toggle("hidden", !isCharity);
 
-        // Toggle the 'required' attribute for better UX and native validation.
         headlineInput.required = !isCharity;
         amountInput.required = isCharity;
         charityNameInput.required = isCharity;
     });
 
-    // This handler is refactored for better validation and data integrity.
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        // Use native browser validation, which respects the `required` attribute.
         if (!form.checkValidity()) {
             form.reportValidity();
             return;
@@ -106,7 +100,6 @@ export function initializeCommunity(initialItems, refreshData) {
         const id = document.getElementById("edit-community-id").value || String(Date.now());
         const type = typeInput.value;
 
-        // Start with base data, which is always required.
         const dataToSave = {
             id,
             type,
@@ -114,7 +107,6 @@ export function initializeCommunity(initialItems, refreshData) {
             description: document.getElementById("community-description").value.trim(),
         };
 
-        // Add type-specific fields, ensuring no empty/irrelevant fields are saved.
         if (type === "community") {
             dataToSave.headline = document.getElementById("community-headline").value.trim();
         } else if (type === "charity") {
@@ -137,7 +129,7 @@ export function initializeCommunity(initialItems, refreshData) {
         const btn = e.target.closest("button");
         if (!btn) return;
         const itemId = btn.dataset.id;
-        const item = initialItems.find(i => i.id === itemId);
+        const item = items.find(i => i.id === itemId);
 
         if (btn.classList.contains("edit-community-btn")) {
             showForm("edit", item);

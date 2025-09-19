@@ -10,10 +10,10 @@ import { initializeAdminPanel } from './admin/admin-panel.js';
 import { initializeHeroAdmin } from './admin/hero-admin.js';
 import { initializeVenueManagement, renderVenueList } from './admin/venue-management.js';
 import { initializeDefaultJamAdmin } from './admin/default-jam-admin.js';
-import { initializeJams } from './jams.js';
-import { initializeEvents } from './events.js';
-import { initializeCommunity } from './community.js';
-import { initializeGallery } from './gallery.js';
+import { initializeJams, renderJams } from './jams.js';
+import { initializeEvents, renderEvents } from './events.js';
+import { initializeCommunity, renderCommunity } from './community.js';
+import { initializeGallery, renderGallery } from './gallery.js';
 import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
@@ -111,10 +111,10 @@ async function loadAllData() {
 // -----------------------------------------------------------------------------
 function initializeAllModules() {
     console.log("🚀 Initializing all modules with event listeners...");
-    initializeJams(siteData.jams, siteData.venues, siteData.config, loadAllData);
-    initializeEvents(siteData.events, loadAllData);
+    initializeJams(siteData.venues, loadAllData);
+    initializeEvents(siteData.events, siteData.venues, loadAllData);
     initializeCommunity(siteData.communityItems, loadAllData);
-    initializeGallery(siteData.photos, siteData.config, loadAllData);
+    initializeGallery(loadAllData);
     initializeVenueManagement(loadAllData);
     initializeDefaultJamAdmin(siteData.config, siteData.venues, loadAllData);
     initializeHeroAdmin(loadAllData);
@@ -129,20 +129,11 @@ function renderAll() {
         coverPhoto.src = siteData.config.coverPhotoUrl;
     }
     
-    // This is the new rendering hub. 
-    // As modules are refactored, their render functions will be called from here.
+    renderJams(siteData.jams, siteData.venues, siteData.config);
+    renderEvents(siteData.events);
+    renderCommunity(siteData.communityItems);
+    renderGallery(siteData.photos, siteData.config);
     renderVenueList(siteData.venues);
-
-    // For now, the old initialize functions are still called on first load.
-    // This is not ideal, but fixes the immediate bug.
-    // A full refactor would involve creating render functions for all modules.
-    if (!isInitialized) {
-        initializeJams(siteData.jams, siteData.venues, siteData.config, loadAllData);
-        initializeEvents(siteData.events, loadAllData);
-        initializeCommunity(siteData.communityItems, loadAllData);
-        initializeGallery(siteData.photos, siteData.config, loadAllData);
-        initializeDefaultJamAdmin(siteData.config, siteData.venues, loadAllData);
-    }
     
     console.log("🎨 All components rendered.");
 }

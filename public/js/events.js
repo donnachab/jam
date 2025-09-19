@@ -1,5 +1,5 @@
 import { db } from './firebase-config.js';
-import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
 import { initFestivalCarousel } from './ui/carousels.js';
 
@@ -9,18 +9,13 @@ const festivalLogos = [
   { src: "images/galway-folk-festival.png", alt: "Galway Folk Festival Logo" },
   { src: "images/westport-folk-and-bluegrass-festival.jpg", alt: "Westport Folk and Bluegrass Festival Logo" },
   { src: "images/cahersiveen-mountain-roots.jpg", alt: "Cahersiveen Mountain Roots Music Weekend Logo" },
-  // Add new festival logos here
 ];
 
-/**
- * Renders the festival logo carousel.
- */
 function renderFestivalLogos() {
   const wrapper = document.getElementById("festival-carousel-wrapper");
   if (!wrapper) return;
   wrapper.innerHTML = '';
   
-  // Duplicating the slides to meet the loop requirement.
   const allLogos = festivalLogos.concat(festivalLogos);
 
   allLogos.forEach(logo => {
@@ -33,7 +28,7 @@ function renderFestivalLogos() {
   initFestivalCarousel(allLogos.length);
 }
 
-function renderEvents(events) {
+export function renderEvents(events) {
     const eventList = document.getElementById("event-list");
     if (!eventList) return;
     eventList.innerHTML = "";
@@ -78,14 +73,35 @@ function renderEvents(events) {
     });
 }
 
-export function initializeEvents(initialEvents, refreshData) {
+export function initializeEvents(events, venues, refreshData) {
     const addEventBtn = document.getElementById("add-event-btn");
     const addEventForm = document.getElementById("add-event-form");
     const cancelEventBtn = document.getElementById("cancel-event-btn");
     const eventList = document.getElementById("event-list");
-    
+    const eventVenueSelect = document.getElementById("event-venue");
+    const eventMapLinkInput = document.getElementById("event-map-link");
+
     renderFestivalLogos();
-    renderEvents(initialEvents);
+    
+    if (eventVenueSelect) {
+        eventVenueSelect.innerHTML = '<option value="">Select a venue...</option>';
+        venues.forEach(venue => {
+            const option = document.createElement('option');
+            option.value = venue.name;
+            option.textContent = venue.name;
+            eventVenueSelect.appendChild(option);
+        });
+
+        eventVenueSelect.addEventListener('change', () => {
+            const selectedVenueName = eventVenueSelect.value;
+            const selectedVenue = venues.find(v => v.name === selectedVenueName);
+            if (selectedVenue) {
+                eventMapLinkInput.value = selectedVenue.mapLink || '';
+            } else {
+                eventMapLinkInput.value = '';
+            }
+        });
+    }
 
     flatpickr("#event-start-date", { dateFormat: "Y-m-d", altInput: true, altFormat: "F j, Y" });
     flatpickr("#event-end-date", { dateFormat: "Y-m-d", altInput: true, altFormat: "F j, Y" });
@@ -99,7 +115,8 @@ export function initializeEvents(initialEvents, refreshData) {
             flatpickr("#event-start-date").setDate(event.startDate);
             flatpickr("#event-end-date").setDate(event.endDate);
             document.getElementById("event-time").value = event.time || '';
-            document.getElementById("event-map-link").value = event.mapLink || '';
+            if(eventVenueSelect) eventVenueSelect.value = event.venue || '';
+            if(eventMapLinkInput) eventMapLinkInput.value = event.mapLink || '';
             document.getElementById("event-description").value = event.description;
         } else {
             document.getElementById("event-form-title").textContent = "Add New Event";
@@ -120,7 +137,8 @@ export function initializeEvents(initialEvents, refreshData) {
             startDate: document.getElementById("event-start-date").value,
             endDate: document.getElementById("event-end-date").value,
             time: document.getElementById("event-time").value.trim(),
-            mapLink: document.getElementById("event-map-link").value.trim(),
+            venue: eventVenueSelect ? eventVenueSelect.value.trim() : '',
+            mapLink: eventMapLinkInput ? eventMapLinkInput.value.trim() : '',
             description: document.getElementById("event-description").value.trim(),
         };
 
@@ -137,7 +155,7 @@ export function initializeEvents(initialEvents, refreshData) {
         const button = e.target.closest("button");
         if (!button) return;
         const eventId = button.dataset.id;
-        const event = initialEvents.find(ev => ev.id === eventId);
+        const event = events.find(ev => ev.id === eventId);
 
         if (button.classList.contains("edit-event-btn")) {
             showEventForm("edit", event);
