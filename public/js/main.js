@@ -2,6 +2,7 @@
 // --- 1. IMPORTS
 // -----------------------------------------------------------------------------
 import { app, db, auth } from './firebase-config.js';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 import { showModal } from './ui/modal.js';
 import { initializeMobileMenu } from './ui/mobile-menu.js';
 import { initFestivalCarousel } from './ui/carousels.js';
@@ -14,7 +15,7 @@ import { initializeJams, renderJams } from './jams.js';
 import { initializeEvents, renderEvents } from './events.js';
 import { initializeCommunity, renderCommunity } from './community.js';
 import { initializeGallery, renderGallery } from './gallery.js';
-import { collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, getDocs, getDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 
@@ -128,6 +129,14 @@ function renderAll() {
     if (coverPhoto && siteData.config.coverPhotoUrl) {
         coverPhoto.src = siteData.config.coverPhotoUrl;
     }
+
+    const siteLogo = document.getElementById('site-logo');
+    if (siteLogo && siteData.config.logoUrl) {
+        siteLogo.src = siteData.config.logoUrl;
+    } else if (siteLogo) {
+        // Fallback to default static logo if no dynamic logo is set
+        siteLogo.src = 'images/logo.svg';
+    }
     
     renderJams(siteData.jams, siteData.venues, siteData.config);
     renderEvents(siteData.events, siteData.venues);
@@ -179,7 +188,7 @@ async function main() {
     initializeMobileMenu();
     initFestivalCarousel();
     initializeAdminMode();
-    initializeAdminPanel();
+    initializeAdminPanel(loadAllData);
 
     // --- Theme Switching Logic ---
     const defaultThemeLink = document.querySelector('link[href="css/gcc-theme.css"]');
