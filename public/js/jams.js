@@ -170,10 +170,17 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
         const venue = document.getElementById("jam-venue").value;
         if (!date || !venue) return showModal("Date and Venue are required.", "alert");
 
+        // Explicitly validate that the selected day matches the date
+        const selectedDay = document.getElementById("jam-day").value;
+        const correctDay = dayNames[parseDate(date).getDay()];
+        if (selectedDay !== correctDay) {
+            return showModal(`The selected day (${selectedDay}) does not match the date (${date}, which is a ${correctDay}). Please re-select the date.`, "alert");
+        }
+
         const jamData = {
             id,
             date,
-            day: dayNames[parseDate(date).getDay()],
+            day: correctDay, // Use the already validated correct day
             time: document.getElementById("jam-time").value.trim(),
             venue,
             mapLink: document.getElementById("jam-map-link").value.trim(),
