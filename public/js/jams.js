@@ -208,7 +208,7 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
         } else if (button.classList.contains("delete-jam-btn")) {
             console.log('Delete button clicked for jamId:', jamId);
             console.log('Jam object:', jam);
-            if (jam.isProposal) {
+            if (jam.id.startsWith('proposal-')) {
                 jamsToDisplay = jamsToDisplay.filter(j => j.id !== jamId);
                 renderJams();
             } else {
