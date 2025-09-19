@@ -1,21 +1,21 @@
-<section id="gallery" class="py-16 md:py-20 lg:py-24 bg-white border-y border-stone-200">
+<section id="gallery" class="py-16 md:py-20 lg:py-24 bg-grey-lightest border-y border-grey-light">
   <div class="container mx-auto px-4 sm:px-6">
-    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-primary mb-12">
+    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-primary mb-12 font-secondary">
       Jam Circle Gallery
     </h2>
 
-    <h3 class="text-2xl md:text-3xl font-bold text-center text-primary mb-8">
+    <h3 class="text-2xl md:text-3xl font-bold text-center text-primary mb-8 font-secondary">
       Videos
     </h3>
     <div class="max-w-5xl mx-auto">
         <div class="text-center mb-4 admin-controls">
-            <button id="edit-featured-video-btn" class="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600">Change Featured Video</button>
+            <button id="edit-featured-video-btn" class="px-4 py-2 bg-blue text-white font-bold rounded-full hover:bg-opacity-80">Change Featured Video</button>
         </div>
-        <form id="edit-featured-video-form" class="max-w-xl mx-auto mt-4 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
-            <h3 class="text-xl font-bold text-primary mb-4">Change Featured Video</h3>
-            <div class="mb-4"><label for="featured-video-url" class="block text-gray-700 font-bold mb-2 text-left">New YouTube Video URL</label><input type="url" id="featured-video-url" class="w-full p-2 border rounded"/></div>
+        <form id="edit-featured-video-form" class="max-w-xl mx-auto mt-4 p-6 bg-white rounded-lg shadow-inner border" style="display: none;">
+            <h3 class="text-xl font-bold text-primary mb-4 font-secondary">Change Featured Video</h3>
+            <div class="mb-4"><label for="featured-video-url" class="block text-grey-dark font-bold mb-2 text-left">New YouTube Video URL</label><input type="url" id="featured-video-url" class="w-full p-2 border rounded"/></div>
             <div class="flex justify-end space-x-4">
-                <button type="button" id="cancel-featured-video-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                <button type="button" id="cancel-featured-video-btn" class="px-4 py-2 bg-grey-medium text-white rounded-md hover:bg-grey-dark">Cancel</button>
                 <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Video</button>
             </div>
         </form>
@@ -41,26 +41,26 @@
       </a>
     </div>
 
-    <h3 class="text-2xl md:text-3xl font-bold text-center text-primary mt-16 mb-8">
+    <h3 class="text-2xl md:text-3xl font-bold text-center text-primary mt-16 mb-8 font-secondary">
       Photos
     </h3>
     <div class="text-center mb-8 admin-controls">
-        <button id="add-photo-btn" class="px-6 py-2 bg-green-500 text-white font-bold rounded-full hover:bg-green-600 transition duration-300 shadow-md">Add Photo</button>
+        <button id="add-photo-btn" class="px-6 py-2 bg-green text-white font-bold rounded-full hover:bg-opacity-80 transition duration-300 shadow-md">Add Photo</button>
     </div>
-    <form id="add-photo-form" class="max-w-3xl mx-auto mb-8 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
-        <h3 class="text-xl font-bold text-primary mb-4">Add New Photo</h3>
+    <form id="add-photo-form" class="max-w-3xl mx-auto mb-8 p-6 bg-white rounded-lg shadow-inner border" style="display: none;">
+        <h3 class="text-xl font-bold text-primary mb-4 font-secondary">Add New Photo</h3>
         <div class="mb-4">
-            <label for="photo-file" class="block text-gray-700 font-bold mb-2 text-left">Upload Photo</label>
+            <label for="photo-file" class="block text-grey-dark font-bold mb-2 text-left">Upload Photo</label>
             <input type="file" id="photo-file" class="w-full p-2 border rounded" accept="image/*"/>
-            <p class="text-sm text-gray-500 mt-1 text-left">Or paste a URL below...</p>
+            <p class="text-sm text-grey-medium mt-1 text-left">Or paste a URL below...</p>
         </div>
         <div class="mb-4">
-            <label for="photo-url" class="block text-gray-700 font-bold mb-2 text-left">Photo URL</label>
+            <label for="photo-url" class="block text-grey-dark font-bold mb-2 text-left">Photo URL</label>
             <input type="url" id="photo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
         </div>
-        <div class="mb-4"><label for="photo-caption" class="block text-gray-700 font-bold mb-2 text-left">Caption (Alt Text)</label><input type="text" id="photo-caption" class="w-full p-2 border rounded"/></div>
+        <div class="mb-4"><label for="photo-caption" class="block text-grey-dark font-bold mb-2 text-left">Caption (Alt Text)</label><input type="text" id="photo-caption" class="w-full p-2 border rounded"/></div>
         <div class="flex justify-end space-x-4">
-            <button type="button" id="cancel-photo-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+            <button type="button" id="cancel-photo-btn" class="px-4 py-2 bg-grey-medium text-white rounded-md hover:bg-grey-dark">Cancel</button>
             <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Photo</button>
         </div>
     </form>
