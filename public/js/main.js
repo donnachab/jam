@@ -189,21 +189,9 @@ async function main() {
     console.log("Initializing non-data-dependent UI modules...");
     initializeMobileMenu();
     initFestivalCarousel();
+    initializeAdminMode(); // Checks for admin status and adds class to body
+    initializeAdminPanel(); // Sets up tab functionality
     console.log("✅ Non-data-dependent UI modules initialized.");
-
-    // Initialize admin mode AFTER footer is loaded - wait for DOM to be ready
-    function initAdminWhenReady() {
-        const adminButton = document.getElementById('admin-mode-btn');
-        if (adminButton) {
-            console.log('✅ Admin button found, initializing admin mode...');
-            initializeAdminMode();
-            initializeAdminPanel();
-        } else {
-            console.log('⏳ Admin button not ready, retrying in 50ms...');
-            setTimeout(initAdminWhenReady, 50);
-        }
-    }
-    initAdminWhenReady();
 
     // Initialize admin modules that depend on Firebase being authenticated
     console.log("Initializing data-dependent admin modules...");
