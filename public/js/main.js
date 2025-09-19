@@ -8,7 +8,7 @@ import { initFestivalCarousel } from './ui/carousels.js';
 import { initializeAdminMode } from './admin/admin-mode.js?v=2.1';
 import { initializeAdminPanel } from './admin/admin-panel.js';
 import { initializeHeroAdmin } from './admin/hero-admin.js';
-import { initializeVenueManagement } from './admin/venue-management.js';
+import { initializeVenueManagement, renderVenueList } from './admin/venue-management.js';
 import { initializeDefaultJamAdmin } from './admin/default-jam-admin.js';
 import { initializeJams } from './jams.js';
 import { initializeEvents } from './events.js';
@@ -29,6 +29,7 @@ let siteData = {
     communityItems: [],
     config: {}
 };
+let isInitialized = false;
 
 // -----------------------------------------------------------------------------
 // --- 3. UTILITIES & HELPERS
@@ -58,70 +59,68 @@ async function loadAllData() {
     try {
         const jamSnap = await getDocs(collection(db, "jams"));
         siteData.jams = jamSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log('✅ Jams data loaded', siteData.jams);
     } catch (error) {
         console.error("❌ Error loading jams:", error);
-        showModal("Could not load jam data from the database. Please try refreshing the page.", "alert");
-        return;
     }
 
     try {
         const eventSnap = await getDocs(collection(db, "events"));
         siteData.events = eventSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log('✅ Events data loaded', siteData.events);
     } catch (error) {
         console.error("❌ Error loading events:", error);
-        showModal("Could not load event data from the database. Please try refreshing the page.", "alert");
-        return;
     }
 
     try {
         const photoSnap = await getDocs(collection(db, "photos"));
         siteData.photos = photoSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log('✅ Photos data loaded', siteData.photos);
     } catch (error) {
         console.error("❌ Error loading photos:", error);
-        showModal("Could not load photo data from the database. Please try refreshing the page.", "alert");
-        return;
     }
 
     try {
         const venueSnap = await getDocs(collection(db, "venues"));
         siteData.venues = venueSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log('✅ Venues data loaded', siteData.venues);
     } catch (error) {
         console.error("❌ Error loading venues:", error);
-        showModal("Could not load venue data from the database. Please try refreshing the page.", "alert");
-        return;
     }
 
     try {
         const communitySnap = await getDocs(collection(db, "community"));
         siteData.communityItems = communitySnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log('✅ Community items data loaded', siteData.communityItems);
     } catch (error) {
         console.error("❌ Error loading community items:", error);
-        showModal("Could not load community data from the database. Please try refreshing the page.", "alert");
-        return;
     }
 
     try {
         const configDoc = await getDoc(doc(db, "site_config", "main"));
         siteData.config = configDoc.exists() ? configDoc.data() : {};
-        console.log('✅ Site config data loaded', siteData.config);
     } catch (error) {
         console.error("❌ Error loading site config:", error);
-        showModal("Could not load site configuration from the database. Please try refreshing the page.", "alert");
-        return;
     }
 
     console.log("✅ All data loaded successfully.");
+    if (!isInitialized) {
+        initializeAllModules();
+        isInitialized = true;
+    }
     renderAll();
 }
 
 // -----------------------------------------------------------------------------
-// --- 5. INITIALIZATION HUB
+// --- 5. INITIALIZATION & RENDERING
 // -----------------------------------------------------------------------------
+function initializeAllModules() {
+    console.log("🚀 Initializing all modules with event listeners...");
+    initializeJams(siteData.jams, siteData.venues, siteData.config, loadAllData);
+    initializeEvents(siteData.events, loadAllData);
+    initializeCommunity(siteData.communityItems, loadAllData);
+    initializeGallery(siteData.photos, siteData.config, loadAllData);
+    initializeVenueManagement(loadAllData);
+    initializeDefaultJamAdmin(siteData.config, siteData.venues, loadAllData);
+    initializeHeroAdmin(loadAllData);
+    console.log("✅ All modules initialized.");
+}
+
 function renderAll() {
     console.log("🎨 Rendering all page components with fresh data...");
 
@@ -130,15 +129,21 @@ function renderAll() {
         coverPhoto.src = siteData.config.coverPhotoUrl;
     }
     
-    // Initialize all the feature modules with the data they need
-    initializeJams(siteData.jams, siteData.venues, siteData.config, loadAllData);
-    initializeEvents(siteData.events, loadAllData);
-    initializeCommunity(siteData.communityItems, loadAllData);
-    initializeGallery(siteData.photos, siteData.config, loadAllData);
+    // This is the new rendering hub. 
+    // As modules are refactored, their render functions will be called from here.
+    renderVenueList(siteData.venues);
 
-    // Re-initialize admin components that depend on dynamic data
-    initializeVenueManagement(siteData.venues, loadAllData);
-    initializeDefaultJamAdmin(siteData.config, siteData.venues, loadAllData);
+    // For now, the old initialize functions are still called on first load.
+    // This is not ideal, but fixes the immediate bug.
+    // A full refactor would involve creating render functions for all modules.
+    if (!isInitialized) {
+        initializeJams(siteData.jams, siteData.venues, siteData.config, loadAllData);
+        initializeEvents(siteData.events, loadAllData);
+        initializeCommunity(siteData.communityItems, loadAllData);
+        initializeGallery(siteData.photos, siteData.config, loadAllData);
+        initializeDefaultJamAdmin(siteData.config, siteData.venues, loadAllData);
+    }
+    
     console.log("🎨 All components rendered.");
 }
 
@@ -148,27 +153,21 @@ function renderAll() {
 async function main() {
     console.log("🚀 Initializing application...");
 
-    // Sign in with the custom token or anonymously if not available
-    const initialAuthToken = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) ? __initial_auth_token : null;
-    console.log("🔑 Initial auth token:", initialAuthToken);
-
+    // Sign in
     try {
+        const initialAuthToken = (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) ? __initial_auth_token : null;
         if (initialAuthToken) {
-            console.log("Attempting to sign in with custom token...");
             await signInWithCustomToken(auth, initialAuthToken);
-            console.log("✅ Signed in with custom token.");
         } else {
-            console.log("No custom token, attempting anonymous sign-in...");
             await signInAnonymously(auth);
-            console.log("✅ Signed in anonymously.");
         }
+        console.log("✅ Signed in.");
     } catch (error) {
         console.error("❌ Firebase authentication failed:", error);
-        showModal("Authentication failed. Please check your network connection and see the console for details.", "alert");
     }
 
+    // Load HTML components
     console.log("🔄 Loading all HTML components...");
-    // Load all HTML components in parallel
     await Promise.all([
         loadComponent('components/header.html', 'header-container'),
         loadComponent('components/hero.html', 'hero-container'),
@@ -182,27 +181,18 @@ async function main() {
         loadComponent('components/footer.html', 'footer-container'),
         loadComponent('components/ui/modal.html', 'modal-container')
     ]);
-
     console.log("👍 All HTML components loaded.");
 
-    // Initialize UI modules that don't depend on data
+    // Initialize UI modules
     console.log("Initializing non-data-dependent UI modules...");
     initializeMobileMenu();
     initFestivalCarousel();
-    initializeAdminMode(); // Checks for admin status and adds class to body
-    initializeAdminPanel(); // Sets up tab functionality
+    initializeAdminMode();
+    initializeAdminPanel();
     console.log("✅ Non-data-dependent UI modules initialized.");
 
-    // Initialize admin modules that depend on Firebase being authenticated
-    console.log("Initializing data-dependent admin modules...");
-    initializeHeroAdmin(loadAllData);
-    console.log("✅ Data-dependent admin modules initialized.");
-
-    // Load initial data from Firestore, which will then trigger all data-dependent rendering
-    console.log("Inspecting db object before loading data:", db);
+    // Load data and render
     await loadAllData();
-
-    console.log("🎉 Application initialization complete.");
 }
 
 // -----------------------------------------------------------------------------

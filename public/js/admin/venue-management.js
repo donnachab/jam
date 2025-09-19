@@ -1,13 +1,9 @@
 import { db } from '../firebase-config.js';
-import { collection, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from '../ui/modal.js';
 import { getIsAdminMode } from './admin-mode.js';
 
-/**
- * Renders the list of venues in the admin panel.
- * @param {Array} venues - The array of venue objects.
- */
-function renderVenueList(venues) {
+export function renderVenueList(venues) {
   const venueListAdmin = document.getElementById("venue-list-admin");
   if (!venueListAdmin) return;
 
@@ -23,12 +19,7 @@ function renderVenueList(venues) {
   });
 }
 
-/**
- * Initializes the venue management functionality.
- * @param {Array} initialVenues - The initial array of venues.
- * @param {function} refreshData - A callback function to reload all site data.
- */
-export function initializeVenueManagement(initialVenues, refreshData) {
+export function initializeVenueManagement(refreshData) {
   const manageVenuesBtn = document.getElementById("manage-venues-btn");
   const venueManagementSection = document.getElementById("venue-management-section");
   const addVenueForm = document.getElementById("add-venue-form");
@@ -39,26 +30,21 @@ export function initializeVenueManagement(initialVenues, refreshData) {
     return;
   }
 
-  renderVenueList(initialVenues);
-
   manageVenuesBtn.addEventListener("click", () => {
     if (getIsAdminMode()) {
-        venueManagementSection.classList.remove("hidden");
+        venueManagementSection.style.display = 'block';
     }
   });
 
   addVenueForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-
-
     const nameInput = document.getElementById("new-venue-name");
     const mapLinkInput = document.getElementById("new-venue-map-link");
     const name = nameInput.value.trim();
     const mapLink = mapLinkInput.value.trim();
 
     if (!name) return;
-    const id = String(Date.now());
+    const id = name.toLowerCase().replace(/\s+/g, '-');
     try {
       await setDoc(doc(db, "venues", id), { id, name, mapLink });
       addVenueForm.reset();
@@ -71,8 +57,6 @@ export function initializeVenueManagement(initialVenues, refreshData) {
 
   venueListAdmin.addEventListener("click", async (e) => {
     if (e.target.classList.contains("delete-venue-btn")) {
-
-
       const venueId = e.target.dataset.id;
       showModal("Are you sure you want to delete this venue?", "confirm", async () => {
         try {
