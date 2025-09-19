@@ -30,9 +30,11 @@ function formatTime(timeStr) {
 let jamsToDisplay = [];
 let jamDatepicker = null;
 
-function manageJamSchedule(confirmedJams, testDate = null) {
+function manageJamSchedule(confirmedJams, config, testDate = null) {
     const today = testDate ? new Date(testDate) : new Date();
     today.setHours(0, 0, 0, 0);
+
+    const defaultDay = parseInt(config.defaultJamDay || '6', 10);
 
     let upcomingConfirmed = confirmedJams
         .map(jam => ({...jam, dateObj: parseDate(jam.date)}))
@@ -41,24 +43,32 @@ function manageJamSchedule(confirmedJams, testDate = null) {
 
     jamsToDisplay = [...upcomingConfirmed];
 
-    let lastJam = jamsToDisplay.length > 0 ? jamsToDisplay[jamsToDisplay.length - 1] : null;
-    let lastDate = lastJam ? new Date(lastJam.dateObj) : new Date(today);
+    const lastJamOnList = jamsToDisplay.length > 0 ? jamsToDisplay[jamsToDisplay.length - 1] : null;
+    let lastDate = lastJamOnList ? new Date(lastJamOnList.dateObj) : new Date(today);
+    
+    if (!lastJamOnList) {
+        lastDate.setDate(lastDate.getDate() - 1);
+    }
 
     while (jamsToDisplay.length < 5) {
         lastDate.setDate(lastDate.getDate() + 1);
-        if (lastDate.getDay() === 6) { // It's a Saturday
+        if (lastDate.getDay() === defaultDay) {
             const dateString = lastDate.toISOString().split('T')[0];
-            jamsToDisplay.push({
-                id: `proposal-${dateString}`,
-                date: dateString,
-                day: "Saturday",
-                venue: lastJam ? lastJam.venue : "To be decided...",
-                time: lastJam ? lastJam.time : "2:00 PM",
-                mapLink: lastJam ? lastJam.mapLink : null,
-                isProposal: true,
-            });
+            
+            if (!jamsToDisplay.some(jam => jam.date === dateString)) {
+                jamsToDisplay.push({
+                    id: `proposal-${dateString}`,
+                    date: dateString,
+                    day: dayNames[defaultDay],
+                    venue: config.defaultJamVenue || "To be decided...",
+                    time: config.defaultJamTime || "2:00 PM",
+                    mapLink: config.defaultJamMapLink || null,
+                    isProposal: true,
+                });
+            }
         }
     }
+    jamsToDisplay.sort((a, b) => (a.dateObj || parseDate(a.date)) - (b.dateObj || parseDate(b.date)));
     jamsToDisplay = jamsToDisplay.slice(0, 5);
 }
 
@@ -104,7 +114,7 @@ function renderJams() {
 }
 
 // --- Initialization ---
-export function initializeJams(initialJams, initialVenues, refreshData) {
+export function initializeJams(initialJams, initialVenues, config, refreshData) {
     const addJamBtn = document.getElementById("add-jam-btn");
     const addJamForm = document.getElementById("add-jam-form");
     const cancelJamBtn = document.getElementById("cancel-jam-btn");
@@ -121,7 +131,7 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
         }
     });
     
-    manageJamSchedule(initialJams);
+    manageJamSchedule(initialJams, config);
     renderJams();
 
     // Initialize date pickers
@@ -253,13 +263,13 @@ export function initializeJams(initialJams, initialVenues, refreshData) {
     document.getElementById("test-date-btn").addEventListener("click", () => {
         const testDate = document.getElementById("test-date-input").value;
         if (testDate) {
-            manageJamSchedule(initialJams, testDate);
+            manageJamSchedule(initialJams, config, testDate);
             renderJams();
         }
     });
     document.getElementById("reset-date-btn").addEventListener("click", () => {
         document.getElementById("test-date-input").value = "";
-        manageJamSchedule(initialJams);
+        manageJamSchedule(initialJams, config);
         renderJams();
     });
     

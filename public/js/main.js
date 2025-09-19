@@ -8,6 +8,7 @@ import { initFestivalCarousel } from './ui/carousels.js';
 import { initializeAdminMode } from './admin/admin-mode.js?v=2.1';
 import { initializeHeroAdmin } from './admin/hero-admin.js';
 import { initializeVenueManagement } from './admin/venue-management.js';
+import { initializeDefaultJamAdmin } from './admin/default-jam-admin.js';
 import { initializeJams } from './jams.js';
 import { initializeEvents } from './events.js';
 import { initializeCommunity } from './community.js';
@@ -129,13 +130,14 @@ function renderAll() {
     }
     
     // Initialize all the feature modules with the data they need
-    initializeJams(siteData.jams, siteData.venues, loadAllData);
+    initializeJams(siteData.jams, siteData.venues, siteData.config, loadAllData);
     initializeEvents(siteData.events, loadAllData);
     initializeCommunity(siteData.communityItems, loadAllData);
     initializeGallery(siteData.photos, siteData.config, loadAllData);
 
     // Re-initialize admin components that depend on dynamic data
     initializeVenueManagement(siteData.venues, loadAllData);
+    initializeDefaultJamAdmin(siteData.config, loadAllData);
     console.log("🎨 All components rendered.");
 }
 
@@ -172,6 +174,7 @@ async function main() {
         loadComponent('components/admin/hero-controls.html', 'admin-hero-controls-container'),
         loadComponent('components/jams.html', 'jams-container'),
         loadComponent('components/admin/jam-controls.html', 'admin-jam-controls-container'),
+        loadComponent('components/admin/default-jam-controls.html', 'admin-default-jam-controls-container'),
         loadComponent('components/format.html', 'format-container'),
         loadComponent('components/events.html', 'events-container'),
         loadComponent('components/admin/event-controls.html', 'admin-event-controls-container'),
