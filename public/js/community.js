@@ -1,8 +1,7 @@
 import { db } from './firebase-config.js';
-import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
 import { initCommunityCarousel } from './ui/carousels.js';
-import { siteData } from './main.js';
 
 let communitySwiper = null;
 
@@ -130,10 +129,15 @@ export function initializeCommunity(refreshData) {
         const btn = e.target.closest("button");
         if (!btn) return;
         const itemId = btn.dataset.id;
-        const item = siteData.communityItems.find(i => i.id === itemId);
-
+        
         if (btn.classList.contains("edit-community-btn")) {
-            showForm("edit", item);
+            const docRef = doc(db, "community", itemId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                showForm("edit", docSnap.data());
+            } else {
+                showModal("Could not find the item to edit.", "alert");
+            }
         } else if (btn.classList.contains("delete-community-btn")) {
             showModal("Delete this item?", "confirm", async () => {
                 await deleteDoc(doc(db, "community", itemId));

@@ -1,8 +1,7 @@
 import { db } from './firebase-config.js';
-import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
 import { initFestivalCarousel } from './ui/carousels.js';
-import { siteData } from './main.js';
 
 const festivalLogos = [
   { src: "images/cleggan-fringe-festival.jpg", alt: "Cleggan Fringe Festival Logo" },
@@ -60,7 +59,7 @@ export function renderEvents(events, venues) {
             dateDisplay += ` - ${endDate.toLocaleDateString('en-US', formatOpts)}`;
         }
 
-        const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${event.venue}" class="w-32 h-auto max-h-32 object-contain rounded-md mr-6 flex-shrink-0">` : '';
+        const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${event.venue}" class="w-32 h-24 mr-6 flex-shrink-0 object-cover rounded-md">` : '';
 
         div.innerHTML = `
             ${imageHtml}
@@ -164,10 +163,15 @@ export function initializeEvents(venues, refreshData) {
         const button = e.target.closest("button");
         if (!button) return;
         const eventId = button.dataset.id;
-        const event = siteData.events.find(ev => ev.id === eventId);
-
+        
         if (button.classList.contains("edit-event-btn")) {
-            showEventForm("edit", event);
+            const docRef = doc(db, "events", eventId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                showEventForm("edit", docSnap.data());
+            } else {
+                showModal("Could not find the event to edit.", "alert");
+            }
         } else if (button.classList.contains("delete-event-btn")) {
             showModal("Delete this event?", "confirm", async () => {
                 await deleteDoc(doc(db, "events", eventId));

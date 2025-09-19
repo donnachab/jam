@@ -1,7 +1,6 @@
 import { db } from './firebase-config.js';
-import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
-import { siteData } from './main.js';
 
 // --- Helper Functions ---
 const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -111,10 +110,9 @@ export function renderJams(jams, venues, config) {
 
         const mapLink = jam.mapLink ? ` <a href="${jam.mapLink}" target="_blank" class="text-blue-500 hover:underline whitespace-nowrap">(Map)</a>` : "";
         
-        const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${jam.venue}" class="w-24 h-auto max-h-24 object-contain rounded-md mr-4 flex-shrink-0">` : '';
+        const imageHtml = imageUrl ? `<div class="w-24 h-16 mr-4 flex-shrink-0"><img src="${imageUrl}" alt="${jam.venue}" class="w-full h-full object-cover rounded-md"></div>` : '';
 
         li.innerHTML = `
-            <div class="flex items-center">
             ${imageHtml}
             <div class="flex-grow jam-info">
                 <div class="flex flex-col sm:flex-row sm:items-baseline sm:space-x-2">
@@ -124,7 +122,6 @@ export function renderJams(jams, venues, config) {
                 </div>
                 <span class="text-gray-700 text-lg">${jam.venue}${mapLink}</span>
                 ${jam.cancelled ? '<span class="font-bold text-red-600 mt-1 sm:ml-4">(CANCELLED)</span>' : ""}
-            </div>
             </div>
             <div class="admin-controls-inline space-x-2 mt-2 sm:mt-0">${adminButtons}</div>
         `;
@@ -228,15 +225,24 @@ export function initializeJams(venues, refreshData) {
         if (!button) return;
 
         const jamId = button.dataset.id;
-        const jam = jamsToDisplay.find(j => j.id === jamId);
-        if (!jam) return;
-
+        
         if (button.classList.contains("edit-jam-btn")) {
-            showJamForm("edit", jam);
+            if (jamId.startsWith('proposal-')) {
+                const jam = jamsToDisplay.find(j => j.id === jamId);
+                showJamForm("edit", jam);
+            } else {
+                const docRef = doc(db, "jams", jamId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    showJamForm("edit", docSnap.data());
+                } else {
+                    showModal("Could not find the jam to edit.", "alert");
+                }
+            }
         } else if (button.classList.contains("delete-jam-btn")) {
-            if (jam.id.startsWith('proposal-')) {
+            if (jamId.startsWith('proposal-')) {
                 jamsToDisplay = jamsToDisplay.filter(j => j.id !== jamId);
-                renderJams(siteData.jams, siteData.config);
+                renderJams(siteData.jams, siteData.venues, siteData.config);
             } else {
                 showModal("Delete this jam permanently?", "confirm", async () => {
                     try {
@@ -249,12 +255,14 @@ export function initializeJams(venues, refreshData) {
                 });
             }
         } else if (button.classList.contains("cancel-jam-btn")) {
-            if (!jam.isProposal) {
+            const jam = jamsToDisplay.find(j => j.id === jamId);
+            if (jam && !jam.isProposal) {
                 await setDoc(doc(db, "jams", jamId), { cancelled: true }, { merge: true });
                 await refreshData();
             }
         } else if (button.classList.contains("reinstate-jam-btn")) {
-            if (!jam.isProposal) {
+            const jam = jamsToDisplay.find(j => j.id === jamId);
+            if (jam && !jam.isProposal) {
                 await setDoc(doc(db, "jams", jamId), { cancelled: false }, { merge: true });
                 await refreshData();
             }
