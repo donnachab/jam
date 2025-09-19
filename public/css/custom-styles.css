@@ -19,8 +19,12 @@
   - Hide admin controls by default.
   - Show them only when the body has the 'admin-mode' class.
 */
-.admin-controls-inline {
+.admin-controls, .admin-controls-inline {
   display: none;
+}
+
+body.admin-mode .admin-controls {
+    display: block;
 }
 
 body.admin-mode .admin-controls-inline {
