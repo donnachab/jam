@@ -110,18 +110,23 @@ export function renderJams(jams, venues, config) {
 
         const mapLink = jam.mapLink ? ` <a href="${jam.mapLink}" target="_blank" class="text-blue-500 hover:underline whitespace-nowrap">(Map)</a>` : "";
         
-        const imageHtml = imageUrl ? `<div class="w-24 h-16 mr-4 flex-shrink-0"><img src="${imageUrl}" alt="${jam.venue}" class="w-full h-full object-cover rounded-md"></div>` : '';
+        const imageHtml = imageUrl ? `
+            <div class="w-24 h-16 mr-4 flex-shrink-0">
+                <img src="${imageUrl}" alt="${jam.venue}" class="w-full h-full object-cover rounded-md">
+            </div>` : '';
 
         li.innerHTML = `
-            ${imageHtml}
-            <div class="flex-grow jam-info">
-                <div class="flex flex-col sm:flex-row sm:items-baseline sm:space-x-2">
-                    <span class="font-bold text-lg ${isSaturday ? "text-gray-500" : "text-violet-600"}">${jam.day}</span>
-                    <span class="text-lg font-bold text-primary">${formattedDate}:</span>
-                    <span class="text-lg font-bold text-gray-600">${formatTime(jam.time)}</span>
+            <div class="flex items-center">
+                ${imageHtml}
+                <div class="flex-grow jam-info min-w-0">
+                    <div class="flex flex-col sm:flex-row sm:items-baseline sm:space-x-2">
+                        <span class="font-bold text-lg ${isSaturday ? "text-gray-500" : "text-violet-600"}">${jam.day}</span>
+                        <span class="text-lg font-bold text-primary">${formattedDate}:</span>
+                        <span class="text-lg font-bold text-gray-600">${formatTime(jam.time)}</span>
+                    </div>
+                    <span class="text-gray-700 text-lg truncate">${jam.venue}${mapLink}</span>
+                    ${jam.cancelled ? '<span class="font-bold text-red-600 mt-1 sm:ml-4">(CANCELLED)</span>' : ""}
                 </div>
-                <span class="text-gray-700 text-lg">${jam.venue}${mapLink}</span>
-                ${jam.cancelled ? '<span class="font-bold text-red-600 mt-1 sm:ml-4">(CANCELLED)</span>' : ""}
             </div>
             <div class="admin-controls-inline space-x-2 mt-2 sm:mt-0">${adminButtons}</div>
         `;
