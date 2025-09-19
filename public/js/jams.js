@@ -34,7 +34,11 @@ function manageJamSchedule(confirmedJams, config, testDate = null) {
     const today = testDate ? new Date(testDate) : new Date();
     today.setHours(0, 0, 0, 0);
 
-    const defaultDay = parseInt(config.defaultJamDay || '6', 10);
+        let defaultDay = parseInt(config.defaultJamDay, 10);
+    if (isNaN(defaultDay)) {
+        const dayIndex = dayNames.indexOf(config.defaultJamDay);
+        defaultDay = dayIndex !== -1 ? dayIndex : 6;
+    }
 
     let upcomingConfirmed = confirmedJams
         .map(jam => ({...jam, dateObj: parseDate(jam.date)}))
