@@ -55,7 +55,7 @@ async function loadAllData() {
     console.log("🔄 Loading all data from Firestore...");
     try {
         const jamSnap = await getDocs(collection(db, "jams"));
-        siteData.jams = jamSnap.docs.map(doc => doc.data());
+        siteData.jams = jamSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         console.log('✅ Jams data loaded', siteData.jams);
     } catch (error) {
         console.error("❌ Error loading jams:", error);
@@ -65,7 +65,7 @@ async function loadAllData() {
 
     try {
         const eventSnap = await getDocs(collection(db, "events"));
-        siteData.events = eventSnap.docs.map(doc => doc.data());
+        siteData.events = eventSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         console.log('✅ Events data loaded', siteData.events);
     } catch (error) {
         console.error("❌ Error loading events:", error);
@@ -75,7 +75,7 @@ async function loadAllData() {
 
     try {
         const photoSnap = await getDocs(collection(db, "photos"));
-        siteData.photos = photoSnap.docs.map(doc => doc.data());
+        siteData.photos = photoSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         console.log('✅ Photos data loaded', siteData.photos);
     } catch (error) {
         console.error("❌ Error loading photos:", error);
@@ -85,7 +85,7 @@ async function loadAllData() {
 
     try {
         const venueSnap = await getDocs(collection(db, "venues"));
-        siteData.venues = venueSnap.docs.map(doc => doc.data());
+        siteData.venues = venueSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         console.log('✅ Venues data loaded', siteData.venues);
     } catch (error) {
         console.error("❌ Error loading venues:", error);
@@ -95,7 +95,7 @@ async function loadAllData() {
 
     try {
         const communitySnap = await getDocs(collection(db, "community"));
-        siteData.communityItems = communitySnap.docs.map(doc => doc.data());
+        siteData.communityItems = communitySnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         console.log('✅ Community items data loaded', siteData.communityItems);
     } catch (error) {
         console.error("❌ Error loading community items:", error);
