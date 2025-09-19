@@ -44,30 +44,36 @@ function manageJamSchedule(confirmedJams, config, testDate = null) {
     jamsToDisplay = [...upcomingConfirmed];
 
     const lastJamOnList = jamsToDisplay.length > 0 ? jamsToDisplay[jamsToDisplay.length - 1] : null;
-    let lastDate = lastJamOnList ? new Date(lastJamOnList.dateObj) : new Date(today);
-    
-    if (!lastJamOnList) {
+    let lastDate;
+    if (lastJamOnList) {
+        lastDate = new Date(lastJamOnList.dateObj);
+    } else {
+        lastDate = new Date(today);
         lastDate.setDate(lastDate.getDate() - 1);
     }
 
+    // Efficiently find the next jam dates
     while (jamsToDisplay.length < 5) {
-        lastDate.setDate(lastDate.getDate() + 1);
-        if (lastDate.getDay() === defaultDay) {
-            const dateString = lastDate.toISOString().split('T')[0];
-            
-            if (!jamsToDisplay.some(jam => jam.date === dateString)) {
-                jamsToDisplay.push({
-                    id: `proposal-${dateString}`,
-                    date: dateString,
-                    day: dayNames[defaultDay],
-                    venue: config.defaultJamVenue || "To be decided...",
-                    time: config.defaultJamTime || "2:00 PM",
-                    mapLink: config.defaultJamMapLink || null,
-                    isProposal: true,
-                });
-            }
+        const currentDay = lastDate.getDay();
+        const daysUntilNext = (defaultDay - currentDay + 7) % 7;
+        const daysToAdd = daysUntilNext === 0 ? 7 : daysUntilNext;
+        lastDate.setDate(lastDate.getDate() + daysToAdd);
+
+        const dateString = lastDate.toISOString().split('T')[0];
+
+        if (!jamsToDisplay.some(jam => jam.date === dateString)) {
+            jamsToDisplay.push({
+                id: `proposal-${dateString}`,
+                date: dateString,
+                day: dayNames[defaultDay],
+                venue: config.defaultJamVenue || "To be decided...",
+                time: config.defaultJamTime || "2:00 PM",
+                mapLink: config.defaultJamMapLink || null,
+                isProposal: true,
+            });
         }
     }
+
     jamsToDisplay.sort((a, b) => (a.dateObj || parseDate(a.date)) - (b.dateObj || parseDate(b.date)));
     jamsToDisplay = jamsToDisplay.slice(0, 5);
 }
