@@ -2,6 +2,7 @@ import { db } from './firebase-config.js';
 import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
 import { initFestivalCarousel } from './ui/carousels.js';
+import { siteData } from './main.js';
 
 const festivalLogos = [
   { src: "images/cleggan-fringe-festival.jpg", alt: "Cleggan Fringe Festival Logo" },
@@ -73,7 +74,7 @@ export function renderEvents(events) {
     });
 }
 
-export function initializeEvents(events, venues, refreshData) {
+export function initializeEvents(venues, refreshData) {
     const addEventBtn = document.getElementById("add-event-btn");
     const addEventForm = document.getElementById("add-event-form");
     const cancelEventBtn = document.getElementById("cancel-event-btn");
@@ -155,7 +156,7 @@ export function initializeEvents(events, venues, refreshData) {
         const button = e.target.closest("button");
         if (!button) return;
         const eventId = button.dataset.id;
-        const event = events.find(ev => ev.id === eventId);
+        const event = siteData.events.find(ev => ev.id === eventId);
 
         if (button.classList.contains("edit-event-btn")) {
             showEventForm("edit", event);

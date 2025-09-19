@@ -21,7 +21,7 @@ import { signInAnonymously, signInWithCustomToken } from "https://www.gstatic.co
 // -----------------------------------------------------------------------------
 // --- 2. STATE MANAGEMENT
 // -----------------------------------------------------------------------------
-let siteData = {
+export let siteData = {
     jams: [],
     events: [],
     photos: [],
@@ -111,9 +111,9 @@ async function loadAllData() {
 // -----------------------------------------------------------------------------
 function initializeAllModules() {
     console.log("🚀 Initializing all modules with event listeners...");
-    initializeJams(siteData.jams, siteData.venues, siteData.config, loadAllData);
-    initializeEvents(siteData.events, siteData.venues, loadAllData);
-    initializeCommunity(siteData.communityItems, loadAllData);
+    initializeJams(siteData.venues, loadAllData);
+    initializeEvents(siteData.venues, loadAllData);
+    initializeCommunity(loadAllData);
     initializeGallery(loadAllData);
     initializeVenueManagement(loadAllData);
     initializeDefaultJamAdmin(siteData.config, siteData.venues, loadAllData);

@@ -1,6 +1,7 @@
 import { db } from './firebase-config.js';
 import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
+import { siteData } from './main.js';
 
 // --- Helper Functions ---
 const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -123,7 +124,7 @@ export function renderJams(jams, config) {
     });
 }
 
-export function initializeJams(jams, venues, config, refreshData) {
+export function initializeJams(venues, refreshData) {
     const addJamBtn = document.getElementById("add-jam-btn");
     const addJamForm = document.getElementById("add-jam-form");
     const cancelJamBtn = document.getElementById("cancel-jam-btn");
@@ -227,7 +228,7 @@ export function initializeJams(jams, venues, config, refreshData) {
         } else if (button.classList.contains("delete-jam-btn")) {
             if (jam.id.startsWith('proposal-')) {
                 jamsToDisplay = jamsToDisplay.filter(j => j.id !== jamId);
-                renderJams(jams, config);
+                renderJams(siteData.jams, siteData.config);
             } else {
                 showModal("Delete this jam permanently?", "confirm", async () => {
                     try {

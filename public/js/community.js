@@ -2,6 +2,7 @@ import { db } from './firebase-config.js';
 import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
 import { initCommunityCarousel } from './ui/carousels.js';
+import { siteData } from './main.js';
 
 let communitySwiper = null;
 
@@ -44,7 +45,7 @@ export function renderCommunity(items) {
     communitySwiper = initCommunityCarousel(items);
 }
 
-export function initializeCommunity(items, refreshData) {
+export function initializeCommunity(refreshData) {
     const addBtn = document.getElementById("add-community-item-btn");
     const form = document.getElementById("add-community-form");
     const cancelBtn = document.getElementById("cancel-community-btn");
@@ -129,7 +130,7 @@ export function initializeCommunity(items, refreshData) {
         const btn = e.target.closest("button");
         if (!btn) return;
         const itemId = btn.dataset.id;
-        const item = items.find(i => i.id === itemId);
+        const item = siteData.communityItems.find(i => i.id === itemId);
 
         if (btn.classList.contains("edit-community-btn")) {
             showForm("edit", item);
