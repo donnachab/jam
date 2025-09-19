@@ -28,8 +28,8 @@ function formatTime(timeStr) {
     return `${formattedHours}:${minutes} ${suffix}`;
 }
 
-function manageJamSchedule(confirmedJams, config, testDate = null) {
-    const today = testDate ? new Date(testDate) : new Date();
+function manageJamSchedule(confirmedJams, config) {
+    const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     let defaultDay = parseInt(config.defaultJamDay, 10);
@@ -79,7 +79,7 @@ function manageJamSchedule(confirmedJams, config, testDate = null) {
     jamsToDisplay = jamsToDisplay.slice(0, 5);
 }
 
-export function renderJams(jams, venues, config) {
+export function renderJams(jams, config) {
     manageJamSchedule(jams, config);
     
     const jamList = document.getElementById("jam-list");
@@ -123,7 +123,7 @@ export function renderJams(jams, venues, config) {
     });
 }
 
-export function initializeJams(venues, refreshData) {
+export function initializeJams(jams, venues, config, refreshData) {
     const addJamBtn = document.getElementById("add-jam-btn");
     const addJamForm = document.getElementById("add-jam-form");
     const cancelJamBtn = document.getElementById("cancel-jam-btn");
@@ -155,7 +155,6 @@ export function initializeJams(venues, refreshData) {
         }
     });
     flatpickr("#jam-time", { enableTime: true, noCalendar: true, dateFormat: "h:i K", defaultDate: "2:00 PM" });
-    flatpickr("#test-date-input", { dateFormat: "Y-m-d" });
 
     const showJamForm = (mode = "add", jam = null) => {
         addJamForm.style.display = "block";
@@ -228,7 +227,7 @@ export function initializeJams(venues, refreshData) {
         } else if (button.classList.contains("delete-jam-btn")) {
             if (jam.id.startsWith('proposal-')) {
                 jamsToDisplay = jamsToDisplay.filter(j => j.id !== jamId);
-                renderJams(jamsToDisplay, venues, {}); // This is not right
+                renderJams(jams, config);
             } else {
                 showModal("Delete this jam permanently?", "confirm", async () => {
                     try {
@@ -251,16 +250,6 @@ export function initializeJams(venues, refreshData) {
                 await refreshData();
             }
         }
-    });
-
-    document.getElementById("test-date-btn").addEventListener("click", () => {
-        const testDate = document.getElementById("test-date-input").value;
-        if (testDate) {
-            // This needs to be refactored to not call manageJamSchedule directly
-        }
-    });
-    document.getElementById("reset-date-btn").addEventListener("click", () => {
-        // This needs to be refactored
     });
     
     console.log("✅ Jams module initialized.");
