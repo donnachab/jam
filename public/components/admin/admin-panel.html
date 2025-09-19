@@ -1,0 +1,226 @@
+<div id="admin-panel" class="admin-controls w-full max-w-5xl mx-auto my-8 p-4 bg-gray-100 border rounded-lg shadow-lg">
+    <div class="flex items-center justify-between mb-4 border-b pb-2">
+        <h2 class="text-2xl font-bold text-gray-800">Admin Panel</h2>
+        <button class="exit-admin-btn px-4 py-2 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 transition duration-300 shadow-md">
+            Exit Admin Mode
+        </button>
+    </div>
+
+    <!-- Tab Buttons -->
+    <div class="flex flex-wrap border-b bg-gray-50 rounded-t-md">
+        <button class="admin-tab-btn active-tab" data-tab="jams-tab">Jams</button>
+        <button class="admin-tab-btn" data-tab="site-tab">Site & Hero</button>
+        <button class="admin-tab-btn" data-tab="content-tab">Content</button>
+    </div>
+
+    <!-- Jams Tab -->
+    <div id="jams-tab" class="admin-tab-content p-4 bg-white rounded-b-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+                <h3 class="text-xl font-bold text-primary mb-4">Manage Jams</h3>
+                <!-- Jam Controls from jam-controls.html -->
+                <div id="jam-controls-content">
+                    <div class="text-center admin-controls-inline flex-wrap justify-center gap-4 mb-6">
+                        <button id="add-jam-btn" class="px-6 py-2 bg-green-500 text-white font-bold rounded-full hover:bg-green-600 transition duration-300 shadow-md">Add New Jam</button>
+                        <button id="manage-venues-btn" class="px-6 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600 transition duration-300 shadow-md">Manage Venues</button>
+                    </div>
+                    <form id="add-jam-form" class="p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+                        <h3 id="form-title" class="text-xl font-bold text-primary mb-4">Add/Edit Jam</h3>
+                        <input type="hidden" id="edit-jam-id" />
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div class="md:col-span-2">
+                                <label for="jam-date" class="block text-gray-700 font-bold mb-2 text-left">Date</label>
+                                <input type="text" id="jam-date" class="w-full p-2 border rounded" placeholder="Select a date..."/>
+                            </div>
+                            <div>
+                                <label for="jam-day" class="block text-gray-700 font-bold mb-2 text-left">Day</label>
+                                <input type="text" id="jam-day" class="w-full p-2 border rounded bg-gray-200" readonly/>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="jam-time" class="block text-gray-700 font-bold mb-2 text-left">Time</label>
+                            <input type="text" id="jam-time" class="w-full p-2 border rounded" placeholder="Select a time..."/>
+                        </div>
+                        <div class="mb-4">
+                            <label for="jam-venue" class="block text-gray-700 font-bold mb-2 text-left">Venue</label>
+                            <select id="jam-venue" class="w-full p-2 border rounded"></select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="jam-map-link" class="block text-gray-700 font-bold mb-2 text-left">Google Maps Link</label>
+                            <input type="url" id="jam-map-link" class="w-full p-2 border rounded" placeholder="Auto-populates from venue"/>
+                        </div>
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" id="cancel-jam-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Jam</button>
+                        </div>
+                    </form>
+                    <div id="venue-management-section" class="mt-8 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+                        <h3 class="text-xl font-bold text-primary mb-4">Manage Venues</h3>
+                        <ul id="venue-list-admin" class="space-y-2 mb-4"></ul>
+                        <form id="add-venue-form">
+                            <h4 class="text-lg font-bold text-primary mb-2">Add New Venue</h4>
+                            <div class="mb-2"><input type="text" id="new-venue-name" class="w-full p-2 border rounded" placeholder="Venue Name" /></div>
+                            <div class="mb-2"><input type="url" id="new-venue-map-link" class="w-full p-2 border rounded" placeholder="Google Maps Link" /></div>
+                            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Add Venue</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-primary mb-4">Jam Defaults & Testing</h3>
+                <!-- Default Jam Controls -->
+                <div id="default-jam-section">
+                    <h4 class="text-lg font-bold text-gray-700 mb-2">Default Jam Proposal Settings</h4>
+                    <p class="text-sm text-gray-600 mb-4">Configure the default details for auto-generated jam proposals.</p>
+                    <form id="default-jam-form" class="p-4 border rounded bg-gray-50">
+                        <div class="mb-4">
+                            <label for="default-jam-day" class="block text-gray-700 font-bold mb-2 text-left">Default Day</label>
+                            <select id="default-jam-day" class="w-full p-2 border rounded">
+                                <option value="0">Sunday</option>
+                                <option value="1">Monday</option>
+                                <option value="2">Tuesday</option>
+                                <option value="3">Wednesday</option>
+                                <option value="4">Thursday</option>
+                                <option value="5">Friday</option>
+                                <option value="6">Saturday</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="default-jam-venue" class="block text-gray-700 font-bold mb-2 text-left">Default Venue</label>
+                            <select id="default-jam-venue" class="w-full p-2 border rounded">
+                                <option value="">Select a venue...</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="default-jam-time" class="block text-gray-700 font-bold mb-2 text-left">Default Time</label>
+                            <input type="text" id="default-jam-time" class="w-full p-2 border rounded" placeholder="e.g., 3:00 PM" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="default-jam-map-link" class="block text-gray-700 font-bold mb-2 text-left">Default Google Maps Link</label>
+                            <input type="url" id="default-jam-map-link" class="w-full p-2 border rounded" placeholder="Auto-populates from venue" />
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="px-6 py-2 bg-primary text-white font-bold rounded-full hover:opacity-90">Save Defaults</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Date Testing Module (Collapsible) -->
+                <details class="mt-6">
+                    <summary class="text-lg font-bold text-gray-700 cursor-pointer hover:text-primary">Advanced: Date Testing</summary>
+                    <div class="mt-2 p-4 border rounded bg-gray-50">
+                        <p class="text-sm text-gray-600 mb-2">See how the list will look on a specific date.</p>
+                        <div class="flex space-x-2">
+                            <input type="text" id="test-date-input" class="w-full p-2 border rounded" placeholder="Select a test date..."/>
+                            <button id="test-date-btn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 whitespace-nowrap">Test Date</button>
+                            <button id="reset-date-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Reset</button>
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- Site & Hero Tab -->
+    <div id="site-tab" class="admin-tab-content hidden p-4 bg-white rounded-b-md">
+        <!-- Hero Controls -->
+        <h3 class="text-xl font-bold text-primary mb-4">Hero Section</h3>
+        <div class="container mx-auto px-4 sm:px-6 text-center relative z-10">
+            <div class="admin-controls-inline items-center justify-center">
+                <button id="edit-cover-photo-btn" class="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600 transition duration-300 shadow-md">Change Cover Photo</button>
+            </div>
+            <form id="edit-cover-photo-form" class="max-w-xl mx-auto mt-4 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+                <h3 class="text-xl font-bold text-primary mb-4">Change Cover Photo</h3>
+                <div class="mb-4">
+                    <label for="cover-photo-file" class="block text-gray-700 font-bold mb-2 text-left">Upload New Photo</label>
+                    <input type="file" id="cover-photo-file" class="w-full p-2 border rounded" accept="image/*"/>
+                    <p class="text-sm text-gray-500 mt-1 text-left">Or paste a URL below...</p>
+                </div>
+                <div class="mb-4">
+                    <label for="cover-photo-url" class="block text-gray-700 font-bold mb-2 text-left">New Photo URL</label>
+                    <input type="url" id="cover-photo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="cancel-cover-photo-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Photo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Content Tab -->
+    <div id="content-tab" class="admin-tab-content hidden p-4 bg-white rounded-b-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Events -->
+            <div>
+                <h3 class="text-xl font-bold text-primary mb-4">Events</h3>
+                <div id="event-controls-content">
+                    <div class="text-center admin-controls-inline"><button id="add-event-btn" class="px-6 py-2 bg-green-500 text-white font-bold rounded-full hover:bg-green-600">Add New Event</button></div>
+                    <form id="add-event-form" class="mt-8 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+                        <h3 id="event-form-title" class="text-xl font-bold text-primary mb-4">Add a New Event</h3>
+                        <input type="hidden" id="edit-event-id" />
+                        <div class="mb-4"><label for="event-title" class="block text-gray-700 font-bold mb-2 text-left">Title</label><input type="text" id="event-title" class="w-full p-2 border rounded"/></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div><label for="event-start-date" class="block text-gray-700 font-bold mb-2 text-left">Start Date</label><input type="text" id="event-start-date" class="w-full p-2 border rounded"/></div>
+                            <div><label for="event-end-date" class="block text-gray-700 font-bold mb-2 text-left">End Date</label><input type="text" id="event-end-date" class="w-full p-2 border rounded"/></div>
+                        </div>
+                        <div class="mb-4"><label for="event-time" class="block text-gray-700 font-bold mb-2 text-left">Time (Optional)</label><input type="text" id="event-time" class="w-full p-2 border rounded"/></div>
+                        <div class="mb-4"><label for="event-map-link" class="block text-gray-700 font-bold mb-2 text-left">Google Maps Link (Optional)</label><input type="url" id="event-map-link" class="w-full p-2 border rounded"/></div>
+                        <div class="mb-4"><label for="event-description" class="block text-gray-700 font-bold mb-2 text-left">Description</label><textarea id="event-description" class="w-full p-2 border rounded" rows="4"></textarea></div>
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" id="cancel-event-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Event</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Community -->
+            <div>
+                <h3 class="text-xl font-bold text-primary mb-4">Community & Charity</h3>
+                <div id="community-controls-content">
+                    <div class="text-center admin-controls-inline"><button id="add-community-item-btn" class="px-6 py-2 bg-green-500 text-white font-bold rounded-full hover:bg-green-600">Add New Item</button></div>
+                    <form id="add-community-form" class="mt-8 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+                        <h3 id="community-form-title" class="text-xl font-bold text-primary mb-4">Add New Item</h3>
+                        <input type="hidden" id="edit-community-id" />
+                        <div class="mb-4"><label for="community-image-url" class="block text-gray-700 font-bold mb-2 text-left">Image URL</label><input type="url" id="community-image-url" class="w-full p-2 border rounded" required/></div>
+                        <div class="mb-4"><label for="community-item-type" class="block text-gray-700 font-bold mb-2 text-left">Item Type</label><select id="community-item-type" class="w-full p-2 border rounded"><option value="community">Community Event</option><option value="charity">Charity Fundraiser</option></select></div>
+                        <div id="community-headline-wrapper" class="mb-4"><label for="community-headline" class="block text-gray-700 font-bold mb-2 text-left">Headline</label><input type="text" id="community-headline" class="w-full p-2 border rounded"/></div>
+                        <div id="charity-fields-wrapper" class="hidden">
+                            <div class="mb-4"><label for="community-amount" class="block text-gray-700 font-bold mb-2 text-left">Amount Raised</label><input type="text" id="community-amount" class="w-full p-2 border rounded"/></div>
+                            <div class="mb-4"><label for="community-charity-name" class="block text-gray-700 font-bold mb-2 text-left">For (Charity Name)</label><input type="text" id="community-charity-name" class="w-full p-2 border rounded"/></div>
+                        </div>
+                        <div class="mb-4"><label for="community-description" class="block text-gray-700 font-bold mb-2 text-left">Description</label><textarea id="community-description" class="w-full p-2 border rounded" rows="3"></textarea></div>
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" id="cancel-community-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Item</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Gallery -->
+            <div>
+                <h3 class="text-xl font-bold text-primary mb-4">Gallery</h3>
+                <div id="gallery-controls-content">
+                    <div class="text-center admin-controls-inline"><button id="edit-featured-video-btn" class="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600">Change Featured Video</button></div>
+                    <form id="edit-featured-video-form" class="max-w-xl mx-auto mt-4 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+                        <h3 class="text-xl font-bold text-primary mb-4">Change Featured Video</h3>
+                        <div class="mb-4"><label for="featured-video-url" class="block text-gray-700 font-bold mb-2 text-left">New YouTube Video URL</label><input type="url" id="featured-video-url" class="w-full p-2 border rounded"/></div>
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" id="cancel-featured-video-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Video</button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-8 admin-controls-inline"><button id="add-photo-btn" class="px-6 py-2 bg-green-500 text-white font-bold rounded-full hover:bg-green-600">Add Photo</button></div>
+                    <form id="add-photo-form" class="mt-8 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+                        <h3 class="text-xl font-bold text-primary mb-4">Add New Photo</h3>
+                        <div class="mb-4"><label for="photo-url" class="block text-gray-700 font-bold mb-2 text-left">Photo URL</label><input type="url" id="photo-url" class="w-full p-2 border rounded"/></div>
+                        <div class="mb-4"><label for="photo-caption" class="block text-gray-700 font-bold mb-2 text-left">Caption (Alt Text)</label><input type="text" id="photo-caption" class="w-full p-2 border rounded"/></div>
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" id="cancel-photo-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Photo</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

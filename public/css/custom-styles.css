@@ -31,6 +31,15 @@ body.admin-mode .admin-controls-inline {
   display: flex;
 }
 
+/* Admin Panel Tabs */
+.admin-tab-btn {
+    @apply px-4 py-2 text-gray-600 font-semibold border-b-2 border-transparent hover:bg-gray-100 hover:border-gray-300;
+}
+
+.admin-tab-btn.active-tab {
+    @apply text-primary border-primary;
+}
+
 /* 
   Jam Cancellation Styling
 */

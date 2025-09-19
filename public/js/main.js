@@ -6,6 +6,7 @@ import { showModal } from './ui/modal.js';
 import { initializeMobileMenu } from './ui/mobile-menu.js';
 import { initFestivalCarousel } from './ui/carousels.js';
 import { initializeAdminMode } from './admin/admin-mode.js?v=2.1';
+import { initializeAdminPanel } from './admin/admin-panel.js';
 import { initializeHeroAdmin } from './admin/hero-admin.js';
 import { initializeVenueManagement } from './admin/venue-management.js';
 import { initializeDefaultJamAdmin } from './admin/default-jam-admin.js';
@@ -137,7 +138,7 @@ function renderAll() {
 
     // Re-initialize admin components that depend on dynamic data
     initializeVenueManagement(siteData.venues, loadAllData);
-    initializeDefaultJamAdmin(siteData.config, loadAllData);
+    initializeDefaultJamAdmin(siteData.config, siteData.venues, loadAllData);
     console.log("🎨 All components rendered.");
 }
 
@@ -171,17 +172,12 @@ async function main() {
     await Promise.all([
         loadComponent('components/header.html', 'header-container'),
         loadComponent('components/hero.html', 'hero-container'),
-        loadComponent('components/admin/hero-controls.html', 'admin-hero-controls-container'),
+        loadComponent('components/admin/admin-panel.html', 'admin-panel-container'),
         loadComponent('components/jams.html', 'jams-container'),
-        loadComponent('components/admin/jam-controls.html', 'admin-jam-controls-container'),
-        loadComponent('components/admin/default-jam-controls.html', 'admin-default-jam-controls-container'),
         loadComponent('components/format.html', 'format-container'),
         loadComponent('components/events.html', 'events-container'),
-        loadComponent('components/admin/event-controls.html', 'admin-event-controls-container'),
         loadComponent('components/community.html', 'community-container'),
-        loadComponent('components/admin/community-controls.html', 'admin-community-controls-container'),
         loadComponent('components/gallery.html', 'gallery-container'),
-        loadComponent('components/admin/gallery-controls.html', 'admin-gallery-controls-container'),
         loadComponent('components/contact.html', 'contact-container'),
         loadComponent('components/footer.html', 'footer-container'),
         loadComponent('components/ui/modal.html', 'modal-container')
@@ -195,18 +191,19 @@ async function main() {
     initFestivalCarousel();
     console.log("✅ Non-data-dependent UI modules initialized.");
 
-// Initialize admin mode AFTER footer is loaded - wait for DOM to be ready
-function initAdminWhenReady() {
-    const adminButton = document.getElementById('admin-mode-btn');
-    if (adminButton) {
-        console.log('✅ Admin button found, initializing admin mode...');
-        initializeAdminMode();
-    } else {
-        console.log('⏳ Admin button not ready, retrying in 50ms...');
-        setTimeout(initAdminWhenReady, 50);
+    // Initialize admin mode AFTER footer is loaded - wait for DOM to be ready
+    function initAdminWhenReady() {
+        const adminButton = document.getElementById('admin-mode-btn');
+        if (adminButton) {
+            console.log('✅ Admin button found, initializing admin mode...');
+            initializeAdminMode();
+            initializeAdminPanel();
+        } else {
+            console.log('⏳ Admin button not ready, retrying in 50ms...');
+            setTimeout(initAdminWhenReady, 50);
+        }
     }
-}
-initAdminWhenReady();
+    initAdminWhenReady();
 
     // Initialize admin modules that depend on Firebase being authenticated
     console.log("Initializing data-dependent admin modules...");

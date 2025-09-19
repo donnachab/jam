@@ -2,15 +2,38 @@ import { db } from '../firebase-config.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from '../ui/modal.js';
 
-export function initializeDefaultJamAdmin(config, refreshData) {
+export function initializeDefaultJamAdmin(config, venues, refreshData) {
     const form = document.getElementById('default-jam-form');
     if (!form) return;
 
+    const venueSelect = document.getElementById('default-jam-venue');
+    const mapLinkInput = document.getElementById('default-jam-map-link');
+
+    // Populate venue dropdown
+    venueSelect.innerHTML = '<option value="">Select a venue...</option>';
+    venues.forEach(venue => {
+        const option = document.createElement('option');
+        option.value = venue.name;
+        option.textContent = venue.name;
+        venueSelect.appendChild(option);
+    });
+
     // Populate the form with existing config values
-    document.getElementById('default-jam-day').value = config.defaultJamDay || '6'; // Default to Saturday if not set
-    document.getElementById('default-jam-venue').value = config.defaultJamVenue || '';
+    document.getElementById('default-jam-day').value = config.defaultJamDay || '6';
+    venueSelect.value = config.defaultJamVenue || '';
     document.getElementById('default-jam-time').value = config.defaultJamTime || '';
-    document.getElementById('default-jam-map-link').value = config.defaultJamMapLink || '';
+    mapLinkInput.value = config.defaultJamMapLink || '';
+
+    // Handle venue change
+    venueSelect.addEventListener('change', () => {
+        const selectedVenueName = venueSelect.value;
+        const selectedVenue = venues.find(v => v.name === selectedVenueName);
+        if (selectedVenue) {
+            mapLinkInput.value = selectedVenue.mapLink || '';
+        } else {
+            mapLinkInput.value = '';
+        }
+    });
 
     // Handle form submission
     form.addEventListener('submit', async (e) => {
@@ -19,9 +42,9 @@ export function initializeDefaultJamAdmin(config, refreshData) {
 
         const newDefaults = {
             defaultJamDay: document.getElementById('default-jam-day').value,
-            defaultJamVenue: document.getElementById('default-jam-venue').value.trim(),
+            defaultJamVenue: venueSelect.value.trim(),
             defaultJamTime: document.getElementById('default-jam-time').value.trim(),
-            defaultJamMapLink: document.getElementById('default-jam-map-link').value.trim(),
+            defaultJamMapLink: mapLinkInput.value.trim(),
         };
 
         try {
