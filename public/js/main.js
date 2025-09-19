@@ -180,6 +180,35 @@ async function main() {
     initFestivalCarousel();
     initializeAdminMode();
     initializeAdminPanel();
+
+    // --- Theme Switching Logic ---
+    const defaultThemeLink = document.querySelector('link[href="css/gcc-theme.css"]');
+    const maroonThemeLink = document.getElementById('maroon-theme-link');
+    const themeSelect = document.getElementById('theme-select');
+
+    function applyTheme(themeName) {
+        if (themeName === 'maroon') {
+            if (defaultThemeLink) defaultThemeLink.disabled = true;
+            if (maroonThemeLink) maroonThemeLink.disabled = false;
+        } else { // default
+            if (defaultThemeLink) defaultThemeLink.disabled = false;
+            if (maroonThemeLink) maroonThemeLink.disabled = true;
+        }
+        localStorage.setItem('selectedTheme', themeName);
+    }
+
+    if (themeSelect) {
+        themeSelect.addEventListener('change', (event) => {
+            applyTheme(event.target.value);
+        });
+
+        // Apply saved theme on load
+        const savedTheme = localStorage.getItem('selectedTheme') || 'default';
+        themeSelect.value = savedTheme;
+        applyTheme(savedTheme);
+    }
+    // --- End Theme Switching Logic ---
+
     console.log("✅ Non-data-dependent UI modules initialized.");
 
     // Load data and render

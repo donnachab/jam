@@ -1,0 +1,99 @@
+/* Base styles */
+body {
+    background-color: #f8f8f8; /* Light background */
+    color: #333333; /* Dark text for contrast */
+    font-family: Arial, sans-serif;
+}
+
+/* Links */
+a {
+    color: #81112c;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #a0203f; /* Slightly lighter for hover */
+    text-decoration: underline;
+}
+
+/* Buttons */
+button, .button, input[type="submit"], input[type="button"] {
+    background-color: #81112c;
+    color: #ffffff;
+    border: 1px solid #81112c;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover, .button:hover, input[type="submit"]:hover, input[type="button"]:hover {
+    background-color: #a0203f; /* Slightly lighter for hover */
+    border-color: #a0203f;
+}
+
+button:focus, .button:focus, input[type="submit"]:focus, input[type="button"]:focus {
+    outline: 2px solid #c0c0c0; /* Accessible focus indicator */
+    outline-offset: 2px;
+}
+
+/* Form Controls */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+    border: 1px solid #cccccc;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #81112c;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(129, 17, 44, 0.2); /* Subtle focus glow */
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+    color: #81112c;
+}
+
+/* Navigation/Menu items */
+.navbar, .menu {
+    background-color: #81112c;
+    color: #ffffff;
+}
+
+.navbar a, .menu a {
+    color: #ffffff;
+}
+
+.navbar a:hover, .menu a:hover {
+    background-color: #a0203f;
+}
+
+/* Specific UI elements (assuming some common classes) */
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.badge {
+    background-color: #81112c;
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+}
