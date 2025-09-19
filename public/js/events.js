@@ -60,26 +60,24 @@ export function renderEvents(events, venues) {
         }
 
         const imageHtml = imageUrl ? `
-            <div class="w-32 h-24 mr-6 flex-shrink-0">
-                <img src="${imageUrl}" alt="${event.venue}" class="w-full h-full object-cover rounded-md">
+            <div style="width: 96px; height: 96px; margin-right: 1.5rem; flex-shrink: 0; background-color: #e5e7eb; border-radius: 0.375rem; display: flex; align-items: center; justify-content: center;">
+                <img src="${imageUrl}" alt="${event.venue}" style="width: 100%; height: 100%; object-fit: contain;">
             </div>` : '';
 
         div.innerHTML = `
-            <div class="flex items-start">
-                ${imageHtml}
-                <div class="flex-grow min-w-0">
-                    <div class="admin-controls-inline absolute top-2 right-2 space-x-2">
-                        <button data-id="${event.id}" class="edit-event-btn text-blue-500 hover:text-blue-700">Edit</button>
-                        <button data-id="${event.id}" class="delete-event-btn text-red-500 hover:text-red-700">Delete</button>
-                    </div>
-                    <h3 class="text-2xl font-bold text-primary">${event.title}</h3>
-                    <div class="flex items-center space-x-4 mt-1">
-                        <p class="text-lg font-semibold text-gray-700">${dateDisplay}</p>
-                        ${event.time ? `<span class="text-gray-600 font-semibold">${event.time}</span>` : ''}
-                        ${event.mapLink ? `<a href="${event.mapLink}" target="_blank" class="text-blue-500 hover:underline whitespace-nowrap">(Map)</a>` : ''}
-                    </div>
-                    <p class="mt-4 text-gray-600">${event.description}</p>
+            ${imageHtml}
+            <div class="flex-grow min-w-0">
+                <div class="admin-controls-inline absolute top-2 right-2 space-x-2">
+                    <button data-id="${event.id}" class="edit-event-btn text-blue-500 hover:text-blue-700">Edit</button>
+                    <button data-id="${event.id}" class="delete-event-btn text-red-500 hover:text-red-700">Delete</button>
                 </div>
+                <h3 class="text-2xl font-bold text-primary">${event.title}</h3>
+                <div class="flex items-center space-x-4 mt-1">
+                    <p class="text-lg font-semibold text-gray-700">${dateDisplay}</p>
+                    ${event.time ? `<span class="text-gray-600 font-semibold">${event.time}</span>` : ''}
+                    ${event.mapLink ? `<a href="${event.mapLink}" target="_blank" class="text-blue-500 hover:underline whitespace-nowrap">(Map)</a>` : ''}
+                </div>
+                <p class="mt-4 text-gray-600">${event.description}</p>
             </div>
         `;
         eventList.appendChild(div);
