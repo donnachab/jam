@@ -49,7 +49,13 @@ export function initializeHeroAdmin(refreshData) {
       const uploadFile = async () => {
         try {
           showModal("Preparing upload...", "loading");
-          await auth.currentUser.getIdToken(true);
+          console.log("Current user for upload:", auth.currentUser);
+          if (auth.currentUser) {
+            const token = await auth.currentUser.getIdToken(true);
+            console.log("Successfully refreshed ID Token.");
+          } else {
+            throw new Error("No user is signed in to refresh token.");
+          }
           const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
           const fileExtension = newFile.name.split('.').pop();
           const fileName = `hero-cover-${Date.now()}.${fileExtension}`;

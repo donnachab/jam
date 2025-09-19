@@ -95,7 +95,13 @@ export function initializeVenueManagement(venues, refreshData) {
     if (newFile) {
         try {
             showModal("Uploading image...", "loading");
-            await auth.currentUser.getIdToken(true);
+            console.log("Current user for upload:", auth.currentUser);
+            if (auth.currentUser) {
+                const token = await auth.currentUser.getIdToken(true);
+                console.log("Successfully refreshed ID Token.");
+            } else {
+                throw new Error("No user is signed in to refresh token.");
+            }
             const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
             const fileExtension = newFile.name.split('.').pop();
             const fileName = `venue-${Date.now()}.${fileExtension}`;
