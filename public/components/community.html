@@ -9,6 +9,34 @@
       involved with.
     </p>
 
+    <div class="text-center mb-8 admin-controls">
+        <button id="add-community-item-btn" class="px-6 py-2 bg-green-500 text-white font-bold rounded-full hover:bg-green-600 transition duration-300 shadow-md">Add New Item</button>
+    </div>
+    <form id="add-community-form" class="max-w-3xl mx-auto mb-8 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+        <h3 id="community-form-title" class="text-xl font-bold text-primary mb-4">Add New Item</h3>
+        <input type="hidden" id="edit-community-id" />
+        <div class="mb-4">
+            <label for="community-image-file" class="block text-gray-700 font-bold mb-2 text-left">Upload Image</label>
+            <input type="file" id="community-image-file" class="w-full p-2 border rounded" accept="image/*"/>
+            <p class="text-sm text-gray-500 mt-1 text-left">Or paste a URL below...</p>
+        </div>
+        <div class="mb-4">
+            <label for="community-image-url" class="block text-gray-700 font-bold mb-2 text-left">Image URL</label>
+            <input type="url" id="community-image-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
+        </div>
+        <div class="mb-4"><label for="community-item-type" class="block text-gray-700 font-bold mb-2 text-left">Item Type</label><select id="community-item-type" class="w-full p-2 border rounded"><option value="community">Community Event</option><option value="charity">Charity Fundraiser</option></select></div>
+        <div id="community-headline-wrapper" class="mb-4"><label for="community-headline" class="block text-gray-700 font-bold mb-2 text-left">Headline</label><input type="text" id="community-headline" class="w-full p-2 border rounded"/></div>
+        <div id="charity-fields-wrapper" class="hidden">
+            <div class="mb-4"><label for="community-amount" class="block text-gray-700 font-bold mb-2 text-left">Amount Raised</label><input type="text" id="community-amount" class="w-full p-2 border rounded"/></div>
+            <div class="mb-4"><label for="community-charity-name" class="block text-gray-700 font-bold mb-2 text-left">For (Charity Name)</label><input type="text" id="community-charity-name" class="w-full p-2 border rounded"/></div>
+        </div>
+        <div class="mb-4"><label for="community-description" class="block text-gray-700 font-bold mb-2 text-left">Description</label><textarea id="community-description" class="w-full p-2 border rounded" rows="3"></textarea></div>
+        <div class="flex justify-end space-x-4">
+            <button type="button" id="cancel-community-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Item</button>
+        </div>
+    </form>
+
     <!-- Community Slideshow Container -->
     <div id="community-slider-container" class="max-w-5xl mx-auto">
       <div class="swiper community-swiper">

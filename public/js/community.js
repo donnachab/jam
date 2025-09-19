@@ -1,9 +1,25 @@
-import { db } from './firebase-config.js';
+import { db, app } from './firebase-config.js';
 import { doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { showModal } from './ui/modal.js';
 import { initCommunityCarousel } from './ui/carousels.js';
 
+const storage = getStorage(app);
+const functions = getFunctions(app, 'us-central1');
+const auth = getAuth(app);
+
 let communitySwiper = null;
+
+function isValidUrl(url) {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 
 export function renderCommunity(items) {
     const wrapper = document.getElementById("community-swiper-wrapper");
@@ -56,7 +72,7 @@ export function initializeCommunity(refreshData) {
         if (mode === 'edit') {
             document.getElementById("community-form-title").textContent = "Edit Item";
             document.getElementById("edit-community-id").value = item.id;
-            document.getElementById("community-image-url").value = item.imageUrl;
+            document.getElementById("community-image-url").value = item.imageUrl || '';
             typeInput.value = item.type;
             document.getElementById("community-description").value = item.description;
             document.getElementById("community-headline").value = item.headline || "";
@@ -99,11 +115,45 @@ export function initializeCommunity(refreshData) {
 
         const id = document.getElementById("edit-community-id").value || String(Date.now());
         const type = typeInput.value;
+        const imageUrlInput = document.getElementById("community-image-url");
+        const imageFileInput = document.getElementById("community-image-file");
+
+        let imageUrl = imageUrlInput.value.trim();
+        const newFile = imageFileInput.files[0];
+
+        if (newFile) {
+            try {
+                showModal("Uploading image...", "loading");
+                await auth.currentUser.getIdToken(true);
+                const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
+                const fileExtension = newFile.name.split('.').pop();
+                const fileName = `community-${Date.now()}.${fileExtension}`;
+
+                const result = await generateSignedUploadUrl({ fileName, contentType: newFile.type });
+
+                if (!result.data.success) throw new Error(result.data.message || 'Could not get upload URL.');
+
+                const signedUrl = result.data.url;
+                const uploadResponse = await fetch(signedUrl, { method: 'PUT', headers: { 'Content-Type': newFile.type }, body: newFile });
+
+                if (!uploadResponse.ok) throw new Error('File upload to storage failed.');
+
+                const bucketName = storage.app.options.storageBucket;
+                imageUrl = `https://storage.googleapis.com/${bucketName}/images/${fileName}`;
+            } catch (error) {
+                console.error("❌ Error during file upload process:", error);
+                return showModal(error.message || "An unexpected error occurred.", "alert");
+            }
+        }
+
+        if (!imageUrl) {
+            return showModal("Please upload an image or provide a URL.", "alert");
+        }
 
         const dataToSave = {
             id,
             type,
-            imageUrl: document.getElementById("community-image-url").value.trim(),
+            imageUrl,
             description: document.getElementById("community-description").value.trim(),
         };
 
@@ -119,6 +169,7 @@ export function initializeCommunity(refreshData) {
             form.style.display = "none";
             form.reset();
             await refreshData();
+            showModal("Community item saved successfully!", "alert");
         } catch (error) {
             console.error("Error saving community item:", error);
             showModal("Failed to save item. Please try again.", "alert");
