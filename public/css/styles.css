@@ -499,6 +499,13 @@ video {
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
+
+/* Recommendation for Hero Section Text Legibility:
+   If text is placed directly over a hero image, especially a dark one,
+   ensure sufficient contrast. Consider adding a semi-transparent overlay
+   behind the text or applying a text-shadow for better readability.
+   This might require dynamic adjustments via JavaScript based on image brightness.
+*/
   :root {
     --primary-color: #371087; /* Correct Purple */
     --accent-color: #f3ead3; /* Warm Cream */

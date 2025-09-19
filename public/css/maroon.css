@@ -78,7 +78,30 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar a:hover, .menu a:hover {
-    background-color: #a0203f;
+    background-color: #650e22; /* Darker maroon for better hover contrast */
+}
+
+/* Theme switcher in header */
+.theme-switcher #theme-select {
+    background-color: #81112c;
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+/* Mobile menu button in header */
+#menu-btn svg {
+    color: #ffffff; /* Ensure icon is white */
+}
+
+/* Songbook button in header */
+.navbar .bg-accent.text-primary {
+    background-color: #ffe146; /* Yellow from default accent-2 */
+    color: #000000; /* Black for high contrast on yellow background */
+}
+
+.navbar .bg-accent.text-primary:hover {
+    background-color: #f0d030; /* Slightly darker yellow for hover */
+    color: #000000;
 }
 
 /* Specific UI elements (assuming some common classes) */

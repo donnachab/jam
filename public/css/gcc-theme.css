@@ -118,3 +118,8 @@ h6 { font-size: var(--font-size-h6); color: var(--heading-6-color); }
 a {
     color: var(--color-link);
 }
+
+/* Songbook button contrast fix for default theme */
+a.bg-accent.text-primary {
+    color: var(--color-black) !important; /* Ensure high contrast on yellow background */
+}
