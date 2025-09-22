@@ -32,6 +32,18 @@
     --border-color-alert: var(--color-black);
 }
 
+body.maroon-theme .bg-primary {
+    background-color: #ffffff !important;
+}
+
+body.maroon-theme .text-primary {
+    color: #800000 !important;
+}
+
+body.maroon-theme .text-white {
+    color: #800000 !important;
+}
+
 .navbar .bg-accent.text-primary {
     background-color: #f3ead3; /* Warm Cream */
     color: #800000; /* Maroon for high contrast on yellow background */

@@ -197,14 +197,9 @@ async function main() {
     const themeSelect = document.getElementById('theme-select');
 
     function applyTheme(themeName) {
-        if (themeName === 'maroon') {
-            if (defaultThemeLink) defaultThemeLink.disabled = true;
-            if (maroonThemeLink) maroonThemeLink.disabled = false;
-        } else { // default
-            if (defaultThemeLink) defaultThemeLink.disabled = false;
-            if (maroonThemeLink) maroonThemeLink.disabled = true;
-        }
+        themeLink.setAttribute('href', `css/themes/${themeName}.css`);
         localStorage.setItem('selectedTheme', themeName);
+        document.body.classList.toggle('maroon-theme', themeName === 'maroon');
         renderAll(); // Re-render to update logo based on new theme
     }
 
@@ -229,4 +224,5 @@ async function main() {
 // -----------------------------------------------------------------------------
 // --- 7. SCRIPT EXECUTION
 // -----------------------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", main);------------------------------------------
 document.addEventListener("DOMContentLoaded", main);
