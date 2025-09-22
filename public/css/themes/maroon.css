@@ -1,0 +1,43 @@
+:root {
+    --color-accent: #800000;
+    --color-accent-2: #f3ead3; /* Warm Cream */
+    --color-green: #048a04;
+    --color-red: #e4251b;
+    --color-orange: #ed7522;
+    --color-yellow: #fd0;
+    --color-blue: #297bbb;
+    --color-white: #fff;
+    --color-grey-lightest: #f9f9f9;
+    --color-grey-lighter: #eaeaea;
+    --color-grey-light: #cecfd0;
+    --color-grey-medium: #b1b4b6;
+    --color-grey-dark: #505a5f;
+    --color-black: #0b0c0c;
+    --color-info: var(--color-blue);
+    --color-success: var(--color-green);
+    --color-danger: var(--color-red);
+    --color-warning: var(--color-orange);
+    --color-minor: var(--color-yellow);
+    --color-link: var(--color-accent);
+    --color-focus: var(--color-yellow);
+    --color-text: var(--color-black);
+    --heading-1-color: var(--color-accent);
+    --heading-2-color: var(--color-accent);
+    --heading-3-color: var(--color-accent);
+    --heading-4-color: var(--color-accent);
+    --heading-5-color: var(--color-accent);
+    --heading-6-color: var(--color-accent);
+    --border-color: var(--color-grey-light);
+    --border-color-dark: var(--color-grey-dark);
+    --border-color-alert: var(--color-black);
+}
+
+.navbar .bg-accent.text-primary {
+    background-color: #f3ead3; /* Warm Cream */
+    color: #800000; /* Maroon for high contrast on yellow background */
+}
+
+.navbar .bg-accent.text-primary:hover {
+    background-color: #e1d5bf; /* Slightly darker cream for hover */
+    color: #800000;
+}
