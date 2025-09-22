@@ -208,9 +208,14 @@ async function main() {
             applyTheme(event.target.value);
         });
 
+        themeSelectMobile.addEventListener('change', (event) => {
+            applyTheme(event.target.value);
+        });
+
         // Apply saved theme on load
         const savedTheme = localStorage.getItem('selectedTheme') || 'default';
         themeSelect.value = savedTheme;
+        themeSelectMobile.value = savedTheme;
         applyTheme(savedTheme);
     }
     // --- End Theme Switching Logic ---
