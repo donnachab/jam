@@ -32,7 +32,7 @@ body.admin-mode .admin-controls-inline {
 }
 
 /* 
-  Jam Cancellation Styling
+  Jam Cancellation Styling - this is a deliberate design choice to indicate a cancelled jam.
 */
 .jam-cancelled .jam-info {
   text-decoration: line-through;
