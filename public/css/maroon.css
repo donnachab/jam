@@ -2,7 +2,7 @@
 body {
     background-color: #f8f8f8; /* Light background */
     color: #333333; /* Dark text for contrast */
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 /* Links */
@@ -18,9 +18,9 @@ a:hover {
 
 /* Buttons */
 button, .button, input[type="submit"], input[type="button"] {
-    background-color: #81112c;
+    background-color: #800000;
     color: #ffffff;
-    border: 1px solid #81112c;
+    border: 1px solid #800000;
     padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
@@ -51,7 +51,6 @@ select {
     width: 100%;
     box-sizing: border-box;
     background-color: #ffffff; /* Ensure solid background */
-} /* Include padding and border in the element's total width and height */
 }
 
 input[type="text"]:focus,
@@ -59,19 +58,19 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus,
 select:focus {
-    border-color: #81112c;
+    border-color: #800000;
     outline: none;
-    box-shadow: 0 0 0 2px rgba(129, 17, 44, 0.2); /* Subtle focus glow */
+    box-shadow: 0 0 0 2px rgba(128, 0, 0, 0.2); /* Subtle focus glow */
 }
 
 /* Headers */
 h1, h2, h3, h4, h5, h6 {
-    color: #81112c;
+    color: #800000;
 }
 
 /* Navigation/Menu items */
 .navbar, .menu {
-    background-color: #81112c;
+    background-color: #800000;
     color: #ffffff;
 }
 
@@ -85,7 +84,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Theme switcher in header */
 .theme-switcher #theme-select {
-    background-color: #81112c;
+    background-color: #800000;
     color: #ffffff;
     border-color: #ffffff;
 }
@@ -97,13 +96,13 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Songbook button in header */
 .navbar .bg-accent.text-primary {
-    background-color: #ffe146; /* Yellow from default accent-2 */
-    color: #000000; /* Black for high contrast on yellow background */
+    background-color: #f3ead3; /* Warm Cream */
+    color: #800000; /* Maroon for high contrast on yellow background */
 }
 
 .navbar .bg-accent.text-primary:hover {
-    background-color: #f0d030; /* Slightly darker yellow for hover */
-    color: #000000;
+    background-color: #e1d5bf; /* Slightly darker cream for hover */
+    color: #800000;
 }
 
 /* Specific UI elements (assuming some common classes) */
@@ -116,7 +115,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .badge {
-    background-color: #81112c;
+    background-color: #800000;
     color: #ffffff;
     padding: 4px 8px;
     border-radius: 12px;

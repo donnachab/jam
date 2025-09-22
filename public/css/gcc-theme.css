@@ -38,7 +38,7 @@
     --color-minor: var(--color-yellow);
     --color-link: var(--color-accent);
     --color-focus: var(--color-yellow);
-    --font-primary: roboto,oxygen,ubuntu,cantarell,"Open Sans","Helvetica Neue",sans-serif;
+    --font-primary: 'Inter', sans-serif;
     --font-secondary: georgia,"Times New Roman",times,serif;
     --font-heading-1: var(--font-secondary);
     --font-heading-2: var(--font-secondary);
