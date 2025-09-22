@@ -1052,6 +1052,11 @@ video {
 .text-white {
   color: var(--color-white);
 }
+
+#home h1,
+#home p {
+  color: var(--color-white);
+}
 .opacity-25 {
   opacity: 0.25;
 }
