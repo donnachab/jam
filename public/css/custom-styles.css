@@ -83,3 +83,12 @@ body.admin-mode .admin-controls-inline {
   text-decoration: line-through;
   color: #9ca3af; /* gray-400 */
 }
+
+/* FORCE STYLES FOR FOOTER AND THEME SWITCHER */
+#footer-container p {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+#theme-select, #theme-select-mobile {
+    color: white !important;
+}
