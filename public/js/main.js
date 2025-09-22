@@ -192,9 +192,9 @@ async function main() {
     initializeAdminPanel(loadAllData);
 
     // --- Theme Switching Logic ---
-    const defaultThemeLink = document.querySelector('link[href="css/gcc-theme.css"]');
-    const maroonThemeLink = document.getElementById('maroon-theme-link');
+    const themeLink = document.getElementById('theme-link');
     const themeSelect = document.getElementById('theme-select');
+    const themeSelectMobile = document.getElementById('theme-select-mobile');
 
     function applyTheme(themeName) {
         themeLink.setAttribute('href', `css/themes/${themeName}.css`);
@@ -203,14 +203,16 @@ async function main() {
         renderAll(); // Re-render to update logo based on new theme
     }
 
-    if (themeSelect) {
-        themeSelect.addEventListener('change', (event) => {
-            applyTheme(event.target.value);
-        });
+    if (themeSelect && themeSelectMobile) {
+        const changeListener = (event) => {
+            const newTheme = event.target.value;
+            applyTheme(newTheme);
+            themeSelect.value = newTheme;
+            themeSelectMobile.value = newTheme;
+        };
 
-        themeSelectMobile.addEventListener('change', (event) => {
-            applyTheme(event.target.value);
-        });
+        themeSelect.addEventListener('change', changeListener);
+        themeSelectMobile.addEventListener('change', changeListener);
 
         // Apply saved theme on load
         const savedTheme = localStorage.getItem('selectedTheme') || 'default';
@@ -229,5 +231,4 @@ async function main() {
 // -----------------------------------------------------------------------------
 // --- 7. SCRIPT EXECUTION
 // -----------------------------------------------------------------------------
-document.addEventListener("DOMContentLoaded", main);------------------------------------------
 document.addEventListener("DOMContentLoaded", main);
