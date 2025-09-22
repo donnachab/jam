@@ -103,7 +103,6 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-secondary);
     font-weight: var(--heading-font-weight);
     line-height: var(--heading-1-line-height);
 }
