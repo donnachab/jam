@@ -1,7 +1,7 @@
 <div id="admin-panel" class="admin-controls w-full max-w-5xl mx-auto my-8 p-4 bg-gray-100 border rounded-lg shadow-lg">
     <div class="flex items-center justify-between mb-4 border-b pb-2">
         <h2 class="text-2xl font-bold text-gray-800">Admin Panel</h2>
-        <button class="exit-admin-btn px-4 py-2 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 transition duration-300 shadow-md">
+        <button class="exit-admin-btn btn btn-danger">
             Exit Admin Mode
         </button>
     </div>
@@ -21,10 +21,10 @@
                 <!-- Jam Controls from jam-controls.html -->
                 <div id="jam-controls-content">
                     <div class="text-center admin-controls-inline flex-wrap justify-center gap-4 mb-6">
-                        <button id="add-jam-btn" class="px-6 py-2 bg-green-500 text-white font-bold rounded-full hover:bg-green-600 transition duration-300 shadow-md">Add New Jam</button>
-                        <button id="manage-venues-btn" class="px-6 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600 transition duration-300 shadow-md">Manage Venues</button>
+                        <button id="add-jam-btn" class="btn btn-green">Add New Jam</button>
+                        <button id="manage-venues-btn" class="btn btn-blue">Manage Venues</button>
                     </div>
-                    <form id="add-jam-form" class="p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+                    <form id="add-jam-form" class="p-6 bg-gray-50 rounded-lg shadow-inner border hidden">
                         <h3 id="form-title" class="text-xl font-bold text-primary mb-4">Add/Edit Jam</h3>
                         <input type="hidden" id="edit-jam-id" />
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -50,11 +50,11 @@
                             <input type="url" id="jam-map-link" class="w-full p-2 border rounded" placeholder="Auto-populates from venue"/>
                         </div>
                         <div class="flex justify-end space-x-4">
-                            <button type="button" id="cancel-jam-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                            <button type="button" id="cancel-jam-btn" class="btn btn-gray">Cancel</button>
                             <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Jam</button>
                         </div>
                     </form>
-                    <div id="venue-management-section" class="mt-8 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+                    <div id="venue-management-section" class="mt-8 p-6 bg-gray-50 rounded-lg shadow-inner border hidden">
                         <h3 class="text-xl font-bold text-primary mb-4">Manage Venues</h3>
                         <ul id="venue-list-admin" class="space-y-2 mb-4"></ul>
                         <form id="add-venue-form" class="p-4 border rounded bg-white">
@@ -72,8 +72,8 @@
                                 <input type="url" id="venue-photo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
                             </div>
                             <div class="flex justify-end space-x-2">
-                                <button type="button" id="cancel-venue-edit-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
-                                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Save Venue</button>
+                                <button type="button" id="cancel-venue-edit-btn" class="btn btn-gray">Cancel</button>
+                                <button type="submit" class="btn btn-green">Save Venue</button>
                             </div>
                         </form>
                     </div>
@@ -127,9 +127,9 @@
         <h3 class="text-xl font-bold text-primary mb-4">Site Logo</h3>
         <div class="container mx-auto px-4 sm:px-6 text-center relative z-10">
             <div class="admin-controls-inline items-center justify-center">
-                <button id="edit-site-logo-btn" class="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600 transition duration-300 shadow-md">Change Site Logo</button>
+                <button id="edit-site-logo-btn" class="btn btn-blue">Change Site Logo</button>
             </div>
-            <form id="edit-site-logo-form" class="max-w-xl mx-auto mt-4 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+            <form id="edit-site-logo-form" class="max-w-xl mx-auto mt-4 p-6 bg-gray-50 rounded-lg shadow-inner border hidden">
                 <h3 class="text-xl font-bold text-primary mb-4">Change Site Logo</h3>
                 <div class="mb-4">
                     <label for="site-logo-theme-select" class="block text-gray-700 font-bold mb-2 text-left">Select Theme</label>
@@ -148,7 +148,7 @@
                     <input type="url" id="site-logo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
                 </div>
                 <div class="flex justify-end space-x-4">
-                    <button type="button" id="cancel-site-logo-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                    <button type="button" id="cancel-site-logo-btn" class="btn btn-gray">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Logo</button>
                 </div>
             </form>
@@ -158,9 +158,9 @@
         <h3 class="text-xl font-bold text-primary mb-4">Hero Section</h3>
         <div class="container mx-auto px-4 sm:px-6 text-center relative z-10">
             <div class="admin-controls-inline items-center justify-center">
-                <button id="edit-cover-photo-btn" class="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600 transition duration-300 shadow-md">Change Cover Photo</button>
+                <button id="edit-cover-photo-btn" class="btn btn-blue">Change Cover Photo</button>
             </div>
-            <form id="edit-cover-photo-form" class="max-w-xl mx-auto mt-4 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+            <form id="edit-cover-photo-form" class="max-w-xl mx-auto mt-4 p-6 bg-gray-50 rounded-lg shadow-inner border hidden">
                 <h3 class="text-xl font-bold text-primary mb-4">Change Cover Photo</h3>
                 <div class="mb-4">
                     <label for="cover-photo-file" class="block text-gray-700 font-bold mb-2 text-left">Upload New Photo</label>
@@ -172,7 +172,7 @@
                     <input type="url" id="cover-photo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
                 </div>
                 <div class="flex justify-end space-x-4">
-                    <button type="button" id="cancel-cover-photo-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                    <button type="button" id="cancel-cover-photo-btn" class="btn btn-gray">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Photo</button>
                 </div>
             </form>
@@ -186,8 +186,8 @@
             <div>
                 <h3 class="text-xl font-bold text-primary mb-4">Events</h3>
                 <div id="event-controls-content">
-                    <div class="text-center admin-controls-inline"><button id="add-event-btn" class="px-6 py-2 bg-green-500 text-white font-bold rounded-full hover:bg-green-600">Add New Event</button></div>
-                    <form id="add-event-form" class="mt-8 p-6 bg-gray-50 rounded-lg shadow-inner border" style="display: none;">
+                    <div class="text-center admin-controls-inline"><button id="add-event-btn" class="btn btn-green">Add New Event</button></div>
+                    <form id="add-event-form" class="mt-8 p-6 bg-gray-50 rounded-lg shadow-inner border hidden">
                         <h3 id="event-form-title" class="text-xl font-bold text-primary mb-4">Add a New Event</h3>
                         <input type="hidden" id="edit-event-id" />
                         <div class="mb-4"><label for="event-title" class="block text-gray-700 font-bold mb-2 text-left">Title</label><input type="text" id="event-title" class="w-full p-2 border rounded"/></div>
@@ -208,7 +208,7 @@
                         </div>
                         <div class="mb-4"><label for="event-description" class="block text-gray-700 font-bold mb-2 text-left">Description</label><textarea id="event-description" class="w-full p-2 border rounded" rows="4"></textarea></div>
                         <div class="flex justify-end space-x-4">
-                            <button type="button" id="cancel-event-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Cancel</button>
+                            <button type="button" id="cancel-event-btn" class="btn btn-gray">Cancel</button>
                             <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Event</button>
                         </div>
                     </form>
