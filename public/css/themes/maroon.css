@@ -1,6 +1,6 @@
 :root {
     --color-accent: #800000;
-    --color-accent-2: #f3ead3; /* Warm Cream */
+    --color-accent-2: #f3ead3;
     --color-green: #048a04;
     --color-red: #e4251b;
     --color-orange: #ed7522;
@@ -32,18 +32,6 @@
     --border-color-alert: var(--color-black);
 }
 
-body.maroon-theme .bg-primary {
-    background-color: #ffffff !important;
-}
-
-body.maroon-theme .text-primary {
-    color: #800000 !important;
-}
-
-body.maroon-theme .text-white {
-    color: #800000 !important;
-}
-
 .navbar .bg-accent.text-primary {
     background-color: #f3ead3; /* Warm Cream */
     color: #800000; /* Maroon for high contrast on yellow background */
@@ -51,5 +39,5 @@ body.maroon-theme .text-white {
 
 .navbar .bg-accent.text-primary:hover {
     background-color: #e1d5bf; /* Slightly darker cream for hover */
-    color: #800000;
+    color: #80000g;
 }
