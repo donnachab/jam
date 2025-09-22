@@ -17,8 +17,8 @@
     --spacing-padding-horizontal: var(--spacing);
     --line-height: 1.5;
     --vertical-rhythm-spacing: calc(var(--line-height) * 1rem);
-    --color-accent: #652c95;
-    --color-accent-2: #ffe146;
+    --color-accent: #371087; /* Correct Purple */
+    --color-accent-2: #f3ead3; /* Warm Cream */
     --color-green: #048a04;
     --color-red: #e4251b;
     --color-orange: #ed7522;

@@ -19,8 +19,8 @@ module.exports = {
         black: 'var(--color-black)',
       },
       fontFamily: {
-        primary: ['roboto', 'oxygen', 'ubuntu', 'cantarell', 'Open Sans', 'Helvetica Neue', 'sans-serif'],
-        secondary: ['georgia', 'Times New Roman', 'times', 'serif'],
+        sans: ['Inter', 'sans-serif'],
+        serif: ['georgia', 'Times New Roman', 'times', 'serif'],
       }
     },
   },
