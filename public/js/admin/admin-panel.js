@@ -191,10 +191,9 @@ export function initializeAdminPanel(loadAllData) {
                 await updateDoc(siteConfigRef, {
                     [`logoUrls.${selectedTheme}`]: urlToSave
                 });
-                showModal('Logo URL updated successfully!', 'success');
+                showModal('Logo URL updated successfully!', 'alert');
                 store.commit('SET_LOGO_FORM_VISIBLE', false);
                 editSiteLogoForm.reset();
-                await loadInitialLogoData();
                 loadAllData();
             } catch (error) {
                 store.commit('SET_ERROR', 'Failed to save logo URL.');
