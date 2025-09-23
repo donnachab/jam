@@ -25,4 +25,4 @@ const auth = getAuth(app); // Get the auth instance
 console.log("✅ Firebase initialized successfully.");
 
 // Export the app, database, and auth instances to be used in other modules
-export { app, db, auth, signInAnonymously, signInWithCustomToken };
+export { app, db, auth, firebaseConfig, signInAnonymously, signInWithCustomToken };
