@@ -134,3 +134,7 @@ body.admin-mode .admin-controls-inline {
     background-color: var(--color-interactive-success-hover-bg);
 }
 
+/* --- SVG Logo Styling --- */
+#site-logo path {
+  fill: var(--color-interactive-primary-bg);
+}
