@@ -82,6 +82,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     await Promise.all([
         loadComponent('components/header.html', 'header-container'),
         loadComponent('components/hero.html', 'hero-container'),
+        loadComponent('components/jams.html', 'jams-container'),
+        loadComponent('components/format.html', 'format-container'),
+        loadComponent('components/events.html', 'events-container'),
+        loadComponent('components/community.html', 'community-container'),
+        loadComponent('components/gallery.html', 'gallery-container'),
+        loadComponent('components/contact.html', 'contact-container'),
         loadComponent('components/footer.html', 'footer-container'),
         loadComponent('components/admin/admin-panel.html', 'admin-panel-container'),
     ]);
