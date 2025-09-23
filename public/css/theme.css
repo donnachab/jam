@@ -1,39 +1,167 @@
-/*
-  ==========================================
-  THEME VARIABLES
-  ==========================================
+/* 
+================================================================================
+THEMING SYSTEM: A Layered, Modular Approach
+================================================================================
+This file establishes a two-layer theming system using CSS Custom Properties.
+It is designed to be easily extensible for future themes.
+
+LAYER 1: PRIMITIVE TOKENS
+- These are the raw, non-contextual values of the design system.
+- They are defined once in :root and should rarely be changed.
+- To add a new color for a future theme, add it here.
+
+LAYER 2: SEMANTIC TOKENS
+- These tokens describe the *purpose* of a value in the UI.
+- They are also defined in :root and map to the primitive tokens,
+  creating the default (purple) theme.
+- Components in the app should ONLY use these semantic tokens.
+
+THEME OVERRIDES
+- To add a new theme, create a new selector (e.g., [data-theme="new-theme"])
+  and simply redefine the semantic tokens that need to change.
+================================================================================
 */
 
-/* --- Base Theme Variables --- */
 :root {
-    --color-green: #048a04;
-    --color-red: #e4251b;
-    --color-orange: #ed7522;
-    --color-yellow: #fd0;
-    --color-blue: #297bbb;
+    /*
+    ----------------------------------------------------------------------------
+    LAYER 1: PRIMITIVE TOKENS
+    ----------------------------------------------------------------------------
+    */
+
+    /* -- Grayscale -- */
     --color-white: #fff;
-    --color-grey-lightest: #f9f9f9;
-    --color-grey-lighter: #eaeaea;
-    --color-grey-light: #cecfd0;
-    --color-grey-medium: #b1b4b6;
-    --color-grey-dark: #505a5f;
     --color-black: #0b0c0c;
+    --color-gray-100: #f9f9f9; /* grey-lightest */
+    --color-gray-200: #eaeaea; /* grey-lighter */
+    --color-gray-300: #cecfd0; /* grey-light */
+    --color-gray-400: #b1b4b6; /* grey-medium */
+    --color-gray-500: #9ca3af; /* from .jam-cancelled */
+    --color-gray-600: #505a5f; /* grey-dark */
+    --color-gray-700: #4b5563; /* from .btn-gray */
+    --color-gray-800: #374151; /* from .btn-gray:hover */
+
+    /* -- Default Theme: Purple Palette -- */
+    --color-purple-700: #371087; /* primary */
+    --color-purple-500: #6d28d9; /* special-day */
+
+    /* -- Maroon Theme: Maroon Palette -- */
+    --color-maroon-700: #800000;
+    --color-maroon-orange-500: #c04000; /* new special-day */
+    --color-maroon-teal-500: #008080;   /* new info color */
+    --color-maroon-olive-500: #556b2f;  /* new success color */
+
+    /* -- Accent Color -- */
+    --color-accent-cream: #f3ead3;
+
+    /* -- Utility & Button Colors -- */
+    --color-blue-700: #1d4ed8;   /* from .btn-blue */
+    --color-blue-800: #1e40af;   /* from .btn-blue:hover */
+    --color-green-700: #15803d;  /* from .btn-green */
+    --color-green-800: #166534;  /* from .btn-green:hover */
+    --color-red-700: #b91c1c;    /* from .btn-danger */
+    --color-red-800: #991b1b;    /* from .btn-danger:hover */
+
+    /* -- Typography -- */
+    --font-family-sans: 'Inter', 'sans-serif';
+    --font-family-serif: 'georgia', 'Times New Roman', 'times', 'serif';
+
+    /* -- Borders -- */
+    --border-radius-button: 9999px; /* rounded-full */
+    --border-radius-card: 0.5rem; /* rounded-lg */
+    --border-radius-form: 0.375rem; /* rounded-md */
+
+    /*
+    ----------------------------------------------------------------------------
+    LAYER 2: SEMANTIC TOKENS (Default Purple Theme)
+    ----------------------------------------------------------------------------
+    */
+
+    /* -- Backgrounds -- */
+    --color-background-primary: var(--color-white);
+    --color-background-secondary: var(--color-gray-100);
+    --color-background-accent: var(--color-accent-cream);
+
+    /* -- Text -- */
+    --color-text-primary: var(--color-gray-800);
+    --color-text-secondary: var(--color-gray-600);
+    --color-text-on-interactive: var(--color-white);
+    --color-text-on-accent: var(--color-black);
+    --color-text-cancelled: var(--color-gray-500);
+    --color-text-hero: var(--color-white);
+
+    /* -- Borders -- */
+    --color-border-default: var(--color-gray-200);
+
+    /* -- Interactive Elements (Buttons, Links) -- */
+    --color-interactive-primary-bg: var(--color-purple-700);
+    --color-interactive-primary-hover-bg: var(--color-purple-500);
+    
+    --color-interactive-accent-bg: var(--color-accent-cream);
+    --color-interactive-accent-hover-bg: var(--color-gray-200);
+
+    --color-interactive-special-bg: var(--color-purple-500);
+
+    --color-interactive-info-bg: var(--color-blue-700);
+    --color-interactive-info-hover-bg: var(--color-blue-800);
+
+    --color-interactive-success-bg: var(--color-green-700);
+    --color-interactive-success-hover-bg: var(--color-green-800);
+
+    --color-interactive-danger-bg: var(--color-red-700);
+    --color-interactive-danger-hover-bg: var(--color-red-800);
+    
+    --color-interactive-muted-bg: var(--color-gray-700);
+    --color-interactive-muted-hover-bg: var(--color-gray-800);
 }
 
-/* --- Default (Purple) Theme --- */
-body.default-theme {
-    --color-primary: #371087;
-    --color-accent: #f3ead3;
-    --color-text-on-primary: #ffffff;
-    --color-text-on-accent: #000000;
-    --color-special-day: #6d28d9;
+/*
+--------------------------------------------------------------------------------
+THEME OVERRIDE: MAROON THEME
+- Redefines only the semantic tokens that need to change.
+- All other tokens (like text colors, backgrounds) are inherited from :root.
+--------------------------------------------------------------------------------
+*/
+[data-theme="maroon"] {
+    /* -- Re-map primary interactive color -- */
+    --color-interactive-primary-bg: var(--color-maroon-700);
+    --color-interactive-primary-hover-bg: var(--color-maroon-orange-500);
+
+    /* -- Re-map special day color -- */
+    --color-interactive-special-bg: var(--color-maroon-orange-500);
+
+    /* -- Re-map text on accent to be darker for better contrast -- */
+    --color-text-on-accent: var(--color-maroon-700);
+
+    /* -- Re-map utility button colors for better harmony -- */
+    --color-interactive-info-bg: var(--color-maroon-teal-500);
+    --color-interactive-info-hover-bg: var(--color-maroon-teal-500); /* Keeping it simple, can be darkened later */
+
+    --color-interactive-success-bg: var(--color-maroon-olive-500);
+    --color-interactive-success-hover-bg: var(--color-maroon-olive-500);
 }
 
-/* --- Maroon Theme --- */
-body.maroon-theme {
-    --color-primary: #800000;
-    --color-accent: #f3ead3;
-    --color-text-on-primary: #ffffff;
-    --color-text-on-accent: #800000;
-    --color-special-day: #a0203f;
+/*
+--------------------------------------------------------------------------------
+EXAMPLE USAGE
+- The following classes should be updated/refactored to use these variables.
+--------------------------------------------------------------------------------
+*/
+
+/* Example for a primary button */
+.btn-primary {
+    background-color: var(--color-interactive-primary-bg);
+    color: var(--color-text-on-interactive);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-button);
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+}
+.btn-primary:hover {
+    background-color: var(--color-interactive-primary-hover-bg);
+}
+
+/* Example for the hero text */
+#home h1, #home p {
+    color: var(--color-text-hero);
 }

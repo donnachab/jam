@@ -1,40 +1,44 @@
 // Main application entry point
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { firebaseConfig } from './firebase-config.js';
 import { initializeMobileMenu } from './ui/mobile-menu.js';
 import { initFestivalCarousel } from './ui/carousels.js';
 import { initializeAdminMode } from './admin/admin-mode.js';
 import { initializeAdminPanel } from './admin/admin-panel.js';
+import { themeManager } from './ui/theme-switcher.js';
 
 // State
 export let siteData = {};
 
 // Functions
 async function loadComponent(path, containerId) {
-    const response = await fetch(path);
-    document.getElementById(containerId).innerHTML = await response.text();
+    try {
+        const response = await fetch(path);
+        if (!response.ok) throw new Error(`Failed to load component: ${path}`);
+        document.getElementById(containerId).innerHTML = await response.text();
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 async function loadAllData(db) {
-    const [configDoc] = await Promise.all([
-        getDoc(doc(db, "site_config", "main")),
-    ]);
-    siteData.config = configDoc.exists() ? configDoc.data() : {};
+    try {
+        const configDoc = await getDoc(doc(db, "site_config", "main"));
+        siteData.config = configDoc.exists() ? configDoc.data() : {};
+    } catch (error) {
+        console.error("Failed to load site configuration:", error);
+    }
 }
 
-export function renderAll() {
-    const activeTheme = localStorage.getItem('selectedTheme') || 'default';
-    document.body.className = '';
-    document.body.classList.add(`${activeTheme}-theme`);
-
+// Renders just the site logo based on the current theme
+export function renderLogo(theme) {
     const siteLogo = document.getElementById('site-logo');
-    if (siteLogo && siteData.config.logoUrls && siteData.config.logoUrls[activeTheme]) {
-        siteLogo.src = siteData.config.logoUrls[activeTheme];
-    } else if (siteLogo) {
-        siteLogo.src = 'images/logo.svg';
-    }
+    if (!siteLogo) return;
+
+    const logoUrl = siteData.config?.logoUrls?.[theme] || 'images/logo.svg';
+    siteLogo.src = logoUrl;
 }
 
 function initializeThemeSwitcher() {
@@ -42,6 +46,8 @@ function initializeThemeSwitcher() {
         const toggle = switcher.querySelector('.dropdown-toggle');
         const menu = switcher.querySelector('.dropdown-menu');
         const themeNameSpan = switcher.querySelector('.theme-name');
+
+        if (!toggle || !menu) return;
 
         toggle.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -51,13 +57,14 @@ function initializeThemeSwitcher() {
         menu.addEventListener('click', (e) => {
             if (e.target.tagName === 'LI') {
                 const newTheme = e.target.dataset.value;
-                localStorage.setItem('selectedTheme', newTheme);
-                renderAll();
-                if(themeNameSpan) themeNameSpan.textContent = e.target.textContent;
+                themeManager.set(newTheme); // Use the new theme manager
+                renderLogo(newTheme); // Re-render the logo for the new theme
+                if (themeNameSpan) themeNameSpan.textContent = e.target.textContent;
                 menu.classList.add('hidden');
             }
         });
     });
+
     // Close dropdown if clicking outside
     document.addEventListener('click', () => {
         document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
@@ -81,10 +88,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await loadAllData(db);
 
+    // The themeManager initializes itself on import, setting the theme.
+    // Now we just need to render the logo for the loaded theme.
+    renderLogo(themeManager.getSaved() || 'default');
+
     initializeMobileMenu();
     initFestivalCarousel();
     initializeAdminMode();
-    initializeAdminPanel(db, auth, loadAllData);
+    initializeAdminPanel(loadAllData); // Pass loadAllData instead of db/auth
     initializeThemeSwitcher();
-    renderAll();
 });
