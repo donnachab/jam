@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow public read access for content collections
+    match /jams/{jamId} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    match /venues/{venueId} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    match /gallery/{photoId} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    match /community/{itemId} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    match /site_config/{configId} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+  }
+}
