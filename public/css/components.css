@@ -1,0 +1,107 @@
+/*
+================================================================================
+COMPONENT STYLES
+- This file contains structural and component-level styles.
+- It uses the CSS variables defined in theme.css for all color properties.
+================================================================================
+*/
+
+/* --- Layout Fixes & Helpers --- */
+
+#footer-container svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+#header-container nav {
+    display: flex;
+}
+
+.aspect-w-16 {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+}
+
+.aspect-h-9 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* 
+  --- Admin Mode Visibility --- 
+  This is legacy and should be refactored to a state-driven approach later.
+*/
+.admin-controls, .admin-controls-inline {
+  display: none;
+}
+
+body.admin-mode .admin-controls {
+    display: block;
+}
+
+body.admin-mode .admin-controls-inline {
+  display: flex;
+}
+
+/* --- Component-Specific Styles --- */
+
+#modal-form {
+    background-color: var(--color-background-primary) !important;
+}
+
+.jam-cancelled .jam-info {
+  text-decoration: line-through;
+  color: var(--color-text-cancelled);
+}
+
+/* 
+ --- Refactored Button Styles --- 
+ - These now use semantic tokens from theme.css
+*/
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-button);
+    font-weight: 700;
+    color: var(--color-text-on-interactive);
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger {
+    background-color: var(--color-interactive-danger-bg);
+}
+.btn-danger:hover {
+    background-color: var(--color-interactive-danger-hover-bg);
+}
+
+.btn-green {
+    background-color: var(--color-interactive-success-bg);
+}
+.btn-green:hover {
+    background-color: var(--color-interactive-success-hover-bg);
+}
+
+.btn-blue {
+    background-color: var(--color-interactive-info-bg);
+}
+.btn-blue:hover {
+    background-color: var(--color-interactive-info-hover-bg);
+}
+
+.btn-gray {
+    background-color: var(--color-interactive-muted-bg);
+}
+.btn-gray:hover {
+    background-color: var(--color-interactive-muted-hover-bg);
+}
+
+/* This is a generic button that uses the current theme's primary color */
+.btn-primary {
+    background-color: var(--color-interactive-primary-bg);
+}
+.btn-primary:hover {
+    background-color: var(--color-interactive-primary-hover-bg);
+}
