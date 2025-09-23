@@ -18,7 +18,19 @@ import { renderCommunity, initializeCommunity } from './community.js';
 // Global State
 export let siteData = {};
 
-// --- DATA LOADING --- //
+// --- CORE FUNCTIONS --- //
+
+async function loadComponent(path, containerId) {
+    try {
+        const response = await fetch(path);
+        if (!response.ok) throw new Error(`Failed to load component: ${path}`);
+        const container = document.getElementById(containerId);
+        if (container) container.innerHTML = await response.text();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 async function loadAllData(db) {
     try {
         const [configDoc, jamsSnap, venuesSnap, eventsSnap, gallerySnap, communitySnap] = await Promise.all([
@@ -38,30 +50,24 @@ async function loadAllData(db) {
         siteData.community = communitySnap.docs.map(doc => doc.data());
 
         console.log("✅ All Firebase data loaded.");
-
     } catch (error) {
         console.error("Failed to load site data:", error);
     }
 }
 
-// --- RENDERING --- //
-
-// Renders all components with the loaded data
 function renderAllComponents() {
-    if (!siteData) {
-        console.error("Site data not available for rendering.");
-        return;
-    }
+    if (!siteData) return console.error("Site data not available for rendering.");
+    
     renderHero();
     renderLogo(themeManager.getSaved() || 'default');
     renderJams(siteData.jams, siteData.venues, siteData.config);
     renderEvents(siteData.events, siteData.venues);
     renderGallery(siteData.gallery, siteData.config);
     renderCommunity(siteData.community);
+    
     console.log("✅ All components rendered.");
 }
 
-// Renders just the site logo based on the current theme
 function renderLogo(theme) {
     const siteLogo = document.getElementById('site-logo');
     if (!siteLogo) return;
@@ -69,7 +75,6 @@ function renderLogo(theme) {
     siteLogo.src = logoUrl;
 }
 
-// Renders the hero image
 function renderHero() {
     const heroImage = document.getElementById('cover-photo');
     if (heroImage && siteData.config?.coverPhotoUrl) {
@@ -77,20 +82,14 @@ function renderHero() {
     }
 }
 
-// --- INITIALIZATION --- //
-
 function initializeThemeSwitcher() {
     document.querySelectorAll('.theme-switcher').forEach(switcher => {
         const select = switcher.querySelector('select');
         if (!select) return;
-
-        // Set initial value
         select.value = themeManager.getSaved() || 'default';
-
         select.addEventListener('change', (e) => {
-            const newTheme = e.target.value;
-            themeManager.set(newTheme);
-            renderLogo(newTheme);
+            themeManager.set(e.target.value);
+            renderLogo(e.target.value);
         });
     });
 }
@@ -102,13 +101,16 @@ async function refreshDataAndRender(db) {
 
 // --- MAIN EXECUTION --- //
 document.addEventListener("DOMContentLoaded", async () => {
-    // Initialize Firebase
+    // 1. Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     await signInAnonymously(auth);
 
-    // Load all HTML components
+    // 2. Load all data from Firestore first
+    await loadAllData(db);
+
+    // 3. Load all HTML components into the DOM
     await Promise.all([
         loadComponent('components/header.html', 'header-container'),
         loadComponent('components/hero.html', 'hero-container'),
@@ -122,14 +124,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         loadComponent('components/admin/admin-panel.html', 'admin-panel-container'),
     ]);
 
-    // Load all data from Firestore
-    await refreshDataAndRender(db);
+    // 4. Render all data into the newly loaded HTML
+    renderAllComponents();
 
-    // Initialize all interactive modules
+    // 5. Initialize all interactive modules now that HTML and data are ready
     themeManager.initialize();
     initializeThemeSwitcher();
     initializeMobileMenu();
-    initFestivalCarousel();
+    initFestivalCarousel(); 
     initializeAdminMode(db, auth, () => refreshDataAndRender(db));
     initializeAdminPanel(() => refreshDataAndRender(db));
     initializeJams(siteData.venues, () => refreshDataAndRender(db));
@@ -137,14 +139,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     initializeGallery(() => refreshDataAndRender(db));
     initializeCommunity(() => refreshDataAndRender(db));
 });
-
-async function loadComponent(path, containerId) {
-    try {
-        const response = await fetch(path);
-        if (!response.ok) throw new Error(`Failed to load component: ${path}`);
-        const container = document.getElementById(containerId);
-        if (container) container.innerHTML = await response.text();
-    } catch (error) {
-        console.error(error);
-    }
-}
