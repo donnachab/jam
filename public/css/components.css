@@ -125,3 +125,11 @@ body.admin-mode .admin-controls-inline {
     color: var(--color-interactive-primary-bg);
     border-bottom-color: var(--color-interactive-primary-bg);
 }
+
+/* --- Gallery Button Fix --- */
+#add-photo-btn {
+    background-color: var(--color-interactive-success-bg);
+}
+#add-photo-btn:hover {
+    background-color: var(--color-interactive-success-hover-bg);
+}

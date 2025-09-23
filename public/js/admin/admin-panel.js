@@ -133,7 +133,7 @@ export function initializeAdminPanel(loadAllData) {
                 [`logoUrls.${selectedTheme}`]: logoUrl
             });
 
-            showModal('Logo updated successfully!', 'success');
+            showModal('Logo updated successfully!', 'alert');
             store.commit('SET_LOGO_FORM_VISIBLE', false);
             editSiteLogoForm.reset();
             await loadInitialLogoData(); // Refresh data
