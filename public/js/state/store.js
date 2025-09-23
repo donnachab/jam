@@ -4,7 +4,7 @@
  * - Provides a structured way to update state via mutations.
  * - Notifies subscribers (like the UI) when state changes.
  */
-class Store {
+export class Store {
     constructor(initialState = {}) {
         this.state = initialState;
         this.mutations = {};
