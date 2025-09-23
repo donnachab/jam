@@ -26,7 +26,12 @@ function isValidUrl(url) {
 
 export function renderGallery(photos, config) {
     const grid = document.getElementById("gallery-grid");
-    if (grid) {
+    if (!grid) return;
+
+    if (!photos || !config) {
+        if(grid) grid.innerHTML = '<p class="text-center text-red-500">Could not load gallery data due to a configuration error.</p>';
+        return;
+    }
         grid.innerHTML = "";
         if (photos.length === 0) {
             grid.innerHTML = `<p class=\"text-center text-gray-500 col-span-full\">No photos in the gallery yet.</p>`;

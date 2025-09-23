@@ -80,10 +80,13 @@ function manageJamSchedule(confirmedJams, config) {
 }
 
 export function renderJams(jams, venues, config) {
-    manageJamSchedule(jams, config);
-    
     const jamList = document.getElementById("jam-list");
     if (!jamList) return;
+
+    if (!config || !jams || !venues) {
+        jamList.innerHTML = '<p class="text-center text-red-500">Could not load jam data due to a configuration error.</p>';
+        return;
+    }
     jamList.innerHTML = "";
 
     jamsToDisplay.forEach(jam => {

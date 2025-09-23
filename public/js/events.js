@@ -31,7 +31,11 @@ function renderFestivalLogos() {
 export function renderEvents(events, venues) {
     const eventList = document.getElementById("event-list");
     if (!eventList) return;
-    eventList.innerHTML = "";
+
+    if (!events || !venues) {
+        eventList.innerHTML = '<p class="text-center text-red-500">Could not load events data due to a configuration error.</p>';
+        return;
+    }
     
     const today = new Date().toISOString().split('T')[0];
 
