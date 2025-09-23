@@ -14,7 +14,7 @@ service cloud.firestore {
       allow read: if true;
       allow write: if request.auth.token.admin == true;
     }
-    match /gallery/{photoId} {
+    match /photos/{photoId} {
       allow read: if true;
       allow write: if request.auth.token.admin == true;
     }
