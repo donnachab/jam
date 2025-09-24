@@ -1,15 +1,13 @@
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { getDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { app, db } from '../firebase-config.js';
 import { Store } from '../state/store.js';
 import { showModal } from '../ui/modal.js';
 
-export function initializeAdminPanel(loadAllData) {
+export function initializeAdminPanel(db, auth, functions, loadAllData) {
     const adminPanel = document.getElementById('admin-panel');
     if (!adminPanel) return;
 
-    // --- Initialize Firebase Functions ---
-    const functions = getFunctions(app);
+    // --- Use passed-in Firebase Functions ---
     const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
 
     // --- DOM Elements ---

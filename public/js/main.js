@@ -133,9 +133,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     initializeMobileMenu();
     initFestivalCarousel(); 
     initializeAdminMode(db, auth, () => refreshDataAndRender(db));
-    initializeAdminPanel(() => refreshDataAndRender(db));
+    initializeAdminPanel(db, auth, functions, () => refreshDataAndRender(db));
     initializeJams(siteData.venues, () => refreshDataAndRender(db));
     initializeEvents(siteData.venues, () => refreshDataAndRender(db));
     initializeGallery(() => refreshDataAndRender(db));
     initializeCommunity(() => refreshDataAndRender(db));
+    initializeHeroAdmin(db, auth, functions, () => refreshDataAndRender(db));
 });

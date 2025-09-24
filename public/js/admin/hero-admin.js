@@ -1,13 +1,7 @@
-import { db, app } from '../firebase-config.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { showModal } from '../ui/modal.js';
-
-const storage = getStorage(app);
-const functions = getFunctions(app, 'us-central1');
-const auth = getAuth(app);
 
 function isValidUrl(url) {
   try {
@@ -18,7 +12,7 @@ function isValidUrl(url) {
   }
 }
 
-export function initializeHeroAdmin(refreshData) {
+export function initializeHeroAdmin(db, auth, functions, refreshData) {
   console.log('🔧 Initializing Hero Admin controls...');
   const editCoverPhotoBtn = document.getElementById("edit-cover-photo-btn");
   const editCoverPhotoForm = document.getElementById("edit-cover-photo-form");
@@ -81,6 +75,7 @@ export function initializeHeroAdmin(refreshData) {
             throw new Error('File upload to storage failed.');
           }
 
+          const storage = getStorage();
           const bucketName = storage.app.options.storageBucket;
           const publicUrl = `https://storage.googleapis.com/${bucketName}/images/${fileName}`;
           
