@@ -1,14 +1,12 @@
-import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { getDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { Store } from '../state/store.js';
 import { showModal } from '../ui/modal.js';
 
-export function initializeAdminPanel(db, auth, functions, loadAllData) {
+export function initializeAdminPanel(db, auth, loadAllData) {
     const adminPanel = document.getElementById('admin-panel');
     if (!adminPanel) return;
-
-    // --- Use passed-in Firebase Functions ---
-    const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
 
     // --- DOM Elements ---
     const tabButtons = adminPanel.querySelectorAll('.admin-tab-btn');
@@ -102,6 +100,8 @@ export function initializeAdminPanel(db, auth, functions, loadAllData) {
 
         try {
             // 1. Get signed URL from backend
+            const functions = getFunctions(getApp(), 'us-central1');
+            const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
             const result = await generateSignedUploadUrl({ 
                 fileName: `logo-${selectedTheme}-${file.name}`, 
                 contentType: file.type 

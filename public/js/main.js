@@ -2,7 +2,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getFunctions } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC4SnqaOMQWmEFulkN8zZALZsqJLK7hOh0",
@@ -115,7 +114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const functions = getFunctions(app, 'us-central1');
     await signInAnonymously(auth);
 
     // 2. Load all data from Firestore first
@@ -144,10 +142,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     initializeMobileMenu();
     initFestivalCarousel(); 
     initializeAdminMode(db, auth, () => refreshDataAndRender(db));
-    initializeAdminPanel(db, auth, functions, () => refreshDataAndRender(db));
+    initializeAdminPanel(db, auth, () => refreshDataAndRender(db));
     initializeJams(db, siteData.venues, () => refreshDataAndRender(db));
     initializeEvents(db, siteData.venues, () => refreshDataAndRender(db));
-    initializeGallery(db, auth, functions, () => refreshDataAndRender(db));
-    initializeCommunity(db, auth, functions, () => refreshDataAndRender(db));
-    initializeHeroAdmin(db, auth, functions, () => refreshDataAndRender(db));
+    initializeGallery(db, auth, () => refreshDataAndRender(db));
+    initializeCommunity(db, auth, () => refreshDataAndRender(db));
+    initializeHeroAdmin(db, auth, () => refreshDataAndRender(db));
 });
