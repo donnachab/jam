@@ -80,6 +80,8 @@ function manageJamSchedule(confirmedJams, config) {
 }
 
 export function renderJams(jams, venues, config) {
+    manageJamSchedule(jams, config); // Process jams before rendering
+
     const jamList = document.getElementById("jam-list");
     if (!jamList) return;
 

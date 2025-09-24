@@ -62,7 +62,7 @@ function renderAllComponents() {
     renderLogo(themeManager.getSaved() || 'default');
     renderJams(siteData.jams, siteData.venues, siteData.config);
     renderEvents(siteData.events, siteData.venues);
-    renderGallery(siteData.gallery, siteData.config);
+    renderGallery(siteData.photos, siteData.config);
     renderCommunity(siteData.community);
     
     console.log("✅ All components rendered.");
