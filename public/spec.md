@@ -33,9 +33,7 @@ This document serves as the master checklist for the website's functionality. It
 
 ### 2.2. Remaining Tasks
 
-> 🧐 **UX Flaw:** The `modal.js` file does not yet show a "Verifying..." loading state while the PIN is being checked.
->
-> **To Do:** Modify the `showModal` function in [`js/ui/modal.js`](./js/ui/modal.js) to handle a "loading" type, and update [`js/admin/admin-mode.js`](./js/admin/admin-mode.js) to use it.
+> ✅ **UX Flaw:** The `modal.js` file does not yet show a "Verifying..." loading state while the PIN is being checked.
 
 ---
 ## 3. Hero Section (`#home`)
@@ -50,9 +48,7 @@ This document serves as the master checklist for the website's functionality. It
 
 ### 3.2. Remaining Tasks
 
-> 🧐 **Robustness Flaw:** The form does not yet validate that the input is a valid URL format before saving.
->
-> **To Do:** Add a simple URL validation function to [`js/admin/hero-admin.js`](./js/admin/hero-admin.js) and show an error modal if the input is invalid.
+> ✅ **Robustness Flaw:** The form does not yet validate that the input is a valid URL format before saving.
 
 ---
 ## 4. Regular Jams Section (`#jams`)
@@ -92,9 +88,7 @@ This document serves as the master checklist for the website's functionality. It
     * `[✅]` The admin form correctly shows conditional fields for "Community" vs. "Charity" items.
 
 ### 6.2. Remaining Tasks
-> 🧐 **Data Integrity Flaw:** The form allows submitting a "Charity" item without an amount or a "Community" item without a headline.
->
-> **To Do:** Add client-side validation in [`js/community.js`](./js/community.js) to make the relevant fields required based on the selected item type.
+> ✅ **Data Integrity Flaw:** The form allows submitting a "Charity" item without an amount or a "Community" item without a headline.
 
 ---
 ## 7. Gallery Section
