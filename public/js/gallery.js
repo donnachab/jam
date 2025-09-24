@@ -2,7 +2,7 @@ import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { showModal } from './ui/modal.js';
-import { createImagePreview } from '../ui/previews.js';
+import { createImagePreview } from './ui/previews.js';
 
 function getYouTubeID(url) {
     const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gi;
