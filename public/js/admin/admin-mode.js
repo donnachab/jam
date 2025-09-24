@@ -4,7 +4,7 @@
  */
 
 import { getApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFunctions, httpsCallable, connectFunctionsEmulator } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { onIdTokenChanged, connectAuthEmulator } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { showModal, hideModal } from '../ui/modal.js';
 
@@ -13,10 +13,9 @@ let currentUser = null;
 
 // --- Top-level Functions for Firebase Interaction ---
 
-async function setAdminClaim(pin) {
+async function setAdminClaim(pin, functions) {
     console.log('Attempting to set admin claim...');
     try {
-        const functions = getFunctions(getApp(), 'us-central1');
         const setAdminClaimCallable = httpsCallable(functions, 'setAdminClaim');
         const result = await setAdminClaimCallable({ pin });
         console.log('✅ Admin claim function result:', result.data);
@@ -27,11 +26,10 @@ async function setAdminClaim(pin) {
     }
 }
 
-async function exitAdminMode() {
+async function exitAdminMode(functions) {
     if (!currentUser) return;
     console.log('Calling revokeAdminClaim function...');
     try {
-        const functions = getFunctions(getApp(), 'us-central1');
         const revokeAdminClaimCallable = httpsCallable(functions, 'revokeAdminClaim');
         await revokeAdminClaimCallable();
         console.log('✅ Admin claim revoked, forcing token refresh...');
@@ -56,13 +54,13 @@ function setAdminModeUI(enable) {
     console.log(enable ? '🔑 Admin mode UI activated' : '👤 Admin mode UI deactivated');
 }
 
-function promptForAdminPin() {
+function promptForAdminPin(functions) {
     console.log('Prompting for admin PIN...');
     showModal('Enter admin PIN:', 'prompt', async (pin) => {
         if (pin) {
             console.log('PIN entered, verifying...');
             showModal('Verifying PIN...', 'loading');
-            const result = await setAdminClaim(pin);
+            const result = await setAdminClaim(pin, functions);
             hideModal();
 
             if (result.success) {
@@ -79,13 +77,8 @@ function promptForAdminPin() {
 
 // --- Main Initialization Function ---
 
-export function initializeAdminMode(db, auth, refreshData) {
+export function initializeAdminMode(db, auth, functions, refreshData) {
     console.log('🔧 Initializing Admin Mode V2...');
-
-    if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
-        console.log('🔌 Connecting to Auth emulator on localhost:9099');
-        connectAuthEmulator(auth, 'http://localhost:9099');
-    }
 
     onIdTokenChanged(auth, async (user) => {
         currentUser = user;
@@ -105,9 +98,9 @@ export function initializeAdminMode(db, auth, refreshData) {
         adminModeBtn.addEventListener('click', (e) => {
             e.preventDefault();
             if (isAdmin) {
-                exitAdminMode();
+                exitAdminMode(functions);
             } else {
-                promptForAdminPin();
+                promptForAdminPin(functions);
             }
         });
         console.log('✅ Admin button found and configured');
@@ -117,7 +110,7 @@ export function initializeAdminMode(db, auth, refreshData) {
         if (e.target.classList.contains('exit-admin-btn')) {
             e.preventDefault();
             if (isAdmin) {
-                exitAdminMode();
+                exitAdminMode(functions);
             }
         }
     });
@@ -126,7 +119,7 @@ export function initializeAdminMode(db, auth, refreshData) {
         if (e.ctrlKey && e.altKey && e.key === 'a') {
             e.preventDefault();
             if (!isAdmin) {
-                promptForAdminPin();
+                promptForAdminPin(functions);
             }
         }
     });
