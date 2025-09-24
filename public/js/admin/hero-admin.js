@@ -3,7 +3,7 @@ import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { showModal } from '../ui/modal.js';
-import { createImagePreview } from '../../ui/previews.js';
+import { createImagePreview } from '../ui/previews.js';
 
 function isValidUrl(url) {
   try {
