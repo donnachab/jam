@@ -3,6 +3,7 @@ import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/
 import { getDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { Store } from '../state/store.js';
 import { showModal } from '../ui/modal.js';
+import { themeManager } from '../ui/theme-switcher.js';
 
 export function initializeAdminPanel(db, auth, loadAllData) {
     const adminPanel = document.getElementById('admin-panel');
@@ -57,7 +58,11 @@ export function initializeAdminPanel(db, auth, loadAllData) {
 
         // Render loading state (e.g., disable buttons)
         const allButtons = adminPanel.querySelectorAll('button, input');
-        allButtons.forEach(btn => btn.disabled = state.isLoading);
+        allButtons.forEach(btn => {
+            if (btn.id !== 'site-logo-url' || !siteLogoFile.files.length) {
+                btn.disabled = state.isLoading;
+            }
+        });
 
         // Render form visibility
         editSiteLogoForm.style.display = state.isLogoFormVisible ? 'block' : 'none';
@@ -103,7 +108,7 @@ export function initializeAdminPanel(db, auth, loadAllData) {
             const functions = getFunctions(getApp(), 'us-central1');
             const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
             const result = await generateSignedUploadUrl({ 
-                fileName: `logo-${selectedTheme}-${file.name}`, 
+                fileName: `logo-${selectedTheme}-${file.name}`,
                 contentType: file.type 
             });
 
@@ -123,7 +128,6 @@ export function initializeAdminPanel(db, auth, loadAllData) {
                 throw new Error('File upload failed.');
             }
             
-            // The public URL is the URL without the query string
             const logoUrl = uploadUrl.split('?')[0];
 
             // 3. Save the new URL to Firestore
@@ -131,11 +135,14 @@ export function initializeAdminPanel(db, auth, loadAllData) {
                 [`logoUrls.${selectedTheme}`]: logoUrl
             });
 
+            // 4. Set the theme and refresh data
+            themeManager.set(selectedTheme);
+            await loadInitialLogoData();
+            loadAllData();
+
             showModal('Logo updated successfully!', 'alert');
             store.commit('SET_LOGO_FORM_VISIBLE', false);
             editSiteLogoForm.reset();
-            await loadInitialLogoData(); // Refresh data
-            loadAllData(); // Call the global refresh function
 
         } catch (error) {
             console.error("Error uploading logo:", error);
@@ -146,7 +153,6 @@ export function initializeAdminPanel(db, auth, loadAllData) {
     }
     
     // --- Event Listeners ---
-    // Tab switching logic remains unchanged for now
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             tabButtons.forEach(btn => btn.classList.remove('active-tab'));
@@ -160,7 +166,6 @@ export function initializeAdminPanel(db, auth, loadAllData) {
         });
     });
 
-    // Logo management listeners
     editSiteLogoBtn.addEventListener('click', () => {
         store.commit('SET_LOGO_FORM_VISIBLE', true);
     });
@@ -174,25 +179,41 @@ export function initializeAdminPanel(db, auth, loadAllData) {
         store.commit('SET_SELECTED_THEME', e.target.value);
     });
 
+    siteLogoFile.addEventListener('change', () => {
+        if (siteLogoFile.files.length > 0) {
+            siteLogoUrlInput.value = '';
+            siteLogoUrlInput.disabled = true;
+        } else {
+            siteLogoUrlInput.disabled = false;
+        }
+    });
+
+    siteLogoUrlInput.addEventListener('input', () => {
+        if (siteLogoUrlInput.value) {
+            siteLogoFile.value = '';
+        }
+    });
+
     editSiteLogoForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const fileToUpload = siteLogoFile.files[0];
-        const urlToSave = siteLogoUrlInput.value;
+        const urlToSave = siteLogoUrlInput.value.trim();
 
         if (fileToUpload) {
             await uploadAndSaveLogo(fileToUpload);
         } else if (urlToSave) {
-            // If only a URL is provided, save it directly
             store.commit('SET_LOADING', true);
             const selectedTheme = store.getState().selectedTheme;
             try {
                 await updateDoc(siteConfigRef, {
                     [`logoUrls.${selectedTheme}`]: urlToSave
                 });
+                themeManager.set(selectedTheme);
+                await loadInitialLogoData();
+                loadAllData();
                 showModal('Logo URL updated successfully!', 'alert');
                 store.commit('SET_LOGO_FORM_VISIBLE', false);
                 editSiteLogoForm.reset();
-                loadAllData();
             } catch (error) {
                 store.commit('SET_ERROR', 'Failed to save logo URL.');
             } finally {
