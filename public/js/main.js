@@ -56,7 +56,7 @@ async function loadAllData(db) {
         siteData.jams = jamsSnap.docs.map(doc => doc.data());
         siteData.venues = venuesSnap.docs.map(doc => doc.data());
         siteData.events = eventsSnap.docs.map(doc => doc.data());
-        siteData.photos = gallerySnap.docs.map(doc => doc.data()); // Corrected this line
+        siteData.photos = gallerySnap.docs.map(doc => doc.data());
         siteData.community = communitySnap.docs.map(doc => doc.data());
 
         console.log("✅ All Firebase data loaded.");
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 2. Load all data from Firestore first
     await loadAllData(db);
 
-    // 3. Load all HTML components into the DOM
+    // 3. Load all HTML components into the DOM and wait for them to finish
     await Promise.all([
         loadComponent('components/header.html', 'header-container'),
         loadComponent('components/hero.html', 'hero-container'),
