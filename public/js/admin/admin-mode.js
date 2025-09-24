@@ -10,25 +10,21 @@ import { showModal, hideModal } from '../ui/modal.js';
 let isAdmin = false;
 let currentUser = null;
 
-/**
- * Toggles the UI to reflect the user's admin status.
- * @param {boolean} enable Whether to enable or disable admin mode UI.
- */
-function setAdminModeUI(enable) {
-    isAdmin = enable;
-    document.body.classList.toggle('admin-mode', enable);
+// --- Top-level Functions for Firebase Interaction ---
 
-    const adminModeBtn = document.getElementById('admin-mode-btn');
-    if (adminModeBtn) {
-        adminModeBtn.textContent = enable ? 'Exit Admin' : 'Admin Mode';
-        adminModeBtn.classList.toggle('active', enable);
+async function setAdminClaim(functions, pin) {
+    console.log('Attempting to set admin claim...');
+    try {
+        const setAdminClaimCallable = httpsCallable(functions, 'setAdminClaim');
+        const result = await setAdminClaimCallable({ pin });
+        console.log('✅ Admin claim function result:', result.data);
+        return result.data;
+    } catch (error) {
+        console.error('❌ Firebase setAdminClaim failed:', error);
+        return { success: false, message: `Verification failed: ${error.message}` };
     }
-    console.log(enable ? '🔑 Admin mode UI activated' : '👤 Admin mode UI deactivated');
 }
 
-/**
- * Logs the user out of admin mode by calling the revokeAdminClaim function.
- */
 async function exitAdminMode(functions) {
     if (!currentUser) return;
     console.log('Calling revokeAdminClaim function...');
@@ -44,30 +40,26 @@ async function exitAdminMode(functions) {
     }
 }
 
-/**
- * Prompts the user for the admin PIN and attempts to elevate their privileges.
- */
-async function promptForAdminPin(functions) {
+// --- UI and Event Handling ---
+
+function setAdminModeUI(enable) {
+    isAdmin = enable;
+    document.body.classList.toggle('admin-mode', enable);
+    const adminModeBtn = document.getElementById('admin-mode-btn');
+    if (adminModeBtn) {
+        adminModeBtn.textContent = enable ? 'Exit Admin' : 'Admin Mode';
+        adminModeBtn.classList.toggle('active', enable);
+    }
+    console.log(enable ? '🔑 Admin mode UI activated' : '👤 Admin mode UI deactivated');
+}
+
+function promptForAdminPin(functions) {
     console.log('Prompting for admin PIN...');
-
-    const setAdminClaim = async (pin) => {
-        console.log('Attempting to set admin claim...');
-        try {
-            const setAdminClaimCallable = httpsCallable(functions, 'setAdminClaim');
-            const result = await setAdminClaimCallable({ pin });
-            console.log('✅ Admin claim function result:', result.data);
-            return result.data;
-        } catch (error) {
-            console.error('❌ Firebase setAdminClaim failed:', error);
-            return { success: false, message: `Verification failed: ${error.message}` };
-        }
-    };
-
     showModal('Enter admin PIN:', 'prompt', async (pin) => {
         if (pin) {
             console.log('PIN entered, verifying...');
             showModal('Verifying PIN...', 'loading');
-            const result = await setAdminClaim(pin);
+            const result = await setAdminClaim(functions, pin);
             hideModal();
 
             if (result.success) {
@@ -82,13 +74,11 @@ async function promptForAdminPin(functions) {
     });
 }
 
-/**
- * Main initialization function for admin mode.
- */
+// --- Main Initialization Function ---
+
 export function initializeAdminMode(db, auth, functions, refreshData) {
     console.log('🔧 Initializing Admin Mode V2...');
 
-    // Connect to emulators in local development
     if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
         console.log('🔌 Connecting to Functions emulator on localhost:5001');
         connectFunctionsEmulator(functions, 'localhost', 5001);
@@ -97,21 +87,15 @@ export function initializeAdminMode(db, auth, functions, refreshData) {
     }
 
     onIdTokenChanged(auth, async (user) => {
+        currentUser = user;
         if (user) {
-            currentUser = user;
             const idTokenResult = await user.getIdTokenResult();
             const newIsAdmin = idTokenResult.claims.admin === true;
-            
             if (isAdmin !== newIsAdmin) {
-                console.log(`Admin status changed to: ${newIsAdmin}`);
                 setAdminModeUI(newIsAdmin);
             }
-        } else {
-            currentUser = null;
-            if (isAdmin) {
-                console.log('User logged out, deactivating admin mode.');
-                setAdminModeUI(false);
-            }
+        } else if (isAdmin) {
+            setAdminModeUI(false);
         }
     });
 
@@ -126,8 +110,6 @@ export function initializeAdminMode(db, auth, functions, refreshData) {
             }
         });
         console.log('✅ Admin button found and configured');
-    } else {
-        console.warn('⚠️ Admin button not found');
     }
 
     document.body.addEventListener('click', (e) => {
