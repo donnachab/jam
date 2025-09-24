@@ -1,13 +1,7 @@
-import { db, app } from './firebase-config.js';
 import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { showModal } from './ui/modal.js';
-
-const storage = getStorage(app);
-const functions = getFunctions(app, 'us-central1');
-const auth = getAuth(app);
 
 function getYouTubeID(url) {
     const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gi;
@@ -58,7 +52,7 @@ export function renderGallery(photos, config) {
     }
 }
 
-export function initializeGallery(refreshData) {
+export function initializeGallery(db, auth, functions, refreshData) {
     const addPhotoBtn = document.getElementById("add-photo-btn");
     const addPhotoForm = document.getElementById("add-photo-form");
     const cancelPhotoBtn = document.getElementById("cancel-photo-btn");
@@ -134,6 +128,7 @@ export function initializeGallery(refreshData) {
                             throw new Error(`File upload to storage failed with status: ${uploadResponse.status}`);
                         }
 
+                        const storage = getStorage();
                         const bucketName = storage.app.options.storageBucket;
                         const publicUrl = `https://storage.googleapis.com/${bucketName}/images/${fileName}`;
                         console.log("DEBUG: Upload successful. Public URL:", publicUrl);

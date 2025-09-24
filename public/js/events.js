@@ -1,4 +1,3 @@
-import { db } from './firebase-config.js';
 import { doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
 import { initFestivalCarousel } from './ui/carousels.js';
@@ -88,7 +87,7 @@ export function renderEvents(events, venues) {
     });
 }
 
-export function initializeEvents(venues, refreshData) {
+export function initializeEvents(db, venues, refreshData) {
     const addEventBtn = document.getElementById("add-event-btn");
     const addEventForm = document.getElementById("add-event-form");
     const cancelEventBtn = document.getElementById("cancel-event-btn");

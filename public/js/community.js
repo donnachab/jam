@@ -1,14 +1,8 @@
-import { db, app } from './firebase-config.js';
 import { doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { showModal } from './ui/modal.js';
 import { initCommunityCarousel } from './ui/carousels.js';
-
-const storage = getStorage(app);
-const functions = getFunctions(app, 'us-central1');
-const auth = getAuth(app);
 
 let communitySwiper = null;
 
@@ -60,7 +54,7 @@ export function renderCommunity(items) {
     communitySwiper = initCommunityCarousel(items);
 }
 
-export function initializeCommunity(refreshData) {
+export function initializeCommunity(db, auth, functions, refreshData) {
     const addBtn = document.getElementById("add-community-item-btn");
     const form = document.getElementById("add-community-form");
     const cancelBtn = document.getElementById("cancel-community-btn");
@@ -138,6 +132,7 @@ export function initializeCommunity(refreshData) {
 
                 if (!uploadResponse.ok) throw new Error('File upload to storage failed.');
 
+                const storage = getStorage();
                 const bucketName = storage.app.options.storageBucket;
                 imageUrl = `https://storage.googleapis.com/${bucketName}/images/${fileName}`;
             } catch (error) {

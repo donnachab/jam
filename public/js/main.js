@@ -3,7 +3,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getFunctions } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
-import { firebaseConfig } from './firebase-config.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC4SnqaOMQWmEFulkN8zZALZsqJLK7hOh0",
+  authDomain: "galway-jam-circle-live.firebaseapp.com",
+  projectId: "galway-jam-circle-live",
+  storageBucket: "galway-jam-circle-live.appspot.com",
+  messagingSenderId: "140452021164",
+  appId: "1:140452021164:web:049a190be3ba0b6c9a3009"
+};
 
 // UI and Component Initializers
 import { initializeMobileMenu } from './ui/mobile-menu.js';
@@ -136,9 +144,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     initFestivalCarousel(); 
     initializeAdminMode(db, auth, () => refreshDataAndRender(db));
     initializeAdminPanel(db, auth, functions, () => refreshDataAndRender(db));
-    initializeJams(siteData.venues, () => refreshDataAndRender(db));
-    initializeEvents(siteData.venues, () => refreshDataAndRender(db));
-    initializeGallery(() => refreshDataAndRender(db));
-    initializeCommunity(() => refreshDataAndRender(db));
+    initializeJams(db, siteData.venues, () => refreshDataAndRender(db));
+    initializeEvents(db, siteData.venues, () => refreshDataAndRender(db));
+    initializeGallery(db, auth, functions, () => refreshDataAndRender(db));
+    initializeCommunity(db, auth, functions, () => refreshDataAndRender(db));
     initializeHeroAdmin(db, auth, functions, () => refreshDataAndRender(db));
 });

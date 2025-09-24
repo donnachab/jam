@@ -1,4 +1,3 @@
-import { db } from './firebase-config.js';
 import { doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
 
@@ -137,7 +136,7 @@ export function renderJams(jams, venues, config) {
     });
 }
 
-export function initializeJams(venues, refreshData) {
+export function initializeJams(db, venues, refreshData) {
     const addJamBtn = document.getElementById("add-jam-btn");
     const addJamForm = document.getElementById("add-jam-form");
     const cancelJamBtn = document.getElementById("cancel-jam-btn");
