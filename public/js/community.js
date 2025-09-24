@@ -122,7 +122,6 @@ export function initializeCommunity(db, auth, functions, refreshData) {
             try {
                 showModal("Uploading image...", "loading");
                 await auth.currentUser.getIdToken(true);
-                const functions = getFunctions(getApp(), 'us-central1');
                 const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
                 const fileExtension = newFile.name.split('.').pop();
                 const fileName = `community-${Date.now()}.${fileExtension}`;
