@@ -19,6 +19,7 @@ import { initFestivalCarousel } from './ui/carousels.js';
 import { themeManager } from './ui/theme-switcher.js';
 import { initializeAdminMode } from './admin/admin-mode.js';
 import { initializeAdminPanel } from './admin/admin-panel.js';
+import { initializeHeroAdmin } from './admin/hero-admin.js';
 import { renderJams, initializeJams } from './jams.js';
 import { renderEvents, initializeEvents } from './events.js';
 import { renderGallery, initializeGallery } from './gallery.js';
