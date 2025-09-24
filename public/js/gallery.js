@@ -48,7 +48,6 @@ export function renderGallery(photos, config) {
                 grid.appendChild(div);
             });
         }
-    }
 
     const videoPlayer = document.getElementById("featured-video-player");
     if (videoPlayer && config.featuredVideoUrl) {
