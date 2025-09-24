@@ -4,6 +4,7 @@ import { getDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12
 import { Store } from '../state/store.js';
 import { showModal } from '../ui/modal.js';
 import { themeManager } from '../ui/theme-switcher.js';
+import { createImagePreview } from '../ui/previews.js';
 
 export function initializeAdminPanel(db, auth, loadAllData) {
     const adminPanel = document.getElementById('admin-panel');
@@ -19,6 +20,7 @@ export function initializeAdminPanel(db, auth, loadAllData) {
     const siteLogoUrlInput = document.getElementById('site-logo-url');
     const siteLogoThemeSelect = document.getElementById('site-logo-theme-select');
     const siteConfigRef = doc(db, "site_config", "main");
+    const siteLogoPreviewContainer = document.getElementById('site-logo-preview-container');
 
     // --- State Management Setup ---
     const initialState = {
@@ -132,12 +134,12 @@ export function initializeAdminPanel(db, auth, loadAllData) {
                 [`logoUrls.${selectedTheme}`]: logoUrl
             });
 
+            store.commit('SET_LOGO_FORM_VISIBLE', false);
+            editSiteLogoForm.reset();
             themeManager.set(selectedTheme, logoUrl);
             await loadInitialLogoData();
 
             showModal('Logo updated successfully!', 'alert');
-            store.commit('SET_LOGO_FORM_VISIBLE', false);
-            editSiteLogoForm.reset();
 
         } catch (error) {
             console.error("Error uploading logo:", error);
@@ -203,11 +205,11 @@ export function initializeAdminPanel(db, auth, loadAllData) {
                 await updateDoc(siteConfigRef, {
                     [`logoUrls.${selectedTheme}`]: urlToSave
                 });
+                store.commit('SET_LOGO_FORM_VISIBLE', false);
+                editSiteLogoForm.reset();
                 themeManager.set(selectedTheme, urlToSave);
                 await loadInitialLogoData();
                 showModal('Logo URL updated successfully!', 'alert');
-                store.commit('SET_LOGO_FORM_VISIBLE', false);
-                editSiteLogoForm.reset();
             } catch (error) {
                 store.commit('SET_ERROR', 'Failed to save logo URL.');
             } finally {
@@ -221,4 +223,7 @@ export function initializeAdminPanel(db, auth, loadAllData) {
     // --- Initial Data Load ---
     loadInitialLogoData();
     console.log('✅ Admin Panel initialized with new state management for Logo.');
+
+    // --- Initialize Image Previews ---
+    createImagePreview(siteLogoFile, siteLogoPreviewContainer);
 }
