@@ -3,7 +3,7 @@ import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-
 import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { showModal } from './ui/modal.js';
 import { initCommunityCarousel } from './ui/carousels.js';
-import { createImagePreview } from '../ui/previews.js';
+import { createImagePreview } from './ui/previews.js';
 
 let communitySwiper = null;
 
