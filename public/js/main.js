@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const functions = getFunctions(app);
+    const functions = getFunctions(app, 'us-central1');
     await signInAnonymously(auth);
 
     // 2. Load all data from Firestore first
