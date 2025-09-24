@@ -1,280 +1,159 @@
-import { doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
 
-// --- Helper Functions ---
-const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-let jamDatepicker = null;
-let jamsToDisplay = [];
-
-function parseDate(dateString) {
-    if (!dateString) return null;
-    if (dateString.includes('-')) {
-        const parts = dateString.split('-');
-        return new Date(parts[0], parts[1] - 1, parts[2]);
-    }
-    const currentYear = new Date().getFullYear();
-    const dateWithoutColon = dateString.replace(':', '');
-    return new Date(`${dateWithoutColon} ${currentYear}`);
-}
-
-function formatTime(timeStr) {
-    if (!timeStr || !timeStr.includes(":")) return timeStr;
-    if (timeStr.toLowerCase().includes("am") || timeStr.toLowerCase().includes("pm")) return timeStr;
-    const [hours, minutes] = timeStr.split(":");
-    const h = parseInt(hours, 10);
-    const suffix = h >= 12 ? "PM" : "AM";
-    const formattedHours = ((h + 11) % 12) + 1;
-    return `${formattedHours}:${minutes} ${suffix}`;
-}
-
-function manageJamSchedule(confirmedJams, config) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    let defaultDay = parseInt(config.defaultJamDay, 10);
-    if (isNaN(defaultDay)) {
-        const dayIndex = dayNames.indexOf(config.defaultJamDay);
-        defaultDay = dayIndex !== -1 ? dayIndex : 6;
-    }
-
-    let upcomingConfirmed = confirmedJams
-        .map(jam => ({...jam, dateObj: parseDate(jam.date)}))
-        .filter(jam => jam.dateObj && jam.dateObj >= today)
-        .sort((a, b) => a.dateObj - b.dateObj);
-
-    jamsToDisplay = [...upcomingConfirmed];
-
-    const lastJamOnList = jamsToDisplay.length > 0 ? jamsToDisplay[jamsToDisplay.length - 1] : null;
-    let lastDate;
-    if (lastJamOnList) {
-        lastDate = new Date(lastJamOnList.dateObj);
-    } else {
-        lastDate = new Date(today);
-        lastDate.setDate(lastDate.getDate() - 1);
-    }
-
-    while (jamsToDisplay.length < 5) {
-        const currentDay = lastDate.getDay();
-        const daysUntilNext = (defaultDay - currentDay + 7) % 7;
-        const daysToAdd = daysUntilNext === 0 ? 7 : daysUntilNext;
-        lastDate.setDate(lastDate.getDate() + daysToAdd);
-
-        const dateString = lastDate.toISOString().split('T')[0];
-
-        if (!jamsToDisplay.some(jam => jam.date === dateString)) {
-            jamsToDisplay.push({
-                id: `proposal-${dateString}`,
-                date: dateString,
-                day: dayNames[defaultDay],
-                venue: config.defaultJamVenue || "To be decided...",
-                time: config.defaultJamTime || "2:00 PM",
-                mapLink: config.defaultJamMapLink || null,
-                isProposal: true,
-            });
-        }
-    }
-
-    jamsToDisplay.sort((a, b) => (a.dateObj || parseDate(a.date)) - (b.dateObj || parseDate(b.date)));
-    jamsToDisplay = jamsToDisplay.slice(0, 5);
+function getVenueName(venueId, venues) {
+    const venue = venues.find(v => v.id === venueId);
+    return venue ? venue.name : 'Unknown Venue';
 }
 
 export function renderJams(jams, venues, config) {
-    manageJamSchedule(jams, config); // Process jams before rendering
+    const list = document.getElementById("jams-list");
+    if (!list) return;
+    list.innerHTML = "";
 
-    const jamList = document.getElementById("jam-list");
-    if (!jamList) return;
-
-    if (!config || !jams || !venues) {
-        jamList.innerHTML = '<p class="text-center text-red-500">Could not load jam data due to a configuration error.</p>';
+    if (!jams || !venues || !config) {
+        list.innerHTML = `<p class="text-center text-red-500">Could not load jam data due to a configuration error.</p>`;
         return;
     }
-    jamList.innerHTML = "";
 
-    jamsToDisplay.forEach(jam => {
-        const li = document.createElement("li");
-        const dateObj = parseDate(jam.date);
-        if (!dateObj) return;
-
-        const venue = venues.find(v => v.name === jam.venue);
-        const imageUrl = venue ? venue.imageUrl : null;
-
-        const isSaturday = dateObj.getDay() === 6;
-        const formattedDate = `${dateObj.getDate()} ${dateObj.toLocaleString('default', { month: 'short' })}`;
-
-        li.className = `p-4 rounded-lg shadow-sm border-l-4 flex flex-col sm:flex-row items-center bg-white ${jam.cancelled ? 'jam-cancelled' : ''} ${!isSaturday && !jam.isProposal ? 'jam-special' : 'border-gray-200'}`;
-
-        let adminButtons = `
-            <button data-id="${jam.id}" class="edit-jam-btn text-blue-500 hover:text-blue-700">Edit</button>
-            ${jam.cancelled
-                ? `<button data-id="${jam.id}" class="reinstate-jam-btn text-green-600 hover:text-green-800 ml-2">Reinstate</button>`
-                : `<button data-id="${jam.id}" class="cancel-jam-btn text-yellow-600 hover:text-yellow-800 ml-2">Cancel</button>`
-            }
-            <button data-id="${jam.id}" class="delete-jam-btn text-red-500 hover:text-red-700 ml-2">Delete</button>
-        `;
-
-        const mapLink = jam.mapLink ? ` <a href="${jam.mapLink}" target="_blank" class="text-blue-500 hover:underline whitespace-nowrap">(Map)</a>` : "";
-        
-        const imageHtml = imageUrl ? `
-            <div style="width: 96px; height: 96px; margin-right: 1rem; flex-shrink: 0; background-color: #e5e7eb; border-radius: 0.375rem; display: flex; align-items: center; justify-content: center;">
-                <img src="${imageUrl}" alt="${jam.venue}" style="width: 100%; height: 100%; object-fit: contain;">
-            </div>` : '';
-
-        li.innerHTML = `
-            ${imageHtml}
-            <div class="flex-grow jam-info min-w-0">
-                <div class="flex flex-col sm:flex-row sm:items-baseline sm:space-x-2">
-                    <span class="font-bold text-lg ${isSaturday ? "text-gray-500" : "text-violet-600"}">${jam.day}</span>
-                    <span class="text-lg font-bold text-primary">${formattedDate}:</span>
-                    <span class="text-lg font-bold text-gray-600">${formatTime(jam.time)}</span>
+    if (jams.length === 0) {
+        list.innerHTML = `<p class="text-center text-gray-500">No jams scheduled at the moment. Check back soon!</p>`;
+    } else {
+        jams.forEach(jam => {
+            const jamElement = document.createElement("div");
+            jamElement.className = "jam-item bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between";
+            jamElement.innerHTML = `
+                <div>
+                    <h3 class="text-2xl font-bold text-primary mb-2">${jam.day}</h3>
+                    <p class="text-lg text-gray-700">${jam.time}</p>
+                    <p class="text-md text-gray-600 mb-4">${getVenueName(jam.venueId, venues)}</p>
+                    <p class="text-gray-500">${jam.details}</p>
                 </div>
-                <span class="text-gray-700 text-lg truncate">${jam.venue}${mapLink}</span>
-                ${jam.cancelled ? '<span class="font-bold text-red-600 mt-1 sm:ml-4">(CANCELLED)</span>' : ""}
-            </div>
-            <div class="admin-controls-inline space-x-2 mt-2 sm:mt-0">${adminButtons}</div>
-        `;
-        jamList.appendChild(li);
-    });
+                <div class="admin-controls-inline mt-4 space-x-2">
+                    <button data-id="${jam.id}" class="edit-jam-btn bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
+                    </button>
+                    <button data-id="${jam.id}" class="delete-jam-btn bg-red-500 text-white p-2 rounded-full hover:bg-red-600 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
+                    </button>
+                </div>`;
+            list.appendChild(jamElement);
+        });
+    }
+
+    const formatInfo = document.getElementById("format-info");
+    if (formatInfo && config.jamFormat) {
+        formatInfo.innerHTML = `<p>${config.jamFormat}</p>`;
+    }
+
+    const editFormatBtn = document.getElementById('edit-format-btn');
+    const editFormatForm = document.getElementById('edit-format-form');
+    if (editFormatBtn) {
+        editFormatBtn.addEventListener('click', () => {
+            editFormatForm.style.display = 'block';
+            document.getElementById('jam-format-input').value = config.jamFormat || '';
+        });
+    }
+
+    const cancelFormatBtn = document.getElementById('cancel-format-btn');
+    if(cancelFormatBtn) {
+        cancelFormatBtn.addEventListener('click', () => {
+            editFormatForm.style.display = 'none';
+        });
+    }
+
+    if(editFormatForm) {
+        editFormatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newFormat = document.getElementById('jam-format-input').value;
+            try {
+                await setDoc(doc(db, "site_config", "main"), { jamFormat: newFormat }, { merge: true });
+                editFormatForm.style.display = 'none';
+                // No need to call refreshData here, as the main module will handle it.
+            } catch (error) {
+                console.error("Error updating jam format:", error);
+                showModal('Failed to update format.', 'alert');
+            }
+        });
+    }
 }
 
 export function initializeJams(db, venues, refreshData) {
+    console.log('🔧 Initializing Jams module...');
     const addJamBtn = document.getElementById("add-jam-btn");
     const addJamForm = document.getElementById("add-jam-form");
     const cancelJamBtn = document.getElementById("cancel-jam-btn");
-    const jamList = document.getElementById("jam-list");
-    const manageVenuesBtn = document.getElementById("manage-venues-btn");
-    const venueManagementSection = document.getElementById("venue-management-section");
-    const venueInput = document.getElementById("jam-venue");
+    const jamsList = document.getElementById("jams-list");
 
-    // Populate venue dropdown
-    venueInput.innerHTML = venues.map(v => `<option value="${v.name}">${v.name}</option>`).join('');
-
-    venueInput.addEventListener('change', (e) => {
-        const selectedVenueName = e.target.value;
-        const venue = venues.find(v => v.name.toLowerCase() === selectedVenueName.toLowerCase());
-        if (venue) {
-            document.getElementById('jam-map-link').value = venue.mapLink || '';
-        }
-    });
-
-    const jamDateInput = document.getElementById("jam-date");
-    jamDatepicker = flatpickr(jamDateInput, {
-        dateFormat: "Y-m-d",
-        altInput: true,
-        altFormat: "F j, Y",
-        onChange: (selectedDates) => {
-            if (selectedDates.length > 0) {
-                document.getElementById("jam-day").value = dayNames[selectedDates[0].getDay()];
-            }
-        }
-    });
-    flatpickr("#jam-time", { enableTime: true, noCalendar: true, dateFormat: "h:i K", defaultDate: "2:00 PM" });
-
-    const showJamForm = (mode = "add", jam = null) => {
-        addJamForm.style.display = "block";
-        const formTitle = document.getElementById("form-title");
-        
-        if (mode === 'edit') {
-            formTitle.textContent = "Edit Jam";
-            document.getElementById("edit-jam-id").value = jam.id;
-            const dateObj = parseDate(jam.date);
-            const formattedDate = dateObj.toISOString().split('T')[0];
-            jamDatepicker.setDate(formattedDate, true);
-            document.getElementById("jam-time").value = jam.time;
-            venueInput.value = jam.venue;
-            document.getElementById("jam-map-link").value = jam.mapLink || '';
-            addJamForm.scrollIntoView({ behavior: 'smooth' });
-        } else {
-            formTitle.textContent = "Add New Jam";
+    if (addJamBtn) {
+        addJamBtn.addEventListener("click", () => {
+            document.getElementById("edit-jam-id").value = "";
             addJamForm.reset();
-            document.getElementById("edit-jam-id").value = '';
-            if (jam && jam.isProposal) {
-                 jamDatepicker.setDate(jam.date, true);
+            addJamForm.style.display = "block";
+        });
+    }
+
+    if(cancelJamBtn) {
+        cancelJamBtn.addEventListener("click", () => {
+            addJamForm.style.display = "none";
+        });
+    }
+    
+    // This is the critical check to prevent the error
+    if (addJamForm) { 
+        const venueInput = document.getElementById("jam-venue");
+        if (venueInput) {
+            venueInput.innerHTML = venues.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
+        }
+
+        addJamForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const id = document.getElementById("edit-jam-id").value || String(Date.now());
+            const jamData = {
+                id,
+                day: document.getElementById("jam-day").value,
+                time: document.getElementById("jam-time").value,
+                venueId: document.getElementById("jam-venue").value,
+                details: document.getElementById("jam-details").value
+            };
+            try {
+                await setDoc(doc(db, "jams", id), jamData);
+                addJamForm.style.display = "none";
+                await refreshData();
+                showModal("Jam saved successfully!", "alert");
+            } catch (error) {
+                console.error("Error saving jam:", error);
+                showModal("Failed to save jam. Please try again.", "alert");
             }
-        }
-    };
+        });
+    }
 
-    addJamBtn.addEventListener("click", () => showJamForm("add"));
-    cancelJamBtn.addEventListener("click", () => addJamForm.style.display = "none");
-    manageVenuesBtn.addEventListener("click", () => {
-        venueManagementSection.style.display = "block";
-    });
-
-    addJamForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const id = document.getElementById("edit-jam-id").value || String(Date.now());
-        const date = document.getElementById("jam-date").value;
-        const venue = document.getElementById("jam-venue").value;
-        if (!date || !venue) return showModal("Date and Venue are required.", "alert");
-
-        const selectedDay = document.getElementById("jam-day").value;
-        const correctDay = dayNames[parseDate(date).getDay()];
-        if (selectedDay !== correctDay) {
-            return showModal(`The selected day (${selectedDay}) does not match the date (${date}, which is a ${correctDay}). Please re-select the date.`, "alert");
-        }
-
-        const jamData = {
-            id,
-            date,
-            day: correctDay,
-            time: document.getElementById("jam-time").value.trim(),
-            venue,
-            mapLink: document.getElementById("jam-map-link").value.trim(),
-            cancelled: false,
-        };
-
-        await setDoc(doc(db, "jams", id), jamData);
-        addJamForm.style.display = "none";
-        await refreshData();
-    });
-
-    jamList.addEventListener("click", async (e) => {
-        const button = e.target.closest("button");
-        if (!button) return;
-
-        const jamId = button.dataset.id;
-        
-        if (button.classList.contains("edit-jam-btn")) {
-            if (jamId.startsWith('proposal-')) {
-                const jam = jamsToDisplay.find(j => j.id === jamId);
-                showJamForm("edit", jam);
-            } else {
+    if (jamsList) {
+        jamsList.addEventListener("click", async (e) => {
+            const target = e.target.closest("button");
+            if (!target) return;
+            const jamId = target.dataset.id;
+            
+            if (target.classList.contains("edit-jam-btn")) {
                 const docRef = doc(db, "jams", jamId);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    showJamForm("edit", docSnap.data());
-                } else {
-                    showModal("Could not find the jam to edit.", "alert");
+                    const jam = docSnap.data();
+                    document.getElementById("edit-jam-id").value = jam.id;
+                    document.getElementById("jam-day").value = jam.day;
+                    document.getElementById("jam-time").value = jam.time;
+                    document.getElementById("jam-venue").value = jam.venueId;
+                    document.getElementById("jam-details").value = jam.details;
+                    addJamForm.style.display = "block";
                 }
-            }
-        } else if (button.classList.contains("delete-jam-btn")) {
-            if (jamId.startsWith('proposal-')) {
-                jamsToDisplay = jamsToDisplay.filter(j => j.id !== jamId);
-                renderJams(siteData.jams, siteData.venues, siteData.config);
-            } else {
-                showModal("Delete this jam permanently?", "confirm", async () => {
-                    try {
-                        await deleteDoc(doc(db, "jams", jamId));
-                        await refreshData();
-                    } catch (error) {
-                        console.error('Error deleting jam:', error);
-                        showModal(`Failed to delete jam. Error: ${error.message}`, 'alert');
-                    }
+            } else if (target.classList.contains("delete-jam-btn")) {
+                showModal("Are you sure you want to delete this jam?", "confirm", async () => {
+                    await deleteDoc(doc(db, "jams", jamId));
+                    await refreshData();
+                    showModal("Jam deleted.", "alert");
                 });
             }
-        } else if (button.classList.contains("cancel-jam-btn")) {
-            const jam = jamsToDisplay.find(j => j.id === jamId);
-            if (jam && !jam.isProposal) {
-                await setDoc(doc(db, "jams", jamId), { cancelled: true }, { merge: true });
-                await refreshData();
-            }
-        } else if (button.classList.contains("reinstate-jam-btn")) {
-            const jam = jamsToDisplay.find(j => j.id === jamId);
-            if (jam && !jam.isProposal) {
-                await setDoc(doc(db, "jams", jamId), { cancelled: false }, { merge: true });
-                await refreshData();
-            }
-        }
-    });
-    
-    console.log("✅ Jams module initialized.");
+        });
+    }
+    console.log('✅ Jams module initialized.');
 }
