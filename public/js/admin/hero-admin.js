@@ -1,7 +1,7 @@
 import { getApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { showModal } from '../ui/modal.js';
 import { createImagePreview } from '../../ui/previews.js';
 
@@ -14,7 +14,7 @@ function isValidUrl(url) {
   }
 }
 
-export function initializeHeroAdmin(db, auth, refreshData) {
+export function initializeHeroAdmin(db, auth, functions, refreshData) {
   console.log('🔧 Initializing Hero Admin controls...');
   const editCoverPhotoBtn = document.getElementById("edit-cover-photo-btn");
   const editCoverPhotoForm = document.getElementById("edit-cover-photo-form");
@@ -54,7 +54,6 @@ export function initializeHeroAdmin(db, auth, refreshData) {
             throw new Error("No user is signed in to refresh token.");
           }
           
-          const functions = getFunctions(getApp(), 'us-central1');
           const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
           const fileExtension = newFile.name.split('.').pop();
           const fileName = `hero-cover-${Date.now()}.${fileExtension}`;
