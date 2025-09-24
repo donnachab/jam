@@ -1,7 +1,8 @@
 // Main application entry point
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInAnonymously, connectAuthEmulator } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, getDoc, doc, connectFirestoreEmulator } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFunctions, connectFunctionsEmulator } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC4SnqaOMQWmEFulkN8zZALZsqJLK7hOh0",
@@ -114,7 +115,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const functions = getFunctions(app);
     await signInAnonymously(auth);
+
+    if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+        connectAuthEmulator(auth, "http://localhost:9099");
+        connectFirestoreEmulator(db, 'localhost', 8080);
+        connectFunctionsEmulator(functions, "localhost", 5001);
+    }
 
     // 2. Load all data from Firestore first
     await loadAllData(db);
@@ -141,11 +149,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     initializeThemeSwitcher();
     initializeMobileMenu();
     initFestivalCarousel(); 
-    initializeAdminMode(db, auth, () => refreshDataAndRender(db));
+    initializeAdminMode(db, auth, functions, () => refreshDataAndRender(db));
     initializeAdminPanel(db, auth, () => refreshDataAndRender(db));
     initializeJams(db, siteData.venues, () => refreshDataAndRender(db));
     initializeEvents(db, siteData.venues, () => refreshDataAndRender(db));
-    initializeGallery(db, auth, () => refreshDataAndRender(db));
-    initializeCommunity(db, auth, () => refreshDataAndRender(db));
-    initializeHeroAdmin(db, auth, () => refreshDataAndRender(db));
+    initializeGallery(db, auth, functions, () => refreshDataAndRender(db));
+    initializeCommunity(db, auth, functions, () => refreshDataAndRender(db));
+    initializeHeroAdmin(db, auth, functions, () => refreshDataAndRender(db));
 });
