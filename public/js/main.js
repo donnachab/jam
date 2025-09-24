@@ -38,7 +38,7 @@ async function loadAllData(db) {
             getDocs(collection(db, "jams")),
             getDocs(collection(db, "venues")),
             getDocs(collection(db, "events")),
-            getDocs(collection(db, "gallery")),
+            getDocs(collection(db, "photos")),
             getDocs(collection(db, "community")),
         ]);
 
@@ -46,7 +46,7 @@ async function loadAllData(db) {
         siteData.jams = jamsSnap.docs.map(doc => doc.data());
         siteData.venues = venuesSnap.docs.map(doc => doc.data());
         siteData.events = eventsSnap.docs.map(doc => doc.data());
-        siteData.gallery = gallerySnap.docs.map(doc => doc.data());
+        siteData.photos = gallerySnap.docs.map(doc => doc.data()); // Corrected this line
         siteData.community = communitySnap.docs.map(doc => doc.data());
 
         console.log("✅ All Firebase data loaded.");

@@ -26,7 +26,7 @@ export function renderCommunity(items) {
     if (!wrapper) return;
     wrapper.innerHTML = "";
 
-    if (items.length === 0) {
+    if (!items || items.length === 0) { // Added !items check
         wrapper.innerHTML = `<div class="swiper-slide flex items-center justify-center bg-gray-100 text-gray-500 p-4 rounded-lg">No community events to show.</div>`;
     } else {
         items.forEach(item => {
