@@ -2,6 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFunctions } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { firebaseConfig } from './firebase-config.js';
 
 // UI and Component Initializers
@@ -105,6 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const functions = getFunctions(app);
     await signInAnonymously(auth);
 
     // 2. Load all data from Firestore first
