@@ -3,6 +3,7 @@ import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { showModal } from '../ui/modal.js';
+import { createImagePreview } from '../../ui/previews.js';
 
 function isValidUrl(url) {
   try {
@@ -18,6 +19,8 @@ export function initializeHeroAdmin(db, auth, refreshData) {
   const editCoverPhotoBtn = document.getElementById("edit-cover-photo-btn");
   const editCoverPhotoForm = document.getElementById("edit-cover-photo-form");
   const cancelCoverPhotoBtn = document.getElementById("cancel-cover-photo-btn");
+  const coverPhotoFileInput = document.getElementById('cover-photo-file');
+  const coverPhotoPreviewContainer = document.getElementById('cover-photo-preview-container');
 
   if (!editCoverPhotoBtn) {
     console.warn("Hero admin elements not found, skipping initialization.");
@@ -35,7 +38,6 @@ export function initializeHeroAdmin(db, auth, refreshData) {
   editCoverPhotoForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const coverPhotoUrlInput = document.getElementById('cover-photo-url');
-    const coverPhotoFileInput = document.getElementById('cover-photo-file');
 
     const newUrl = coverPhotoUrlInput.value.trim();
     const newFile = coverPhotoFileInput.files[0];
@@ -117,4 +119,7 @@ export function initializeHeroAdmin(db, auth, refreshData) {
   });
 
   console.log("✅ Hero admin controls initialized.");
+
+  // --- Initialize Image Previews ---
+  createImagePreview(coverPhotoFileInput, coverPhotoPreviewContainer);
 }
