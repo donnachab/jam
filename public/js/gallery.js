@@ -2,6 +2,7 @@ import { doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { showModal } from './ui/modal.js';
+import { createImagePreview } from '../ui/previews.js';
 
 function getYouTubeID(url) {
     const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gi;
@@ -57,6 +58,8 @@ export function initializeGallery(db, auth, functions, refreshData) {
     const addPhotoForm = document.getElementById("add-photo-form");
     const cancelPhotoBtn = document.getElementById("cancel-photo-btn");
     const grid = document.getElementById("gallery-grid");
+    const photoFileInput = document.getElementById("photo-file");
+    const photoPreviewContainer = document.getElementById("photo-preview-container");
 
     const editVideoBtn = document.getElementById("edit-featured-video-btn");
     const editVideoForm = document.getElementById("edit-featured-video-form");
@@ -99,6 +102,7 @@ export function initializeGallery(db, auth, functions, refreshData) {
                         await auth.currentUser.getIdToken(true);
                         console.log("DEBUG: Token refreshed. Calling generateSignedUploadUrl function...");
 
+                        const functions = getFunctions(getApp(), 'us-central1');
                         const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
                         const fileExtension = newFile.name.split('.').pop();
                         const fileName = `gallery-${Date.now()}.${fileExtension}`;
@@ -190,4 +194,7 @@ export function initializeGallery(db, auth, functions, refreshData) {
     }
 
     console.log("✅ Gallery module initialized.");
+
+    // --- Initialize Image Previews ---
+    createImagePreview(photoFileInput, photoPreviewContainer);
 }
