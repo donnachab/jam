@@ -102,7 +102,6 @@ export function initializeGallery(db, auth, functions, refreshData) {
                         await auth.currentUser.getIdToken(true);
                         console.log("DEBUG: Token refreshed. Calling generateSignedUploadUrl function...");
 
-                        const functions = getFunctions(getApp(), 'us-central1');
                         const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
                         const fileExtension = newFile.name.split('.').pop();
                         const fileName = `gallery-${Date.now()}.${fileExtension}`;
