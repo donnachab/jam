@@ -3,6 +3,7 @@ import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-
 import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import { showModal } from './ui/modal.js';
 import { initCommunityCarousel } from './ui/carousels.js';
+import { createImagePreview } from '../ui/previews.js';
 
 let communitySwiper = null;
 
@@ -60,6 +61,8 @@ export function initializeCommunity(db, auth, functions, refreshData) {
     const cancelBtn = document.getElementById("cancel-community-btn");
     const typeInput = document.getElementById("community-item-type");
     const wrapper = document.getElementById("community-swiper-wrapper");
+    const communityImageFile = document.getElementById("community-image-file");
+    const communityImagePreviewContainer = document.getElementById("community-image-preview-container");
 
     const showForm = (mode = "add", item = null) => {
         form.style.display = "block";
@@ -119,6 +122,7 @@ export function initializeCommunity(db, auth, functions, refreshData) {
             try {
                 showModal("Uploading image...", "loading");
                 await auth.currentUser.getIdToken(true);
+                const functions = getFunctions(getApp(), 'us-central1');
                 const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
                 const fileExtension = newFile.name.split('.').pop();
                 const fileName = `community-${Date.now()}.${fileExtension}`;
@@ -193,4 +197,7 @@ export function initializeCommunity(db, auth, functions, refreshData) {
     });
 
     console.log("✅ Community module initialized.");
+
+    // --- Initialize Image Previews ---
+    createImagePreview(communityImageFile, communityImagePreviewContainer);
 }
