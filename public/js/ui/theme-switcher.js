@@ -1,3 +1,5 @@
+import { siteData } from '../main.js';
+
 /**
  * Manages the application's visual theme.
  * - Applies a theme by setting a 'data-theme' attribute on the <html> element.
@@ -10,10 +12,21 @@ const themeManager = (() => {
     /**
      * Applies the specified theme to the document.
      * @param {string} themeName - The name of the theme to apply (e.g., 'light', 'dark').
+     * @param {string|null} temporaryLogoUrl - An optional, temporary URL for the logo.
      */
-    function applyTheme(themeName) {
+    function applyTheme(themeName, temporaryLogoUrl = null) {
         document.documentElement.setAttribute('data-theme', themeName);
-        console.log(`Theme applied: ${themeName}`); // Debug message
+        console.log(`Theme applied: ${themeName}`);
+
+        const siteLogo = document.getElementById('site-logo');
+        if (!siteLogo) return;
+
+        if (temporaryLogoUrl) {
+            siteLogo.src = temporaryLogoUrl;
+        } else {
+            const logoUrl = siteData.config?.logoUrls?.[themeName] || 'images/logo.svg';
+            siteLogo.src = logoUrl;
+        }
     }
 
     /**
@@ -42,44 +55,22 @@ const themeManager = (() => {
     }
 
     /**
-     * Gets the user's preferred color scheme from the browser/OS settings.
-     * @returns {string} 'dark' or 'light'.
-     */
-    function getSystemPreference() {
-        // This project doesn't have a dark/light mode distinction in that way,
-        // so we will default to the project's default theme.
-        return 'default'; 
-    }
-
-    /**
      * Public method to set and persist the application theme.
      * @param {string} themeName - The theme to set.
+     * @param {string|null} temporaryLogoUrl - An optional, temporary URL for the logo.
      */
-    function setTheme(themeName) {
-        applyTheme(themeName);
+    function setTheme(themeName, temporaryLogoUrl = null) {
+        applyTheme(themeName, temporaryLogoUrl);
         saveThemePreference(themeName);
     }
 
     /**
      * Initializes the theme on application startup.
-     * It prioritizes:
-     * 1. A theme saved in localStorage.
-     * 2. A default of 'default'.
      */
     function initialize() {
-        const savedTheme = getSavedThemePreference();
-        if (savedTheme) {
-            applyTheme(savedTheme);
-            console.log(`Loaded theme '${savedTheme}' from localStorage.`);
-        } else {
-            const defaultTheme = getSystemPreference();
-            applyTheme(defaultTheme);
-            console.log(`No saved theme found, applying default: '${defaultTheme}'`);
-        }
+        const savedTheme = getSavedThemePreference() || 'default';
+        applyTheme(savedTheme);
     }
-
-    // --- Initialize on script load ---
-    initialize();
 
     // --- Expose public methods ---
     return {

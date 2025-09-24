@@ -25,7 +25,7 @@ import { renderGallery, initializeGallery } from './gallery.js';
 import { renderCommunity, initializeCommunity } from './community.js';
 
 // Global State
-export let siteData = {};
+export export let siteData = {};
 
 // --- CORE FUNCTIONS --- //
 

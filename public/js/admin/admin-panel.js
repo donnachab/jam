@@ -104,7 +104,6 @@ export function initializeAdminPanel(db, auth, loadAllData) {
         const selectedTheme = store.getState().selectedTheme;
 
         try {
-            // 1. Get signed URL from backend
             const functions = getFunctions(getApp(), 'us-central1');
             const generateSignedUploadUrl = httpsCallable(functions, 'generateSignedUploadUrl');
             const result = await generateSignedUploadUrl({ 
@@ -117,7 +116,6 @@ export function initializeAdminPanel(db, auth, loadAllData) {
             }
             const uploadUrl = result.data.url;
 
-            // 2. Upload the file to the signed URL
             const uploadResponse = await fetch(uploadUrl, {
                 method: 'PUT',
                 headers: { 'Content-Type': file.type },
@@ -130,15 +128,12 @@ export function initializeAdminPanel(db, auth, loadAllData) {
             
             const logoUrl = uploadUrl.split('?')[0];
 
-            // 3. Save the new URL to Firestore
             await updateDoc(siteConfigRef, {
                 [`logoUrls.${selectedTheme}`]: logoUrl
             });
 
-            // 4. Set the theme and refresh data
-            themeManager.set(selectedTheme);
+            themeManager.set(selectedTheme, logoUrl);
             await loadInitialLogoData();
-            loadAllData();
 
             showModal('Logo updated successfully!', 'alert');
             store.commit('SET_LOGO_FORM_VISIBLE', false);
@@ -208,9 +203,8 @@ export function initializeAdminPanel(db, auth, loadAllData) {
                 await updateDoc(siteConfigRef, {
                     [`logoUrls.${selectedTheme}`]: urlToSave
                 });
-                themeManager.set(selectedTheme);
+                themeManager.set(selectedTheme, urlToSave);
                 await loadInitialLogoData();
-                loadAllData();
                 showModal('Logo URL updated successfully!', 'alert');
                 store.commit('SET_LOGO_FORM_VISIBLE', false);
                 editSiteLogoForm.reset();
