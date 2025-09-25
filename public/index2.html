@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Galway Jam Circle - Official Website</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    
+    <style>
+      *, ::before, ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  ;
+}
+
+::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  ;
+}/*
+! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com
+*//*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+
+*,
+::before,
+::after {
+  box-sizing: border-box; /* 1 */
+  border-width: 0; /* 2 */
+  border-style: solid; /* 2 */
+  border-color: #e5e7eb; /* 2 */
+}
+
+::before,
+::after {
+  --tw-content: '';
+}
+
+/*
+1. Use a consistent sensible line-height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size.
+4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
+6. Use the user's configured `sans` font-variation-settings by default.
+7. Disable tap highlights on iOS
+*/
+
+html,
+:host {
+  line-height: 1.5; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+  -moz-tab-size: 4; /* 3 */
+  -o-tab-size: 4;
+     tab-size: 4; /* 3 */
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */
+  font-feature-settings: normal; /* 5 */
+  font-variation-settings: normal; /* 6 */
+  -webkit-tap-highlight-color: transparent; /* 7 */
+}
+
+/*
+1. Remove the margin in all browsers.
+2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
+*/
+
+body {
+  margin: 0; /* 1 */
+  line-height: inherit; /* 2 */
+}
+
+/*
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+3. Ensure horizontal rules are visible by default.
+*/
+
+hr {
+  height: 0; /* 1 */
+  color: inherit; /* 2 */
+  border-top-width: 1px; /* 3 */
+}
+
+/*
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
+
+abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/*
+1. Use the user's configured `mono` font-family by default.
+2. Use the user's configured `mono` font-feature-settings by default.
+3. Use the user's configured `mono` font-variation-settings by default.
+4. Correct the odd `em` font sizing in all browsers.
+*/
+
+code,
+kbd,
+samp,
+pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */
+  font-feature-settings: normal; /* 2 */
+  font-variation-settings: normal; /* 3 */
+  font-size: 1em; /* 4 */
+}
+
+/*
+Add the correct font size in all browsers.
+*/
+
+small {
+  font-size: 80%;
+}
+
+/*
+Prevent `sub` and `sup` elements from affecting the line height in all browsers.
+*/
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/*
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+3. Remove gaps between table borders by default.
+*/
+
+table {
+  text-indent: 0; /* 1 */
+  border-color: inherit; /* 2 */
+  border-collapse: collapse; /* 3 */
+}
+
+/*
+1. Change the font styles in all browsers.
+2. Remove the margin in Firefox and Safari.
+3. Remove default padding in all browsers.
+*/
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit; /* 1 */
+  font-feature-settings: inherit; /* 1 */
+  font-variation-settings: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  font-weight: inherit; /* 1 */
+  line-height: inherit; /* 1 */
+  letter-spacing: inherit; /* 1 */
+  color: inherit; /* 1 */
+  margin: 0; /* 2 */
+  padding: 0; /* 3 */
+}
+
+/*
+Remove the inheritance of text transform in Edge and Firefox.
+*/
+
+button,
+select {
+  text-transform: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Remove default button styles.
+*/
+
+button,
+input:where([type='button']),
+input:where([type='reset']),
+input:where([type='submit']) {
+  -webkit-appearance: button; /* 1 */
+  background-color: transparent; /* 2 */
+  background-image: none; /* 2 */
+}
+
+/*
+Use the modern Firefox focus style for all focusable elements.
+*/
+
+:-moz-focusring {
+  outline: auto;
+}
+
+/*
+Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
+*/
+
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+/*
+Add the correct vertical alignment in Chrome and Firefox.
+*/
+
+progress {
+  vertical-align: baseline;
+}
+
+/*
+Correct the cursor style of increment and decrement buttons in Safari.
+*/
+
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/*
+1. Correct the odd appearance in Chrome and Safari.
+2. Correct the outline style in Safari.
+*/
+
+[type='search'] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
+
+/*
+Remove the inner padding in Chrome and Safari on macOS.
+*/
+
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Change font properties to `inherit` in Safari.
+*/
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
+}
+
+/*
+Add the correct display in Chrome and Safari.
+*/
+
+summary {
+  display: list-item;
+}
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+Reset default styling for dialogs.
+*/
+dialog {
+  padding: 0;
+}
+
+/*
+Prevent resizing textareas horizontally by default.
+*/
+
+textarea {
+  resize: vertical;
+}
+
+/*
+1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
+2. Set the default placeholder color to the user's configured gray 400 color.
+*/
+
+input::-moz-placeholder, textarea::-moz-placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+/*
+Set the default cursor for buttons.
+*/
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+/*
+Make sure disabled buttons don't get the pointer cursor.
+*/
+:disabled {
+  cursor: default;
+}
+
+/*
+1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
+2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
+   This can trigger a poorly considered lint error in some tools but is included by design.
+*/
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block; /* 1 */
+  vertical-align: middle; /* 2 */
+}
+
+/*
+Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make elements with the HTML hidden attribute stay hidden by default */
+[hidden]:where(:not([hidden="until-found"])) {
+  display: none;
+}
+
+/* Recommendation for Hero Section Text Legibility:
+   If text is placed directly over a hero image, especially a dark one,
+   ensure sufficient contrast. Consider adding a semi-transparent overlay
+   behind the text or applying a text-shadow for better readability.
+   This might require dynamic adjustments via JavaScript based on image brightness.
+*/
+  :root {
+    --primary-color: #371087; /* Correct Purple */
+    --accent-color: #f3ead3; /* Warm Cream */
+    --background-color: #ffffff;
+    --text-dark: #1f2937;
+    --text-light: #ffffff;
+  }
+.container {
+  width: 100%;
+}
+@media (min-width: 640px) {
+
+  .container {
+    max-width: 640px;
+  }
+}
+@media (min-width: 768px) {
+
+  .container {
+    max-width: 768px;
+  }
+}
+@media (min-width: 1024px) {
+
+  .container {
+    max-width: 1024px;
+  }
+}
+@media (min-width: 1280px) {
+
+  .container {
+    max-width: 1280px;
+  }
+}
+@media (min-width: 1536px) {
+
+  .container {
+    max-width: 1536px;
+  }
+}
+.fixed {
+  position: fixed;
+}
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
+.sticky {
+  position: sticky;
+}
+.inset-0 {
+  inset: 0px;
+}
+.left-0 {
+  left: 0px;
+}
+.right-2 {
+  right: 0.5rem;
+}
+.top-0 {
+  top: 0px;
+}
+.top-2 {
+  top: 0.5rem;
+}
+.z-10 {
+  z-index: 10;
+}
+.z-50 {
+  z-index: 50;
+}
+.col-span-full {
+  grid-column: 1 / -1;
+}
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+.mb-12 {
+  margin-bottom: 3rem;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+.mb-8 {
+  margin-bottom: 2rem;
+}
+.ml-2 {
+  margin-left: 0.5rem;
+}
+.mr-2 {
+  margin-right: 0.5rem;
+}
+.mr-3 {
+  margin-right: 0.75rem;
+}
+.mt-1 {
+  margin-top: 0.25rem;
+}
+.mt-12 {
+  margin-top: 3rem;
+}
+.mt-16 {
+  margin-top: 4rem;
+}
+.mt-2 {
+  margin-top: 0.5rem;
+}
+.mt-4 {
+  margin-top: 1rem;
+}
+.mt-8 {
+  margin-top: 2rem;
+}
+.block {
+  display: block;
+}
+.inline-block {
+  display: inline-block;
+}
+.flex {
+  display: flex;
+}
+.grid {
+  display: grid;
+}
+.hidden {
+  display: none;
+}
+.h-12 {
+  height: 3rem;
+}
+.h-20 {
+  height: 5rem;
+}
+.h-4 {
+  height: 1rem;
+}
+.h-48 {
+  height: 12rem;
+}
+.h-5 {
+  height: 1.25rem;
+}
+.h-6 {
+  height: 1.5rem;
+}
+.h-8 {
+  height: 2rem;
+}
+.h-\[70vh\] {
+  height: 70vh;
+}
+.h-full {
+  height: 100%;
+}
+.max-h-full {
+  max-height: 100%;
+}
+.w-12 {
+  width: 3rem;
+}
+.w-4 {
+  width: 1rem;
+}
+.w-5 {
+  width: 1.25rem;
+}
+.w-6 {
+  width: 1.5rem;
+}
+.w-8 {
+  width: 2rem;
+}
+.w-full {
+  width: 100%;
+}
+.min-w-0 {
+  min-width: 0px;
+}
+.max-w-3xl {
+  max-width: 48rem;
+}
+.max-w-4xl {
+  max-width: 56rem;
+}
+.max-w-5xl {
+  max-width: 64rem;
+}
+.max-w-7xl {
+  max-width: 80rem;
+}
+.max-w-full {
+  max-width: 100%;
+}
+.max-w-none {
+  max-width: none;
+}
+.max-w-sm {
+  max-width: 24rem;
+}
+.max-w-xl {
+  max-width: 36rem;
+}
+.flex-shrink {
+  flex-shrink: 1;
+}
+.flex-grow {
+  flex-grow: 1;
+}
+.grow {
+  flex-grow: 1;
+}
+.transform {
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+@keyframes spin {
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.list-inside {
+  list-style-position: inside;
+}
+.list-disc {
+  list-style-type: disc;
+}
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.items-start {
+  align-items: flex-start;
+}
+.items-center {
+  align-items: center;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.gap-4 {
+  gap: 1rem;
+}
+.gap-8 {
+  gap: 2rem;
+}
+.space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+.space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+.space-x-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+.space-y-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+.space-y-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(2rem * var(--tw-space-y-reverse));
+}
+.overflow-hidden {
+  overflow: hidden;
+}
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+.rounded {
+  border-radius: 0.25rem;
+}
+.rounded-full {
+  border-radius: 9999px;
+}
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+.rounded-md {
+  border-radius: 0.375rem;
+}
+.rounded-b-md {
+  border-bottom-right-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+.rounded-t-md {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+.border {
+  border-width: 1px;
+}
+.border-y {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+}
+.border-b {
+  border-bottom-width: 1px;
+}
+.border-l-4 {
+  border-left-width: 4px;
+}
+.border-t {
+  border-top-width: 1px;
+}
+.border-amber-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(253 230 138 / var(--tw-border-opacity, 1));
+}
+.border-gray-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
+}
+.border-stone-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(231 229 228 / var(--tw-border-opacity, 1));
+}
+.bg-accent {
+  background-color: var(--color-accent-2);
+}
+.bg-gray-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
+}
+.bg-gray-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1));
+}
+.bg-gray-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
+}
+.bg-gray-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity, 1));
+}
+.bg-primary {
+  background-color: var(--color-accent);
+}
+.bg-stone-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(250 250 249 / var(--tw-bg-opacity, 1));
+}
+.bg-stone-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(87 83 78 / var(--tw-bg-opacity, 1));
+}
+.bg-white {
+  background-color: var(--color-white);
+}
+.bg-gradient-to-t {
+  background-image: linear-gradient(to top, var(--tw-gradient-stops));
+}
+.to-transparent {
+  --tw-gradient-to: transparent var(--tw-gradient-to-position);
+}
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.p-1 {
+  padding: 0.25rem;
+}
+.p-2 {
+  padding: 0.5rem;
+}
+.p-4 {
+  padding: 1rem;
+}
+.p-6 {
+  padding: 1.5rem;
+}
+.p-8 {
+  padding: 2rem;
+}
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+.py-16 {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+.pt-1 {
+  padding-top: 0.25rem;
+}
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.font-bold {
+  font-weight: 700;
+}
+.font-semibold {
+  font-weight: 600;
+}
+.italic {
+  font-style: italic;
+}
+.tracking-tight {
+  letter-spacing: -0.025em;
+}
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+}
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity, 1));
+}
+.text-gray-700 {
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
+}
+.text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
+}
+.text-primary {
+  color: var(--color-accent);
+}
+.text-stone-400 {
+  --tw-text-opacity: 1;
+  color: rgb(168 162 158 / var(--tw-text-opacity, 1));
+}
+.text-violet-600 {
+  --tw-text-opacity: 1;
+  color: rgb(124 58 237 / var(--tw-text-opacity, 1));
+}
+.text-white {
+  color: var(--color-white);
+}
+
+#home h1,
+#home p {
+  color: var(--color-white);
+}
+.opacity-25 {
+  opacity: 0.25;
+}
+.opacity-60 {
+  opacity: 0.6;
+}
+.opacity-75 {
+  opacity: 0.75;
+}
+.shadow-inner {
+  --tw-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: inset 0 2px 4px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.shadow-lg {
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.shadow-md {
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.shadow-sm {
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.shadow-xl {
+  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.drop-shadow-2xl {
+  --tw-drop-shadow: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.drop-shadow-xl {
+  --tw-drop-shadow: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03)) drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.transition {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.duration-300 {
+  transition-duration: 300ms;
+}
+.duration-500 {
+  transition-duration: 500ms;
+}
+.hover\:scale-105:hover {
+  --tw-scale-x: 1.05;
+  --tw-scale-y: 1.05;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.hover\:bg-gray-600:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1));
+}
+.hover\:bg-opacity-80:hover {
+  --tw-bg-opacity: 0.8;
+}
+.hover\:text-accent:hover {
+  color: var(--color-accent-2);
+}
+.hover\:text-white:hover {
+  color: var(--color-white);
+}
+.hover\:underline:hover {
+  text-decoration-line: underline;
+}
+.hover\:opacity-90:hover {
+  opacity: 0.9;
+}
+.focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.group:hover .group-hover\:flex {
+  display: flex;
+}
+.group:hover .group-hover\:scale-110 {
+  --tw-scale-x: 1.1;
+  --tw-scale-y: 1.1;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+@media (min-width: 640px) {
+
+  .sm\:ml-4 {
+    margin-left: 1rem;
+  }
+
+  .sm\:mt-0 {
+    margin-top: 0px;
+  }
+
+  .sm\:h-14 {
+    height: 3.5rem;
+  }
+
+  .sm\:w-14 {
+    width: 3.5rem;
+  }
+
+  .sm\:flex-row {
+    flex-direction: row;
+  }
+
+  .sm\:items-baseline {
+    align-items: baseline;
+  }
+
+  .sm\:space-x-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  .sm\:space-x-4 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  .sm\:space-y-0 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0px * var(--tw-space-y-reverse));
+  }
+
+  .sm\:p-12 {
+    padding: 3rem;
+  }
+
+  .sm\:px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .sm\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .sm\:text-5xl {
+    font-size: 3rem;
+    line-height: 1;
+  }
+
+  .sm\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+}
+@media (min-width: 768px) {
+
+  .md\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+
+  .md\:flex {
+    display: flex;
+  }
+
+  .md\:hidden {
+    display: none;
+  }
+
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .md\:py-20 {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  .md\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .md\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+
+  .md\:text-6xl {
+    font-size: 3.75rem;
+    line-height: 1;
+  }
+}
+@media (min-width: 1024px) {
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lg\:py-24 {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .lg\:text-5xl {
+    font-size: 3rem;
+    line-height: 1;
+  }
+}
+/* 
+================================================================================
+THEMING SYSTEM: A Layered, Modular Approach
+================================================================================
+This file establishes a two-layer theming system using CSS Custom Properties.
+It is designed to be easily extensible for future themes.
+
+LAYER 1: PRIMITIVE TOKENS
+- These are the raw, non-contextual values of the design system.
+- They are defined once in :root and should rarely be changed.
+- To add a new color for a future theme, add it here.
+
+LAYER 2: SEMANTIC TOKENS
+- These tokens describe the *purpose* of a value in the UI.
+- They are also defined in :root and map to the primitive tokens,
+  creating the default (purple) theme.
+- Components in the app should ONLY use these semantic tokens.
+
+THEME OVERRIDES
+- To add a new theme, create a new selector (e.g., [data-theme="new-theme"])
+  and simply redefine the semantic tokens that need to change.
+================================================================================
+*/
+
+:root {
+    /*
+    ----------------------------------------------------------------------------
+    LAYER 1: PRIMITIVE TOKENS
+    ----------------------------------------------------------------------------
+    */
+
+    /* -- Grayscale -- */
+    --color-white: #fff;
+    --color-black: #0b0c0c;
+    --color-gray-100: #f9f9f9; /* grey-lightest */
+    --color-gray-200: #eaeaea; /* grey-lighter */
+    --color-gray-300: #cecfd0; /* grey-light */
+    --color-gray-400: #b1b4b6; /* grey-medium */
+    --color-gray-500: #9ca3af; /* from .jam-cancelled */
+    --color-gray-600: #505a5f; /* grey-dark */
+    --color-gray-700: #4b5563; /* from .btn-gray */
+    --color-gray-800: #374151; /* from .btn-gray:hover */
+
+    /* -- Default Theme: Purple Palette -- */
+    --color-purple-700: #371087; /* primary */
+    --color-purple-500: #6d28d9; /* special-day */
+
+    /* -- Maroon Theme: Maroon Palette -- */
+    --color-maroon-700: #800000;
+    --color-maroon-orange-500: #c04000; /* new special-day */
+    --color-maroon-teal-500: #008080;   /* new info color */
+    --color-maroon-olive-500: #556b2f;  /* new success color */
+
+    /* -- Accent Color -- */
+    --color-accent-cream: #f3ead3;
+
+    /* -- Utility & Button Colors -- */
+    --color-blue-700: #1d4ed8;   /* from .btn-blue */
+    --color-blue-800: #1e40af;   /* from .btn-blue:hover */
+    --color-green-700: #15803d;  /* from .btn-green */
+    --color-green-800: #166534;  /* from .btn-green:hover */
+    --color-red-700: #b91c1c;    /* from .btn-danger */
+    --color-red-800: #991b1b;    /* from .btn-danger:hover */
+
+    /* -- Typography -- */
+    --font-family-sans: 'Inter', 'sans-serif';
+    --font-family-serif: 'georgia', 'Times New Roman', 'times', 'serif';
+
+    /* -- Borders -- */
+    --border-radius-button: 9999px; /* rounded-full */
+    --border-radius-card: 0.5rem; /* rounded-lg */
+    --border-radius-form: 0.375rem; /* rounded-md */
+
+    /*
+    ----------------------------------------------------------------------------
+    LAYER 2: SEMANTIC TOKENS (Default Purple Theme)
+    ----------------------------------------------------------------------------
+    */
+
+    /* -- Backgrounds -- */
+    --color-background-primary: var(--color-white);
+    --color-background-secondary: var(--color-gray-100);
+    --color-background-accent: var(--color-accent-cream);
+
+    /* -- Text -- */
+    --color-text-primary: var(--color-gray-800);
+    --color-text-secondary: var(--color-gray-600);
+    --color-text-on-interactive: var(--color-white);
+    --color-text-on-accent: var(--color-black);
+    --color-text-cancelled: var(--color-gray-500);
+    --color-text-hero: var(--color-white);
+
+    /* -- Borders -- */
+    --color-border-default: var(--color-gray-200);
+
+    /* -- Interactive Elements (Buttons, Links) -- */
+    --color-interactive-primary-bg: var(--color-purple-700);
+    --color-interactive-primary-hover-bg: var(--color-purple-500);
+    
+    --color-interactive-accent-bg: var(--color-accent-cream);
+    --color-interactive-accent-hover-bg: var(--color-gray-200);
+
+    --color-interactive-special-bg: var(--color-purple-500);
+
+    --color-interactive-info-bg: var(--color-blue-700);
+    --color-interactive-info-hover-bg: var(--color-blue-800);
+
+    --color-interactive-success-bg: var(--color-green-700);
+    --color-interactive-success-hover-bg: var(--color-green-800);
+
+    --color-interactive-danger-bg: var(--color-red-700);
+    --color-interactive-danger-hover-bg: var(--color-red-800);
+    
+    --color-interactive-muted-bg: var(--color-gray-700);
+    --color-interactive-muted-hover-bg: var(--color-gray-800);
+}
+
+/*
+--------------------------------------------------------------------------------
+THEME OVERRIDE: MAROON THEME
+- Redefines only the semantic tokens that need to change.
+- All other tokens (like text colors, backgrounds) are inherited from :root.
+--------------------------------------------------------------------------------
+*/
+[data-theme="maroon"] {
+    /* -- Re-map primary interactive color -- */
+    --color-interactive-primary-bg: var(--color-maroon-700);
+    --color-interactive-primary-hover-bg: var(--color-maroon-orange-500);
+
+    /* -- Re-map special day color -- */
+    --color-interactive-special-bg: var(--color-maroon-orange-500);
+
+    /* -- Re-map text on accent to be darker for better contrast -- */
+    --color-text-on-accent: var(--color-maroon-700);
+
+    /* -- Re-map utility button colors for better harmony -- */
+    --color-interactive-info-bg: var(--color-maroon-teal-500);
+    --color-interactive-info-hover-bg: var(--color-maroon-teal-500); /* Keeping it simple, can be darkened later */
+
+    --color-interactive-success-bg: var(--color-maroon-olive-500);
+    --color-interactive-success-hover-bg: var(--color-maroon-olive-500);
+}
+
+/*
+--------------------------------------------------------------------------------
+EXAMPLE USAGE
+- The following classes should be updated/refactored to use these variables.
+--------------------------------------------------------------------------------
+*/
+
+/* Example for a primary button */
+.btn-primary {
+    background-color: var(--color-interactive-primary-bg);
+    color: var(--color-text-on-interactive);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-button);
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+}
+.btn-primary:hover {
+    background-color: var(--color-interactive-primary-hover-bg);
+}
+
+/* Example for the hero text */
+#home h1, #home p {
+    color: var(--color-text-hero);
+}
+/*
+================================================================================
+COMPONENT STYLES
+- This file contains structural and component-level styles.
+- It uses the CSS variables defined in theme.css for all color properties.
+================================================================================
+*/
+
+/* --- Layout Fixes & Helpers --- */
+
+#footer-container svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+#header-container nav {
+    display: flex;
+}
+
+.aspect-w-16 {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+}
+
+.aspect-h-9 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* 
+  --- Admin Mode Visibility --- 
+  This is legacy and should be refactored to a state-driven approach later.
+*/
+.admin-controls, .admin-controls-inline {
+  display: none;
+}
+
+body.admin-mode .admin-controls {
+    display: block;
+}
+
+body.admin-mode .admin-controls-inline {
+  display: flex;
+}
+
+/* --- Component-Specific Styles --- */
+
+#modal-form {
+    background-color: var(--color-background-primary) !important;
+}
+
+.jam-cancelled .jam-info {
+  text-decoration: line-through;
+  color: var(--color-text-cancelled);
+}
+
+/* 
+ --- Refactored Button Styles --- 
+ - These now use semantic tokens from theme.css
+*/
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-button);
+    font-weight: 700;
+    color: var(--color-text-on-interactive);
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger {
+    background-color: var(--color-interactive-danger-bg);
+}
+.btn-danger:hover {
+    background-color: var(--color-interactive-danger-hover-bg);
+}
+
+.btn-green {
+    background-color: var(--color-interactive-success-bg);
+}
+.btn-green:hover {
+    background-color: var(--color-interactive-success-hover-bg);
+}
+
+.btn-blue {
+    background-color: var(--color-interactive-info-bg);
+}
+.btn-blue:hover {
+    background-color: var(--color-interactive-info-hover-bg);
+}
+
+.btn-gray {
+    background-color: var(--color-interactive-muted-bg);
+}
+.btn-gray:hover {
+    background-color: var(--color-interactive-muted-hover-bg);
+}
+
+/* This is a generic button that uses the current theme's primary color */
+.btn-primary {
+    background-color: var(--color-interactive-primary-bg);
+}
+.btn-primary:hover {
+    background-color: var(--color-interactive-primary-hover-bg);
+}
+
+/* --- Admin Panel Tabs --- */
+.admin-tab-btn {
+    padding: 0.75rem 1.5rem;
+    margin-bottom: -1px;
+    border-bottom: 2px solid transparent;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.admin-tab-btn:hover {
+    color: var(--color-text-primary);
+}
+
+.admin-tab-btn.active-tab {
+    color: var(--color-interactive-primary-bg);
+    border-bottom-color: var(--color-interactive-primary-bg);
+}
+
+/* --- Gallery Button Fix --- */
+#add-photo-btn {
+    background-color: var(--color-interactive-success-bg);
+}
+#add-photo-btn:hover {
+    background-color: var(--color-interactive-success-hover-bg);
+}
+
+/* --- SVG Logo Styling --- */
+#site-logo path {
+  fill: var(--color-interactive-primary-bg);
+}
+    </style>
+  </head>
+  <body>
+
+    <header id="header-container"><header class="bg-primary shadow-lg sticky top-0 z-50">
+      <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-2 sm:space-x-4">
+          <div class="w-12 h-12 sm:w-14 sm:h-14">
+            <img src="images/logo.svg" alt="Galway Jam Circle Logo" class="rounded-full" />
+          </div>
+          <div class="text-white text-lg sm:text-2xl font-bold tracking-tight">Galway Jam Circle</div>
+        </div>
+        <div class="hidden md:flex items-center space-x-2">
+          <div class="theme-switcher text-white">
+            <label for="theme-select" class="sr-only">Select Theme</label>
+            <select id="theme-select" class="bg-primary text-white px-2 py-1 rounded-md border border-white/20">
+              <option value="default">Default Theme</option>
+              <option value="maroon">Maroon Theme</option>
+            </select>
+          </div>
+          <a href="#home" class="text-white px-4 py-2 rounded-md hover:bg-white/10 transition duration-300">Home</a>
+          <a href="#jams" class="text-white px-4 py-2 rounded-md hover:bg-white/10 transition duration-300">Regular Jams</a>
+          <a href="#format" class="text-white px-4 py-2 rounded-md hover:bg-white/10 transition duration-300">Our Format</a>
+          <a href="#special-events" class="text-white px-4 py-2 rounded-md hover:bg-white/10 transition duration-300">Festivals & Events</a>
+          <a href="#community" class="text-white px-4 py-2 rounded-md hover:bg-white/10 transition duration-300">Community</a>
+          <a href="#gallery" class="text-white px-4 py-2 rounded-md hover:bg-white/10 transition duration-300">Gallery</a>
+          <a href="https://drive.google.com/file/d/1V3X3K5hwUHxZtn3o29Wd6ZZ4twz4x0j_/view?usp=sharing" target="_blank" class="text-primary bg-accent px-4 py-3 rounded-md hover:bg-opacity-80 transition duration-300 font-bold">Songbook</a>
+          <a href="#contact" class="text-white px-4 py-2 rounded-md hover:bg-white/10 transition duration-300">Contact</a>
+        </div>
+        <div class="md:hidden">
+          <button id="menu-btn" class="text-white focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+          </button>
+        </div>
+      </nav>
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="md:hidden hidden bg-primary/95">
+        <div class="theme-switcher p-4">
+          <label for="theme-select-mobile" class="sr-only">Select Theme</label>
+          <select id="theme-select-mobile" class="bg-primary text-white w-full px-2 py-1 rounded-md border border-white/20">
+            <option value="default">Default Theme</option>
+            <option value="maroon">Maroon Theme</option>
+          </select>
+        </div>
+        <a href="#home" class="block text-white text-center py-3 hover:bg-white/10">Home</a>
+        <a href="#jams" class="block text-white text-center py-3 hover:bg-white/10">Regular Jams</a>
+        <a href="#format" class="block text-white text-center py-3 hover:bg-white/10">Our Format</a>
+        <a href="#special-events" class="block text-white text-center py-3 hover:bg-white/10">Festivals & Events</a>
+        <a href="#community" class="block text-white text-center py-3 hover:bg-white/10">Community</a>
+        <a href="#gallery" class="block text-white text-center py-3 hover:bg-white/10">Gallery</a>
+        <a href="https://drive.google.com/file/d/1V3X3K5hwUHxZtn3o29Wd6ZZ4twz4x0j_/view?usp=sharing" target="_blank" class="block text-primary text-center font-bold py-3 bg-accent hover:bg-opacity-80">Songbook</a>
+        <a href="#contact" class="block text-white text-center py-3 hover:bg-white/10">Contact</a>
+      </div>
+    </header>
+</header>
+    
+    <main>
+      <div id="hero-container"><section id="home" class="relative text-white text-center">
+        <img
+          id="cover-photo"
+          src="https://i.imgur.com/3CRs4O4.jpeg"
+          alt="A group of people playing instruments like guitars and ukuleles by a river in Galway."
+          class="w-full h-[70vh] object-cover"
+        />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent flex flex-col justify-end items-center p-6 sm:p-12"
+        >
+          <h1
+            class="text-4xl sm:text-5xl md:text-6xl font-bold text-white drop-shadow-2xl"
+          >
+            Welcome to the Galway Jam Circle
+          </h1>
+          <p
+            class="mt-4 text-lg sm:text-xl max-w-3xl text-white/90 drop-shadow-xl"
+          >
+            A friendly, informal music-making community for all skill levels.
+            Let's Jam!
+          </p>
+          <div
+            class="mt-8 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4"
+          >
+            <a
+              href="#jams"
+              class="px-8 py-3 bg-accent text-primary font-bold rounded-full hover:bg-opacity-80 transition duration-300 transform hover:scale-105 shadow-lg"
+              >See Regular Jams</a
+            >
+            <div class="flex items-start space-x-4">
+              <div class="text-center">
+                <a
+                  href="https://www.facebook.com/groups/116675615376726"
+                  target="_blank"
+                  class="text-white hover:text-accent transition duration-300"
+                >
+                  <svg
+                    class="w-8 h-8 mx-auto mb-1"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V21.878A10.001 10.001 0 0022 12z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <span class="text-xs font-semibold">Group</span>
+                </a>
+              </div>
+              <div class="text-center">
+                <a
+                  href="https://www.facebook.com/profile.php?id=61570031297498"
+                  target="_blank"
+                  class="text-white hover:text-accent transition duration-300"
+                >
+                  <svg
+                    class="w-8 h-8 mx-auto mb-1"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V21.878A10.001 10.001 0 0022 12z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <span class="text-xs font-semibold">Page</span>
+                </a>
+              </div>
+              <a
+                href="https://www.instagram.com/galwayjamcircle42/?hl=en"
+                target="_blank"
+                class="text-white hover:text-accent transition duration-300 pt-1"
+              >
+                <svg
+                  class="w-8 h-8"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.345 2.525c.636-.247 1.363-.416 2.427-.465C9.792 2.013 10.146 2 12.315 2zm0 1.623c-2.403 0-2.748.01-3.728.058-1.006.047-1.634.21-2.203.434a3.272 3.272 0 00-1.15 1.15c-.224.57-.386 1.198-.434 2.203-.048.98-.058 1.325-.058 3.728s.01 2.748.058 3.728c.048 1.006.21 1.634.434 2.203a3.272 3.272 0 001.15 1.15c.57.224.386 1.198.434 2.203.048.98.058 1.325-.058 3.728s-.01 2.748-.058-3.728c-.048-1.006-.21-1.634-.434-2.203a3.272 3.272 0 00-1.15-1.15c-.57-.224-1.198-.386-2.203-.434C15.063 3.633 14.718 3.623 12.315 3.623zM12 9.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zm0 6a3.75 3.75 0 110-7.5 3.75 3.75 0 010 7.5zM16.965 6.57a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+<div class="admin-controls-container"></div></div>
+      <div id="admin-panel-container"><div class="admin-panel-tab-content" id="logo-settings">
+    <h3 class="text-2xl font-bold text-primary mb-4 font-secondary">Site Logo Settings</h3>
+    <div class="text-center mb-4 admin-controls">
+        <button id="edit-site-logo-btn" class="px-4 py-2 bg-blue text-white font-bold rounded-full hover:bg-opacity-80">Change Site Logo</button>
+    </div>
+    <form id="edit-site-logo-form" class="max-w-xl mx-auto mt-4 p-6 bg-white rounded-lg shadow-inner border" style="display: none;">
+        <h4 class="text-xl font-bold text-primary mb-4 font-secondary">Upload or Link Logo</h4>
+        <div class="mb-4">
+            <label for="site-logo-theme-select" class="block text-grey-dark font-bold mb-2 text-left">Select Theme</label>
+            <select id="site-logo-theme-select" class="w-full p-2 border rounded">
+                <option value="default">Default</option>
+                <option value="maroon">Maroon</option>
+                <option value="forest">Forest</option>
+            </select>
+        </div>
+        <div class="mb-4">
+            <label for="site-logo-file" class="block text-grey-dark font-bold mb-2 text-left">Upload Logo File</label>
+            <input type="file" id="site-logo-file" class="w-full p-2 border rounded" accept="image/*"/>
+            <div id="site-logo-preview-container" class="mt-2"></div>
+            <p class="text-sm text-grey-medium mt-1 text-left">Or provide a URL below...</p>
+        </div>
+        <div class="mb-4">
+            <label for="site-logo-url" class="block text-grey-dark font-bold mb-2 text-left">Logo URL</label>
+            <input type="url" id="site-logo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
+        </div>
+        <div class="flex justify-end space-x-4">
+            <button type="button" id="cancel-site-logo-btn" class="px-4 py-2 bg-grey-medium text-white rounded-md hover:bg-grey-dark">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Logo</button>
+        </div>
+    </form>
+</div>
+
+<div class="admin-panel-tab-content hidden" id="hero-settings">
+    <h3 class="text-2xl font-bold text-primary mb-4 font-secondary">Hero Section Settings</h3>
+    <div class="text-center mb-4 admin-controls">
+        <button id="edit-cover-photo-btn" class="px-4 py-2 bg-blue text-white font-bold rounded-full hover:bg-opacity-80">Change Cover Photo</button>
+    </div>
+    <form id="edit-cover-photo-form" class="max-w-xl mx-auto mt-4 p-6 bg-white rounded-lg shadow-inner border" style="display: none;">
+        <h4 class="text-xl font-bold text-primary mb-4 font-secondary">Upload or Link Cover Photo</h4>
+        <div class="mb-4">
+            <label for="cover-photo-file" class="block text-grey-dark font-bold mb-2 text-left">Upload Cover Photo File</label>
+            <input type="file" id="cover-photo-file" class="w-full p-2 border rounded" accept="image/*"/>
+            <p class="text-sm text-grey-medium mt-1 text-left">Or provide a URL below...</p>
+        </div>
+        <div class="mb-4">
+            <label for="cover-photo-url" class="block text-grey-dark font-bold mb-2 text-left">Cover Photo URL</label>
+            <input type="url" id="cover-photo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
+        </div>
+        <div class="flex justify-end space-x-4">
+            <button type="button" id="cancel-cover-photo-btn" class="px-4 py-2 bg-grey-medium text-white rounded-md hover:bg-grey-dark">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Photo</button>
+        </div>
+    </form>
+</div>
+
+<div class="admin-panel-tab-content hidden" id="jams-settings">
+    <h3 class="text-2xl font-bold text-primary mb-4 font-secondary">Jam Session Settings</h3>
+    <p>Manage default jam settings, add/edit venues, etc.</p>
+</div>
+
+<div class="admin-panel-tab-content hidden" id="events-settings">
+    <h3 class="text-2xl font-bold text-primary mb-4 font-secondary">Events Settings</h3>
+    <p>Manage special events and festivals.</p>
+</div>
+
+<div class="admin-panel-tab-content hidden" id="community-settings">
+    <h3 class="text-2xl font-bold text-primary mb-4 font-secondary">Community & Charity Settings</h3>
+    <p>Manage community and charity items.</p>
+</div>
+
+<div class="admin-panel-tab-content hidden" id="gallery-settings">
+    <h3 class="text-2xl font-bold text-primary mb-4 font-secondary">Gallery Settings</h3>
+    <p>Manage gallery photos and featured videos.</p>
+</div>
+</div>
+      <div id="jams-container"><section id="jams" class="py-16 md:py-20 lg:py-24 bg-grey-lightest">
+  <div class="container mx-auto px-4 sm:px-6">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4 font-secondary">
+        Regular Jams
+      </h2>
+      <p class="text-lg text-grey-dark max-w-3xl mx-auto font-primary">
+        Our weekly jam schedule. Voluntary donations are welcome to help
+        cover venue costs.
+      </p>
+
+      <div class="mt-8">
+        <a href="#" onclick="return false;" class="px-8 py-3 bg-accent text-primary font-bold rounded-full transition duration-300 shadow-lg opacity-60 cursor-not-allowed">
+          Contribute €5 for the Jam
+        </a>
+        <p class="text-sm text-grey-medium mt-2 font-semibold">
+          (Payment feature coming soon - for demonstration only)
+        </p>
+      </div>
+    </div>
+    <div class="max-w-4xl mx-auto">
+      <!-- Jam list will be dynamically inserted here -->
+      <ul id="jam-list" class="space-y-4"></ul>
+    </div>
+  </div>
+</section>
+</div>
+      <div id="format-container"><section id="format" class="py-16 md:py-20 lg:py-24 bg-white">
+  <div class="container mx-auto px-4 sm:px-6">
+    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-primary mb-12 font-secondary">
+      Our Jam Format
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center max-w-7xl mx-auto">
+      <div class="bg-grey-lightest p-8 rounded-lg shadow-sm border border-grey-light">
+        <h3 class="font-bold text-xl text-primary mb-2 font-secondary">1. Loop Songs First</h3>
+        <p class="text-grey-dark font-primary">
+          We begin with easy, repetitive songs to get everyone warmed up and in the groove.
+        </p>
+      </div>
+      <div class="bg-grey-lightest p-8 rounded-lg shadow-sm border border-grey-light">
+        <h3 class="font-bold text-xl text-primary mb-2 font-secondary">2. Four Chords or Less</h3>
+        <p class="text-grey-dark font-primary">
+          Next, we move to songs that use four simple chords or fewer, making it easy for everyone to join in.
+        </p>
+      </div>
+      <div class="bg-grey-lightest p-8 rounded-lg shadow-sm border border-grey-light">
+        <h3 class="font-bold text-xl text-primary mb-2 font-secondary">3. Then Anything Goes!</h3>
+        <p class="text-grey-dark font-primary">
+          In the final part of the jam, the floor is open! Bring out any song you'd like to play with the group.
+        </p>
+      </div>
+    </div>
+    <div class="max-w-4xl mx-auto mt-12">
+      <details class="p-4 rounded-lg bg-grey-lightest border border-grey-light">
+        <summary class="font-bold text-lg text-primary cursor-pointer font-secondary">
+          Jamming Guidelines
+        </summary>
+        <div class="mt-4 space-y-4 text-grey-dark text-left prose max-w-none font-primary">
+          <p class="italic">"Jamming's where the magic happens"</p>
+          <p>Jam circles are relaxed, open, inclusive gatherings of musicians and singers who sit in a circle facing each other. Jammers play for enjoyment rather than for audiences, but listeners are welcome.</p>
+          <p>A jam is a safe space to learn and grow jamming skills.</p>
+          <p>Jams are acoustic. Instruments such as bass and keyboards are exceptions.</p>
+          <p>The most important skill that each Jammer brings to a jam is their ability to listen.</p>
+          <ul class="list-disc list-inside">
+            <li><strong>Play</strong> means to play a song.</li>
+            <li><strong>Pass</strong> means pass to the next jammer.</li>
+            <li><strong>Pick</strong> means pick a song that another jammer plays.</li>
+          </ul>
+          <p>Any Jammer wishing to take a solo should make eye contact with the singer, indicating their willingness to take a solo. They start to solo when the singer gives them ‘the nod’.</p>
+          <p>Galway Jam Circle supports jamming for everyone, irrespective of their age, ethnicity, culture, gender identity, religion, language, sexual orientation, ability, disability or social circumstances.</p>
+        </div>
+      </details>
+    </div>
+    <div class="mt-12 text-center bg-accent/30 p-8 rounded-lg max-w-4xl mx-auto border border-amber-200">
+      <img src="images/lets_jam_logo.png" alt="Let's Jam Ireland Logo Placeholder" class="mx-auto mb-4 rounded-md h-20"/>
+      <p class="text-grey-dark font-primary">
+        Fuller information about the format and rules will be made available on the Let's Jam Ireland site when it is up and running.
+      </p>
+    </div>
+  </div>
+</section>
+</div>
+      <div id="events-container"><section id="special-events" class="py-16 md:py-20 lg:py-24 bg-white">
+  <div class="container mx-auto px-4 sm:px-6">
+    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-primary mb-4 font-secondary">
+      Festivals & Special Events
+    </h2>
+    <p class="text-center text-lg text-grey-dark max-w-4xl mx-auto mb-12 font-primary">
+      We love taking part in festivals around Ireland. Here are some of our favourites we've been to, and hope to see again!
+    </p>
+
+    <!-- Festival Logo Carousel -->
+    <div class="swiper festival-carousel">
+      <div id="festival-carousel-wrapper" class="swiper-wrapper">
+        <!-- Slides will be dynamically generated here -->
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+
+    <!-- List for upcoming special events -->
+    <div id="event-list" class="max-w-4xl mx-auto space-y-8 mt-12"></div>
+  </div>
+</section>
+</div>
+      <div id="community-container"><section id="community" class="py-16 md:py-20 lg:py-24 bg-grey-lightest">
+  <div class="container mx-auto px-4 sm:px-6">
+    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-primary mb-4 font-secondary">
+      Community & Charity
+    </h2>
+    <p class="text-center text-lg text-grey-dark max-w-4xl mx-auto mb-12 font-primary">
+      We're proud to be part of the Galway community and support local
+      causes. Here are some of the events and fundraisers we've been
+      involved with.
+    </p>
+
+    <div class="text-center mb-8 admin-controls">
+        <button id="add-community-item-btn" class="px-6 py-2 bg-green text-white font-bold rounded-full hover:bg-opacity-80 transition duration-300 shadow-md">Add New Item</button>
+    </div>
+    <form id="add-community-form" class="max-w-3xl mx-auto mb-8 p-6 bg-white rounded-lg shadow-inner border border-grey-light hidden">
+        <h3 id="community-form-title" class="text-xl font-bold text-primary mb-4 font-secondary">Add New Item</h3>
+        <input type="hidden" id="edit-community-id" />
+        <div class="mb-4">
+            <label for="community-image-file" class="block text-grey-dark font-bold mb-2 text-left">Upload Image</label>
+            <input type="file" id="community-image-file" class="w-full p-2 border rounded" accept="image/*"/>
+            <div id="community-image-preview-container" class="mt-2"></div>
+            <p class="text-sm text-grey-medium mt-1 text-left">Or paste a URL below...</p>
+        </div>
+        <div class="mb-4">
+            <label for="community-image-url" class="block text-grey-dark font-bold mb-2 text-left">Image URL</label>
+            <input type="url" id="community-image-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
+        </div>
+        <div class="mb-4"><label for="community-item-type" class="block text-grey-dark font-bold mb-2 text-left">Item Type</label><select id="community-item-type" class="w-full p-2 border rounded"><option value="community">Community Event</option><option value="charity">Charity Fundraiser</option></select></div>
+        <div id="community-headline-wrapper" class="mb-4"><label for="community-headline" class="block text-grey-dark font-bold mb-2 text-left">Headline</label><input type="text" id="community-headline" class="w-full p-2 border rounded"/></div>
+        <div id="charity-fields-wrapper" class="hidden">
+            <div class="mb-4"><label for="community-amount" class="block text-grey-dark font-bold mb-2 text-left">Amount Raised</label><input type="text" id="community-amount" class="w-full p-2 border rounded"/></div>
+            <div class="mb-4"><label for="community-charity-name" class="block text-grey-dark font-bold mb-2 text-left">For (Charity Name)</label><input type="text" id="community-charity-name" class="w-full p-2 border rounded"/></div>
+        </div>
+        <div class="mb-4"><label for="community-description" class="block text-grey-dark font-bold mb-2 text-left">Description</label><textarea id="community-description" class="w-full p-2 border rounded" rows="3"></textarea></div>
+        <div class="flex justify-end space-x-4">
+            <button type="button" id="cancel-community-btn" class="px-4 py-2 bg-grey-medium text-white rounded-md hover:bg-grey-dark">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Item</button>
+        </div>
+    </form>
+
+    <!-- Community Slideshow Container -->
+    <div id="community-slider-container" class="max-w-5xl mx-auto">
+      <div class="swiper community-swiper">
+        <div class="swiper-wrapper" id="community-swiper-wrapper"></div>
+        <div class="swiper-button-next text-primary"></div>
+        <div class="swiper-button-prev text-primary"></div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+      <div id="gallery-container"><section id="gallery" class="py-16 md:py-20 lg:py-24 bg-grey-lightest border-y border-grey-light">
+  <div class="container mx-auto px-4 sm:px-6">
+    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-primary mb-12 font-secondary">
+      Jam Circle Gallery
+    </h2>
+
+    <h3 class="text-2xl md:text-3xl font-bold text-center text-primary mb-8 font-secondary">
+      Videos
+    </h3>
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-4 admin-controls">
+            <button id="edit-featured-video-btn" class="px-4 py-2 bg-blue text-white font-bold rounded-full hover:bg-opacity-80">Change Featured Video</button>
+        </div>
+        <form id="edit-featured-video-form" class="max-w-xl mx-auto mt-4 p-6 bg-white rounded-lg shadow-inner border" style="display: none;">
+            <h3 class="text-xl font-bold text-primary mb-4 font-secondary">Change Featured Video</h3>
+            <div class="mb-4"><label for="featured-video-url" class="block text-grey-dark font-bold mb-2 text-left">New YouTube Video URL</label><input type="url" id="featured-video-url" class="w-full p-2 border rounded"/></div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" id="cancel-featured-video-btn" class="px-4 py-2 bg-grey-medium text-white rounded-md hover:bg-grey-dark">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Video</button>
+            </div>
+        </form>
+      <div class="relative" style="padding-bottom: 56.25%; height: 0">
+        <iframe
+          id="featured-video-player"
+          class="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
+          src=""
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+    </div>
+    <div class="text-center mt-8">
+      <a
+        href="https://youtube.com/playlist?list=PLG9xaR5hTnatoLYd337wPFrbVkjHmWErw"
+        target="_blank"
+        class="inline-block px-8 py-3 bg-accent text-primary font-bold rounded-full hover:bg-opacity-80 transition duration-300 shadow-md"
+      >
+        See our YouTube Channel
+      </a>
+    </div>
+
+    <h3 class="text-2xl md:text-3xl font-bold text-center text-primary mt-16 mb-8 font-secondary">
+      Photos
+    </h3>
+    <div class="text-center mb-8 admin-controls">
+        <button id="add-photo-btn" class="px-6 py-2 bg-green text-white font-bold rounded-full hover:bg-opacity-80 transition duration-300 shadow-md">Add Photo</button>
+    </div>
+    <form id="add-photo-form" class="max-w-3xl mx-auto mb-8 p-6 bg-white rounded-lg shadow-inner border hidden">
+        <h3 class="text-xl font-bold text-primary mb-4 font-secondary">Add New Photo</h3>
+        <div class="mb-4">
+            <label for="photo-file" class="block text-grey-dark font-bold mb-2 text-left">Upload Photo</label>
+            <input type="file" id="photo-file" class="w-full p-2 border rounded" accept="image/*"/>
+            <div id="photo-preview-container" class="mt-2"></div>
+            <p class="text-sm text-grey-medium mt-1 text-left">Or paste a URL below...</p>
+        </div>
+        <div class="mb-4">
+            <label for="photo-url" class="block text-grey-dark font-bold mb-2 text-left">Photo URL</label>
+            <input type="url" id="photo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
+        </div>
+        <div class="mb-4"><label for="photo-caption" class="block text-grey-dark font-bold mb-2 text-left">Caption (Alt Text)</label><input type="text" id="photo-caption" class="w-full p-2 border rounded"/></div>
+        <div class="flex justify-end space-x-4">
+            <button type="button" id="cancel-photo-btn" class="px-4 py-2 bg-grey-medium text-white rounded-md hover:bg-grey-dark">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Photo</button>
+        </div>
+    </form>
+    <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+  </div>
+</section>
+</div>
+      <div id="contact-container"><section id="contact" class="py-16 md:py-20 lg:py-24 bg-grey-lightest">
+  <div class="container mx-auto px-4 sm:px-6 text-center">
+    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-primary mb-4 font-secondary">
+      Join Us!
+    </h2>
+    <p class="text-lg text-grey-dark max-w-3xl mx-auto mb-8 font-primary">
+      Want to join our mailing list for updates or have a question? Get in
+      touch! We'd love to hear from you.
+    </p>
+    <a
+      href="mailto:info@galwayjamcircle.ie"
+      class="px-8 py-3 bg-primary text-white font-bold rounded-full hover:opacity-90 transition duration-300 transform hover:scale-105 shadow-md"
+      >Email Us</a
+    >
+  </div>
+</section>
+</div>
+    </main>
+
+    <footer id="footer-container"><footer class="bg-primary text-white/80 py-8 text-white">
+      <div class="container mx-auto px-6 text-center">
+        <div class="flex justify-center items-start space-x-6 mb-4">
+          <div class="text-center">
+            <a
+              href="https://www.facebook.com/groups/11667S5615376726"
+              target="_blank"
+              class="text-white hover:text-accent transition duration-300"
+            >
+              <svg
+                class="w-6 h-6 mx-auto mb-1"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V21.878A10.001 10.001 0 0022 12z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span class="text-xs">Group</span>
+            </a>
+          </div>
+          <div class="text-center">
+            <a
+              href="https://www.facebook.com/profile.php?id=61570031297498"
+              target="_blank"
+              class="text-white hover:text-accent transition duration-300"
+            >
+              <svg
+                class="w-6 h-6 mx-auto mb-1"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V21.878A10.001 10.001 0 0022 12z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span class="text-xs">Page</span>
+            </a>
+          </div>
+          <a
+            href="https://www.instagram.com/galwayjamcircle42/?hl=en"
+            target="_blank"
+            class="text-white hover:text-accent transition duration-300 pt-1"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.345 2.525c.636-.247 1.363-.416 2.427-.465C9.792 2.013 10.146 2 12.315 2zm0 1.623c-2.403 0-2.748.01-3.728.058-1.006.047-1.634.21-2.203.434a3.272 3.272 0 00-1.15 1.15c-.224.57-.386 1.198-.434 2.203-.048.98-.058 1.325-.058 3.728s.01 2.748.058 3.728c.048 1.006.21 1.634.434 2.203a3.272 3.272 0 001.15 1.15c.57.224.386 1.198.434 2.203.048.98.058 1.325-.058 3.728s-.01 2.748-.058-3.728c-.048-1.006-.21-1.634-.434-2.203a3.272 3.272 0 00-1.15-1.15c-.57-.224-1.198-.386-2.203-.434C15.063 3.633 14.718 3.623 12.315 3.623zM12 9.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zm0 6a3.75 3.75 0 110-7.5 3.75 3.75 0 010 7.5zM16.965 6.57a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </a>
+        </div>
+        <p>© 2025 Galway Jam Circle. v1.5. All Rights Reserved.</p>
+        <p class="text-sm text-stone-400 mt-2">
+          Bringing music to the people of Galway.
+        </p>
+        <div class="space-x-4">
+          <a
+            href="feedback.html"
+            class="text-sm text-stone-400 hover:text-white mt-4 inline-block"
+            >Website Feedback</a
+          >
+          <a
+            href="#"
+            id="admin-mode-btn"
+            class="text-sm text-stone-400 hover:text-white mt-4 inline-block"
+            >Admin</a
+          >
+        </div>
+      </div>
+    </footer>
+</footer>
+        <div id="modal-container">
+      <div
+        id="custom-modal"
+        class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center"
+      >
+        <form id="modal-form" class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
+          <p id="modal-message" class="text-lg mb-4"></p>
+          <input type="username" autocomplete="username" class="hidden">
+          <input
+            type="password"
+            id="modal-input"
+            class="w-full p-2 border rounded mb-4 hidden"
+            placeholder="Enter PIN..."
+            autocomplete="current-password"
+          />
+          <div id="modal-buttons" class="flex justify-end space-x-4"></div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <script type="module" src="js/main.js"></script>
+
+  </body>
+</html>
