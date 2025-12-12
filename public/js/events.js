@@ -15,7 +15,7 @@ function renderFestivalLogos() {
   if (!wrapper) return;
   wrapper.innerHTML = '';
   
-  const allLogos = festivalLogos.concat(festivalLogos);
+  const allLogos = festivalLogos.concat(festivalLogos, festivalLogos);
 
   allLogos.forEach(logo => {
     const slide = document.createElement("div");
