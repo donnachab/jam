@@ -1,9 +1,15 @@
 /*
 ================================================================================
-CUSTOM STYLES - LEGACY FILE
+CUSTOM STYLES - RESERVED FOR FUTURE USE
 ================================================================================
-This file is kept for backwards compatibility but most styles have been
-consolidated into components.css which uses the theme system from theme.css.
-All duplicate definitions have been removed.
+This file is reserved for project-specific custom styles that don't fit into
+the component or theme system. Currently empty as all styles have been
+consolidated into components.css (structural/component styles) and theme.css
+(color/theming variables).
+
+Add custom styles here as needed for:
+- One-off styling requirements
+- Experimental features
+- Temporary overrides during development
 ================================================================================
 */

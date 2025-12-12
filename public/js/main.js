@@ -31,7 +31,16 @@ async function loadComponent(path, containerId) {
         console.error(error);
     }
 }
+function showLoading() {
+    const loader = document.getElementById('loading-indicator');
+    if (loader) loader.classList.remove('hidden');
+}
+function hideLoading() {
+    const loader = document.getElementById('loading-indicator');
+    if (loader) loader.classList.add('hidden');
+}
 async function loadAllData(db) {
+    showLoading();
     try {
         const [configDoc, jamsSnap, venuesSnap, eventsSnap, gallerySnap, communitySnap] = await Promise.all([
             getDoc(doc(db, "site_config", "main")),
@@ -50,6 +59,8 @@ async function loadAllData(db) {
         console.log("✅ All Firebase data loaded.");
     } catch (error) {
         console.error("Failed to load site data:", error);
+    } finally {
+        hideLoading();
     }
 }
 function renderAllComponents() {
@@ -102,6 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     await loadAllData(db);
     await Promise.all([
+        loadComponent('components/ui/loading.html', 'loading-container'),
         loadComponent('components/header.html', 'header-container'),
         loadComponent('components/hero.html', 'hero-container'),
         loadComponent('components/jams.html', 'jams-container'),
@@ -137,4 +149,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
     });
+    
+    // Update copyright year dynamically
+    const copyrightYear = document.getElementById('copyright-year');
+    if (copyrightYear) {
+        copyrightYear.textContent = new Date().getFullYear();
+    }
 });

@@ -1,5 +1,5 @@
 <section id="gallery" class="py-16 md:py-20 lg:py-24 bg-grey-lightest border-y border-grey-light">
-  <div class="container mx-auto px-4 sm:px-6">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-primary mb-12 font-secondary">
       Jam Circle Gallery
     </h2>
@@ -60,12 +60,12 @@
             <label for="photo-url" class="block text-grey-dark font-bold mb-2 text-left">Photo URL</label>
             <input type="url" id="photo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
         </div>
-        <div class="mb-4"><label for="photo-caption" class="block text-grey-dark font-bold mb-2 text-left">Caption (Alt Text)</label><input type="text" id="photo-caption" class="w-full p-2 border rounded"/></div>
+        <div class="mb-4"><label for="photo-caption" class="block text-grey-dark font-bold mb-2 text-left">Caption (Alt Text - describe the image for accessibility)</label><input type="text" id="photo-caption" class="w-full p-2 border rounded"/></div>
         <div class="flex justify-end space-x-4">
             <button type="button" id="cancel-photo-btn" class="px-4 py-2 btn-gray text-white rounded-md">Cancel</button>
             <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Photo</button>
         </div>
     </form>
-    <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+    <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6"></div>
   </div>
 </section>
