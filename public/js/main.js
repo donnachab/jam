@@ -125,4 +125,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     initializeGallery(db, auth, functions, () => refreshDataAndRender(db));
     initializeCommunity(db, auth, functions, () => refreshDataAndRender(db));
     initializeHeroAdmin(db, auth, functions, () => refreshDataAndRender(db));
+    
+    // Header scroll behavior - add 'scrolled' class when user scrolls past 50px
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        if (header) {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+    });
 });
