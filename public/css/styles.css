@@ -506,13 +506,6 @@ video {
    behind the text or applying a text-shadow for better readability.
    This might require dynamic adjustments via JavaScript based on image brightness.
 */
-  :root {
-    --primary-color: #371087; /* Correct Purple */
-    --accent-color: #f3ead3; /* Warm Cream */
-    --background-color: #ffffff;
-    --text-dark: #1f2937;
-    --text-light: #ffffff;
-  }
 .container {
   width: 100%;
 }
@@ -885,7 +878,7 @@ video {
   border-color: rgb(231 229 228 / var(--tw-border-opacity, 1));
 }
 .bg-accent {
-  background-color: var(--color-accent-2);
+  background-color: var(--color-background-accent);
 }
 .bg-gray-100 {
   --tw-bg-opacity: 1;
@@ -904,7 +897,7 @@ video {
   background-color: rgb(107 114 128 / var(--tw-bg-opacity, 1));
 }
 .bg-primary {
-  background-color: var(--color-accent);
+  background-color: var(--color-interactive-primary-bg);
 }
 .bg-stone-50 {
   --tw-bg-opacity: 1;
@@ -915,7 +908,7 @@ video {
   background-color: rgb(87 83 78 / var(--tw-bg-opacity, 1));
 }
 .bg-white {
-  background-color: var(--color-white);
+  background-color: var(--color-background-primary);
 }
 .bg-gradient-to-t {
   background-image: linear-gradient(to top, var(--tw-gradient-stops));
@@ -1039,7 +1032,7 @@ video {
   color: rgb(31 41 55 / var(--tw-text-opacity, 1));
 }
 .text-primary {
-  color: var(--color-accent);
+  color: var(--color-interactive-primary-bg);
 }
 .text-stone-400 {
   --tw-text-opacity: 1;
@@ -1050,12 +1043,12 @@ video {
   color: rgb(124 58 237 / var(--tw-text-opacity, 1));
 }
 .text-white {
-  color: var(--color-white);
+  color: var(--color-text-on-interactive);
 }
 
 #home h1,
 #home p {
-  color: var(--color-white);
+  color: var(--color-text-hero);
 }
 .opacity-25 {
   opacity: 0.25;
@@ -1126,10 +1119,10 @@ video {
   --tw-bg-opacity: 0.8;
 }
 .hover\:text-accent:hover {
-  color: var(--color-accent-2);
+  color: var(--color-background-accent);
 }
 .hover\:text-white:hover {
-  color: var(--color-white);
+  color: var(--color-text-on-interactive);
 }
 .hover\:underline:hover {
   text-decoration-line: underline;

@@ -9,13 +9,13 @@
     </h3>
     <div class="max-w-5xl mx-auto">
         <div class="text-center mb-4 admin-controls">
-            <button id="edit-featured-video-btn" class="px-4 py-2 bg-blue text-white font-bold rounded-full hover:bg-opacity-80">Change Featured Video</button>
+            <button id="edit-featured-video-btn" class="px-4 py-2 btn-blue text-white font-bold rounded-full hover:bg-opacity-80">Change Featured Video</button>
         </div>
-        <form id="edit-featured-video-form" class="max-w-xl mx-auto mt-4 p-6 bg-white rounded-lg shadow-inner border" style="display: none;">
+        <form id="edit-featured-video-form" class="max-w-xl mx-auto mt-4 p-6 bg-white rounded-lg shadow-inner border hidden">
             <h3 class="text-xl font-bold text-primary mb-4 font-secondary">Change Featured Video</h3>
             <div class="mb-4"><label for="featured-video-url" class="block text-grey-dark font-bold mb-2 text-left">New YouTube Video URL</label><input type="url" id="featured-video-url" class="w-full p-2 border rounded"/></div>
             <div class="flex justify-end space-x-4">
-                <button type="button" id="cancel-featured-video-btn" class="px-4 py-2 bg-grey-medium text-white rounded-md hover:bg-grey-dark">Cancel</button>
+                <button type="button" id="cancel-featured-video-btn" class="px-4 py-2 btn-gray text-white rounded-md">Cancel</button>
                 <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Video</button>
             </div>
         </form>
@@ -46,7 +46,7 @@
       Photos
     </h3>
     <div class="text-center mb-8 admin-controls">
-        <button id="add-photo-btn" class="px-6 py-2 bg-green text-white font-bold rounded-full hover:bg-opacity-80 transition duration-300 shadow-md">Add Photo</button>
+        <button id="add-photo-btn" class="px-6 py-2 btn-green text-white font-bold rounded-full hover:bg-opacity-80 transition duration-300 shadow-md">Add Photo</button>
     </div>
     <form id="add-photo-form" class="max-w-3xl mx-auto mb-8 p-6 bg-white rounded-lg shadow-inner border hidden">
         <h3 class="text-xl font-bold text-primary mb-4 font-secondary">Add New Photo</h3>
@@ -62,7 +62,7 @@
         </div>
         <div class="mb-4"><label for="photo-caption" class="block text-grey-dark font-bold mb-2 text-left">Caption (Alt Text)</label><input type="text" id="photo-caption" class="w-full p-2 border rounded"/></div>
         <div class="flex justify-end space-x-4">
-            <button type="button" id="cancel-photo-btn" class="px-4 py-2 bg-grey-medium text-white rounded-md hover:bg-grey-dark">Cancel</button>
+            <button type="button" id="cancel-photo-btn" class="px-4 py-2 btn-gray text-white rounded-md">Cancel</button>
             <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Photo</button>
         </div>
     </form>

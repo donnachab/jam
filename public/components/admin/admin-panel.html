@@ -1,9 +1,9 @@
 <div class="admin-panel-tab-content" id="logo-settings">
     <h3 class="text-2xl font-bold text-primary mb-4 font-secondary">Site Logo Settings</h3>
     <div class="text-center mb-4 admin-controls">
-        <button id="edit-site-logo-btn" class="px-4 py-2 bg-blue text-white font-bold rounded-full hover:bg-opacity-80">Change Site Logo</button>
+        <button id="edit-site-logo-btn" class="px-4 py-2 btn-blue text-white font-bold rounded-full hover:bg-opacity-80">Change Site Logo</button>
     </div>
-    <form id="edit-site-logo-form" class="max-w-xl mx-auto mt-4 p-6 bg-white rounded-lg shadow-inner border" style="display: none;">
+    <form id="edit-site-logo-form" class="max-w-xl mx-auto mt-4 p-6 bg-white rounded-lg shadow-inner border hidden">
         <h4 class="text-xl font-bold text-primary mb-4 font-secondary">Upload or Link Logo</h4>
         <div class="mb-4">
             <label for="site-logo-theme-select" class="block text-grey-dark font-bold mb-2 text-left">Select Theme</label>
@@ -24,7 +24,7 @@
             <input type="url" id="site-logo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
         </div>
         <div class="flex justify-end space-x-4">
-            <button type="button" id="cancel-site-logo-btn" class="px-4 py-2 bg-grey-medium text-white rounded-md hover:bg-grey-dark">Cancel</button>
+            <button type="button" id="cancel-site-logo-btn" class="px-4 py-2 btn-gray text-white rounded-md">Cancel</button>
             <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Logo</button>
         </div>
     </form>
@@ -33,9 +33,9 @@
 <div class="admin-panel-tab-content hidden" id="hero-settings">
     <h3 class="text-2xl font-bold text-primary mb-4 font-secondary">Hero Section Settings</h3>
     <div class="text-center mb-4 admin-controls">
-        <button id="edit-cover-photo-btn" class="px-4 py-2 bg-blue text-white font-bold rounded-full hover:bg-opacity-80">Change Cover Photo</button>
+        <button id="edit-cover-photo-btn" class="px-4 py-2 btn-blue text-white font-bold rounded-full hover:bg-opacity-80">Change Cover Photo</button>
     </div>
-    <form id="edit-cover-photo-form" class="max-w-xl mx-auto mt-4 p-6 bg-white rounded-lg shadow-inner border" style="display: none;">
+    <form id="edit-cover-photo-form" class="max-w-xl mx-auto mt-4 p-6 bg-white rounded-lg shadow-inner border hidden">
         <h4 class="text-xl font-bold text-primary mb-4 font-secondary">Upload or Link Cover Photo</h4>
         <div class="mb-4">
             <label for="cover-photo-file" class="block text-grey-dark font-bold mb-2 text-left">Upload Cover Photo File</label>
@@ -47,7 +47,7 @@
             <input type="url" id="cover-photo-url" class="w-full p-2 border rounded" placeholder="Paste direct image link..."/>
         </div>
         <div class="flex justify-end space-x-4">
-            <button type="button" id="cancel-cover-photo-btn" class="px-4 py-2 bg-grey-medium text-white rounded-md hover:bg-grey-dark">Cancel</button>
+            <button type="button" id="cancel-cover-photo-btn" class="px-4 py-2 btn-gray text-white rounded-md">Cancel</button>
             <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Photo</button>
         </div>
     </form>

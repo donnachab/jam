@@ -67,7 +67,18 @@ body.admin-mode .admin-controls-inline {
     border-radius: var(--border-radius-button);
     font-weight: 700;
     color: var(--color-text-on-interactive);
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Focus states for all buttons - keyboard navigation accessibility */
+.btn:focus-visible,
+.btn-danger:focus-visible,
+.btn-green:focus-visible,
+.btn-blue:focus-visible,
+.btn-gray:focus-visible,
+.btn-primary:focus-visible {
+    outline: 3px solid var(--color-interactive-primary-bg);
+    outline-offset: 2px;
 }
 
 .btn-danger {
@@ -76,12 +87,18 @@ body.admin-mode .admin-controls-inline {
 .btn-danger:hover {
     background-color: var(--color-interactive-danger-hover-bg);
 }
+.btn-danger:focus-visible {
+    outline-color: var(--color-interactive-danger-bg);
+}
 
 .btn-green {
     background-color: var(--color-interactive-success-bg);
 }
 .btn-green:hover {
     background-color: var(--color-interactive-success-hover-bg);
+}
+.btn-green:focus-visible {
+    outline-color: var(--color-interactive-success-bg);
 }
 
 .btn-blue {
@@ -90,12 +107,18 @@ body.admin-mode .admin-controls-inline {
 .btn-blue:hover {
     background-color: var(--color-interactive-info-hover-bg);
 }
+.btn-blue:focus-visible {
+    outline-color: var(--color-interactive-info-bg);
+}
 
 .btn-gray {
     background-color: var(--color-interactive-muted-bg);
 }
 .btn-gray:hover {
     background-color: var(--color-interactive-muted-hover-bg);
+}
+.btn-gray:focus-visible {
+    outline-color: var(--color-interactive-muted-bg);
 }
 
 /* This is a generic button that uses the current theme's primary color */
@@ -126,12 +149,20 @@ body.admin-mode .admin-controls-inline {
     border-bottom-color: var(--color-interactive-primary-bg);
 }
 
-/* --- Gallery Button Fix --- */
-#add-photo-btn {
-    background-color: var(--color-interactive-success-bg);
+
+/* --- Theme Switcher Dropdown Styling --- */
+#theme-select,
+#theme-select-mobile {
+    background-color: var(--color-interactive-primary-bg);
+    color: var(--color-text-on-interactive);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
-#add-photo-btn:hover {
-    background-color: var(--color-interactive-success-hover-bg);
+
+#theme-select option,
+#theme-select-mobile option {
+    background-color: var(--color-background-primary);
+    color: var(--color-text-primary);
+    padding: 0.5rem;
 }
 
 /* --- SVG Logo Styling --- */
