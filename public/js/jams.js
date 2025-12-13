@@ -1,12 +1,16 @@
 import { doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showModal } from './ui/modal.js';
 
+function getVenue(venueId, venues) {
+    return venues.find(v => v.id === venueId) || null;
+}
+
 function getVenueName(venueId, venues) {
-    const venue = venues.find(v => v.id === venueId);
+    const venue = getVenue(venueId, venues);
     return venue ? venue.name : 'Unknown Venue';
 }
 
-export function renderJams(jams, venues, config) {
+export function renderJams(jams, venues, config, db) {
     const list = document.getElementById("jams-list");
     if (!list) return;
     list.innerHTML = "";
@@ -20,13 +24,26 @@ export function renderJams(jams, venues, config) {
         list.innerHTML = `<p class="text-center text-gray-500">No jams scheduled at the moment. Check back soon!</p>`;
     } else {
         jams.forEach(jam => {
+            const venue = getVenue(jam.venueId, venues);
             const jamElement = document.createElement("div");
             jamElement.className = "jam-item bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between";
+            
+            // Build venue information HTML
+            let venueHtml = `<p class="text-md font-semibold text-gray-700 mb-1">${venue ? venue.name : 'Unknown Venue'}</p>`;
+            if (venue && venue.address) {
+                venueHtml += `<p class="text-sm text-gray-600">${venue.address}</p>`;
+            }
+            if (venue && venue.mapLink) {
+                venueHtml += `<a href="${venue.mapLink}" target="_blank" class="text-blue-500 hover:underline text-sm">(Map)</a>`;
+            }
+            
             jamElement.innerHTML = `
                 <div>
                     <h3 class="text-2xl font-bold text-primary mb-2">${jam.day}</h3>
-                    <p class="text-lg text-gray-700">${jam.time}</p>
-                    <p class="text-md text-gray-600 mb-4">${getVenueName(jam.venueId, venues)}</p>
+                    <p class="text-lg text-gray-700 mb-3">${jam.time}</p>
+                    <div class="mb-4">
+                        ${venueHtml}
+                    </div>
                     <p class="text-gray-500">${jam.details}</p>
                 </div>
                 <div class="admin-controls-inline mt-4 space-x-2">

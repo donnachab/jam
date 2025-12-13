@@ -63,11 +63,11 @@ async function loadAllData(db) {
         hideLoading();
     }
 }
-function renderAllComponents() {
+function renderAllComponents(db) {
     if (!siteData) return console.error("Site data not available for rendering.");
     renderHero();
     renderLogo(themeManager.getSaved() || 'default');
-    renderJams(siteData.jams, siteData.venues, siteData.config);
+    renderJams(siteData.jams, siteData.venues, siteData.config, db);
     renderEvents(siteData.events, siteData.venues);
     renderGallery(siteData.photos, siteData.config);
     renderCommunity(siteData.community);
@@ -98,7 +98,7 @@ function initializeThemeSwitcher() {
 }
 async function refreshDataAndRender(db) {
     await loadAllData(db);
-    renderAllComponents();
+    renderAllComponents(db);
 }
 document.addEventListener("DOMContentLoaded", async () => {
     const app = initializeApp(firebaseConfig);
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         loadComponent('components/footer.html', 'footer-container'),
         loadComponent('components/admin/admin-panel.html', 'admin-panel-container'),
     ]);
-    renderAllComponents();
+    renderAllComponents(db);
     themeManager.initialize();
     initializeThemeSwitcher();
     initializeMobileMenu();

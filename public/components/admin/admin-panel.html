@@ -54,8 +54,60 @@
 </div>
 
 <div class="admin-panel-tab-content hidden" id="jams-settings">
-    <h3 class="text-2xl font-bold text-primary mb-4 font-secondary">Jam Session Settings</h3>
-    <p>Manage default jam settings, add/edit venues, etc.</p>
+    <h3 class="text-2xl font-bold text-primary mb-4 font-secondary">Venue Management</h3>
+    
+    <!-- Add New Venue Button -->
+    <div class="text-center mb-6 admin-controls">
+        <button id="add-venue-btn" class="px-6 py-2 btn-blue text-white font-bold rounded-full hover:bg-opacity-80">
+            Add New Venue
+        </button>
+    </div>
+
+    <!-- Add/Edit Venue Form (Hidden by default) -->
+    <form id="venue-form" class="max-w-2xl mx-auto mb-8 p-6 bg-white rounded-lg shadow-inner border hidden">
+        <h4 id="venue-form-title" class="text-xl font-bold text-primary mb-4 font-secondary">Add New Venue</h4>
+        <input type="hidden" id="edit-venue-id" />
+        
+        <div class="mb-4">
+            <label for="venue-name" class="block text-grey-dark font-bold mb-2 text-left">Venue Name <span class="text-red-500">*</span></label>
+            <input type="text" id="venue-name" required class="w-full p-2 border rounded" placeholder="Enter venue name" />
+        </div>
+
+        <div class="mb-4">
+            <label for="venue-address" class="block text-grey-dark font-bold mb-2 text-left">Address</label>
+            <input type="text" id="venue-address" class="w-full p-2 border rounded" placeholder="Enter venue address" />
+        </div>
+
+        <div class="mb-4">
+            <label for="venue-map-link" class="block text-grey-dark font-bold mb-2 text-left">Google Maps Link</label>
+            <input type="url" id="venue-map-link" class="w-full p-2 border rounded" placeholder="https://maps.google.com/..." />
+            <p class="text-sm text-grey-medium mt-1 text-left">Paste the Google Maps URL for this venue</p>
+        </div>
+
+        <div class="mb-4">
+            <label for="venue-website" class="block text-grey-dark font-bold mb-2 text-left">Website URL</label>
+            <input type="url" id="venue-website" class="w-full p-2 border rounded" placeholder="https://..." />
+        </div>
+
+        <div class="mb-4">
+            <label for="venue-image-url" class="block text-grey-dark font-bold mb-2 text-left">Image URL</label>
+            <input type="url" id="venue-image-url" class="w-full p-2 border rounded" placeholder="https://..." />
+            <p class="text-sm text-grey-medium mt-1 text-left">Direct link to venue image</p>
+        </div>
+
+        <div class="flex justify-end space-x-4">
+            <button type="button" id="cancel-venue-btn" class="px-4 py-2 btn-gray text-white rounded-md">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Venue</button>
+        </div>
+    </form>
+
+    <!-- Venues List -->
+    <div class="max-w-4xl mx-auto">
+        <h4 class="text-lg font-bold text-gray-700 mb-4">Existing Venues</h4>
+        <div id="venues-list" class="space-y-4">
+            <!-- Venues will be dynamically loaded here -->
+        </div>
+    </div>
 </div>
 
 <div class="admin-panel-tab-content hidden" id="events-settings">

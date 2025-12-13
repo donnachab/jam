@@ -18,9 +18,43 @@
         </p>
       </div>
     </div>
+
+    <!-- Admin Controls -->
+    <div class="text-center mb-8 admin-controls">
+      <button id="add-jam-btn" class="px-6 py-2 btn-green text-white font-bold rounded-full hover:bg-opacity-80 transition duration-300 shadow-md">Add Jam</button>
+    </div>
+
+    <!-- Add/Edit Jam Form -->
+    <form id="add-jam-form" class="max-w-3xl mx-auto mb-8 p-6 bg-white rounded-lg shadow-inner border hidden">
+      <h3 class="text-xl font-bold text-primary mb-4 font-secondary">Add/Edit Jam</h3>
+      <input type="hidden" id="edit-jam-id" />
+      <div class="mb-4">
+        <label for="jam-day" class="block text-grey-dark font-bold mb-2 text-left">Day</label>
+        <input type="text" id="jam-day" class="w-full p-2 border rounded" placeholder="e.g., Monday" required />
+      </div>
+      <div class="mb-4">
+        <label for="jam-time" class="block text-grey-dark font-bold mb-2 text-left">Time</label>
+        <input type="text" id="jam-time" class="w-full p-2 border rounded" placeholder="e.g., 7:00 PM - 9:00 PM" required />
+      </div>
+      <div class="mb-4">
+        <label for="jam-venue" class="block text-grey-dark font-bold mb-2 text-left">Venue</label>
+        <select id="jam-venue" class="w-full p-2 border rounded" required>
+          <!-- Venue options will be populated dynamically -->
+        </select>
+      </div>
+      <div class="mb-4">
+        <label for="jam-details" class="block text-grey-dark font-bold mb-2 text-left">Details</label>
+        <textarea id="jam-details" class="w-full p-2 border rounded" rows="3" placeholder="Additional information about this jam session"></textarea>
+      </div>
+      <div class="flex justify-end space-x-4">
+        <button type="button" id="cancel-jam-btn" class="px-4 py-2 btn-gray text-white rounded-md">Cancel</button>
+        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90">Save Jam</button>
+      </div>
+    </form>
+
     <div class="max-w-4xl mx-auto">
       <!-- Jam list will be dynamically inserted here -->
-      <ul id="jam-list" class="space-y-4"></ul>
+      <ul id="jams-list" class="space-y-4"></ul>
     </div>
   </div>
 </section>
