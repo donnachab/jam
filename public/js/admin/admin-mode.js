@@ -5,6 +5,9 @@ import { showModal } from '../ui/modal.js';
 let storedFunctions;
 let storedRefreshCallback;
 
+// In-memory fallback for admin state when session storage is blocked
+let inMemoryAdminState = false;
+
 /**
  * Verifies the admin PIN using a secure POST request.
  */
@@ -16,7 +19,11 @@ async function verifyPin(pin) {
     if (result.data.success) {
       // Store expiration time if needed for session management
       if (result.data.expiresAt) {
-        sessionStorage.setItem("gjc_adminExpiresAt", result.data.expiresAt.toString());
+        try {
+          sessionStorage.setItem("gjc_adminExpiresAt", result.data.expiresAt.toString());
+        } catch (storageError) {
+          console.warn("Session storage blocked, using in-memory fallback:", storageError);
+        }
       }
       return { success: true, message: result.data.message };
     }
@@ -49,8 +56,13 @@ function handleAdminClick(e) {
 
     if (isAdmin) {
         // Exit admin mode
-        sessionStorage.removeItem("gjc_isAdmin");
-        sessionStorage.removeItem("gjc_adminExpiresAt");
+        inMemoryAdminState = false;
+        try {
+            sessionStorage.removeItem("gjc_isAdmin");
+            sessionStorage.removeItem("gjc_adminExpiresAt");
+        } catch (storageError) {
+            console.warn("Session storage blocked during exit:", storageError);
+        }
         toggleAdminMode(false);
     } else {
         // Enter admin mode
@@ -61,10 +73,22 @@ function handleAdminClick(e) {
             const result = await verifyPin(pin);
             
             if (result.success) {
-                sessionStorage.setItem("gjc_isAdmin", "true");
+                // CRITICAL: Toggle admin mode BEFORE attempting session storage
+                // This ensures UI updates even if storage is blocked
                 toggleAdminMode(true);
+                inMemoryAdminState = true;
+                
+                // Attempt to store in session storage (may fail due to tracking prevention)
+                try {
+                    sessionStorage.setItem("gjc_isAdmin", "true");
+                } catch (storageError) {
+                    console.warn("Session storage blocked, using in-memory fallback:", storageError);
+                }
+                
+                // Always show success modal and refresh
                 showModal("PIN verified! You are now in admin mode.", "alert");
-                // Refresh data to show admin controls
+                
+                // Always refresh data to show admin controls
                 if (storedRefreshCallback) {
                     storedRefreshCallback();
                 }
@@ -91,13 +115,25 @@ export function initializeAdminMode(db, auth, functions, refreshCallback) {
     // Handle exit admin buttons
     document.body.addEventListener("click", (e) => {
         if (e.target.classList.contains("exit-admin-btn")) {
-            sessionStorage.removeItem("gjc_isAdmin");
+            inMemoryAdminState = false;
+            try {
+                sessionStorage.removeItem("gjc_isAdmin");
+            } catch (storageError) {
+                console.warn("Session storage blocked during exit:", storageError);
+            }
             toggleAdminMode(false);
         }
     });
 
     // Check initial state on page load
-    if (sessionStorage.getItem("gjc_isAdmin") === "true") {
+    let isAdminStored = inMemoryAdminState;
+    try {
+        isAdminStored = sessionStorage.getItem("gjc_isAdmin") === "true" || inMemoryAdminState;
+    } catch (storageError) {
+        console.warn("Session storage blocked during initialization, using in-memory fallback:", storageError);
+    }
+    
+    if (isAdminStored) {
         toggleAdminMode(true);
     }
 
