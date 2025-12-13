@@ -103,43 +103,95 @@ function validatePin(pin) {
  * Implements rate limiting and session expiration.
  */
 exports.setAdminClaim = onCall(async (request) => {
+    // eslint-disable-next-line no-console
+    console.log("🔐 [DEBUG] ========================================");
+    // eslint-disable-next-line no-console
+    console.log("🔐 [DEBUG] setAdminClaim function called");
+    // eslint-disable-next-line no-console
+    console.log("🔐 [DEBUG] ========================================");
+    
     if (!request.auth) {
+        // eslint-disable-next-line no-console
+        console.error("❌ [DEBUG] No authentication found in request");
         throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
     }
 
     const uid = request.auth.uid;
+    // eslint-disable-next-line no-console
+    console.log("🔐 [DEBUG] User ID:", uid);
+    // eslint-disable-next-line no-console
+    console.log("🔐 [DEBUG] Request data:", JSON.stringify(request.data, null, 2));
 
     // Check rate limiting
-    await checkRateLimit(uid);
+    // eslint-disable-next-line no-console
+    console.log("🔐 [DEBUG] Checking rate limit...");
+    try {
+        await checkRateLimit(uid);
+        // eslint-disable-next-line no-console
+        console.log("✅ [DEBUG] Rate limit check passed");
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("❌ [DEBUG] Rate limit check failed:", error.message);
+        throw error;
+    }
 
     const correctPin = process.env.ADMIN_PIN;
+    // eslint-disable-next-line no-console
+    console.log("🔐 [DEBUG] Admin PIN configured:", !!correctPin);
     if (!correctPin) {
+        // eslint-disable-next-line no-console
+        console.error("❌ [DEBUG] ADMIN_PIN environment variable not set!");
         throw new HttpsError("internal", "The admin PIN is not configured on the server.");
     }
 
     // Validate PIN format
+    // eslint-disable-next-line no-console
+    console.log("🔐 [DEBUG] Validating PIN format...");
     if (!validatePin(request.data.pin)) {
+        // eslint-disable-next-line no-console
+        console.error("❌ [DEBUG] Invalid PIN format provided");
         throw new HttpsError("invalid-argument", "Invalid PIN format.");
     }
+    // eslint-disable-next-line no-console
+    console.log("✅ [DEBUG] PIN format valid");
 
+    // eslint-disable-next-line no-console
+    console.log("🔐 [DEBUG] Comparing PIN with correct PIN...");
     if (request.data.pin !== correctPin) {
         // Log failed attempt
         // eslint-disable-next-line no-console
-        console.warn(`Failed admin login attempt for UID: ${uid}`);
+        console.warn(`❌ [DEBUG] Failed admin login attempt for UID: ${uid}`);
+        // eslint-disable-next-line no-console
+        console.warn(`❌ [DEBUG] PIN provided length: ${request.data.pin.length}, Expected length: ${correctPin.length}`);
         throw new HttpsError("permission-denied", "Incorrect PIN provided.");
     }
+    // eslint-disable-next-line no-console
+    console.log("✅ [DEBUG] PIN matches!");
 
     // Reset rate limit on successful auth
+    // eslint-disable-next-line no-console
+    console.log("🔐 [DEBUG] Resetting rate limit...");
     await resetRateLimit(uid);
+    // eslint-disable-next-line no-console
+    console.log("✅ [DEBUG] Rate limit reset");
 
     try {
         const expiresAt = Date.now() + ADMIN_SESSION_DURATION;
+        // eslint-disable-next-line no-console
+        console.log("🔐 [DEBUG] Setting custom user claims...");
+        // eslint-disable-next-line no-console
+        console.log("🔐 [DEBUG] Expiration time:", new Date(expiresAt).toISOString());
+        
         await admin.auth().setCustomUserClaims(uid, {
             admin: true,
             adminExpiresAt: expiresAt,
         });
+        // eslint-disable-next-line no-console
+        console.log("✅ [DEBUG] Custom claims set successfully");
 
         // Log successful admin access
+        // eslint-disable-next-line no-console
+        console.log("🔐 [DEBUG] Writing audit log...");
         const db = getFirestore();
         await db.collection("audit_logs").add({
             uid: uid,
@@ -147,18 +199,28 @@ exports.setAdminClaim = onCall(async (request) => {
             timestamp: FieldValue.serverTimestamp(),
             expiresAt: new Date(expiresAt),
         });
+        // eslint-disable-next-line no-console
+        console.log("✅ [DEBUG] Audit log written");
 
         // eslint-disable-next-line no-console
-        console.log(`Admin access granted to UID: ${uid}, expires at: ${new Date(expiresAt).toISOString()}`);
+        console.log(`✅ [DEBUG] Admin access granted to UID: ${uid}, expires at: ${new Date(expiresAt).toISOString()}`);
 
-        return {
+        const response = {
             success: true,
             message: "Admin claim set successfully.",
             expiresAt: expiresAt,
         };
+        // eslint-disable-next-line no-console
+        console.log("✅ [DEBUG] Returning response:", JSON.stringify(response, null, 2));
+        // eslint-disable-next-line no-console
+        console.log("🔐 [DEBUG] ========================================");
+        
+        return response;
     } catch (error) {
         // eslint-disable-next-line no-console
-        console.error("Error setting custom claim:", error);
+        console.error("❌ [DEBUG] Error setting custom claim:", error);
+        // eslint-disable-next-line no-console
+        console.error("❌ [DEBUG] Error details:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
         throw new HttpsError("internal", "Could not set admin claim.");
     }
 });
@@ -169,7 +231,18 @@ exports.setAdminClaim = onCall(async (request) => {
  * @return {void}
  */
 function verifyAdminAccess(auth) {
+    // eslint-disable-next-line no-console
+    console.log("🔒 [DEBUG] verifyAdminAccess called");
+    // eslint-disable-next-line no-console
+    console.log("🔒 [DEBUG] Auth object:", !!auth);
+    // eslint-disable-next-line no-console
+    console.log("🔒 [DEBUG] Auth token:", !!auth?.token);
+    // eslint-disable-next-line no-console
+    console.log("🔒 [DEBUG] Admin claim:", auth?.token?.admin);
+    
     if (!auth || !auth.token.admin) {
+        // eslint-disable-next-line no-console
+        console.error("❌ [DEBUG] Admin access denied - no admin claim");
         throw new HttpsError(
             "permission-denied",
             "You must be an admin to perform this action.",
@@ -177,12 +250,22 @@ function verifyAdminAccess(auth) {
     }
 
     // Check if admin session has expired
+    // eslint-disable-next-line no-console
+    console.log("🔒 [DEBUG] Admin expires at:", auth.token.adminExpiresAt);
+    // eslint-disable-next-line no-console
+    console.log("🔒 [DEBUG] Current time:", Date.now());
+    
     if (auth.token.adminExpiresAt && Date.now() > auth.token.adminExpiresAt) {
+        // eslint-disable-next-line no-console
+        console.error("❌ [DEBUG] Admin session expired");
         throw new HttpsError(
             "permission-denied",
             "Admin session has expired. Please log in again.",
         );
     }
+    
+    // eslint-disable-next-line no-console
+    console.log("✅ [DEBUG] Admin access verified");
 }
 
 /**
@@ -247,18 +330,33 @@ function validateContentType(contentType) {
  * Implements input validation and sanitization.
  */
 exports.generateSignedUploadUrl = onCall(async (request) => {
+    // eslint-disable-next-line no-console
+    console.log("📤 [DEBUG] generateSignedUploadUrl called");
+    // eslint-disable-next-line no-console
+    console.log("📤 [DEBUG] User ID:", request.auth?.uid);
+    
     verifyAdminAccess(request.auth);
 
     if (!request.data.fileName || !request.data.contentType) {
+        // eslint-disable-next-line no-console
+        console.error("❌ [DEBUG] Missing fileName or contentType");
         throw new HttpsError(
             "invalid-argument",
             "The function must be called with 'fileName' and 'contentType'.",
         );
     }
 
+    // eslint-disable-next-line no-console
+    console.log("📤 [DEBUG] File name:", request.data.fileName);
+    // eslint-disable-next-line no-console
+    console.log("📤 [DEBUG] Content type:", request.data.contentType);
+
     // Validate and sanitize inputs
     const sanitizedFileName = sanitizeFileName(request.data.fileName);
     validateContentType(request.data.contentType);
+    
+    // eslint-disable-next-line no-console
+    console.log("📤 [DEBUG] Sanitized file name:", sanitizedFileName);
 
     const bucket = getStorage().bucket();
     const file = bucket.file(`images/${sanitizedFileName}`);
@@ -271,9 +369,15 @@ exports.generateSignedUploadUrl = onCall(async (request) => {
     };
 
     try {
+        // eslint-disable-next-line no-console
+        console.log("📤 [DEBUG] Generating signed URL...");
         const [url] = await file.getSignedUrl(options);
+        // eslint-disable-next-line no-console
+        console.log("✅ [DEBUG] Signed URL generated successfully");
 
         // Log admin action
+        // eslint-disable-next-line no-console
+        console.log("📤 [DEBUG] Writing audit log...");
         const db = getFirestore();
         await db.collection("audit_logs").add({
             uid: request.auth.uid,
@@ -281,11 +385,15 @@ exports.generateSignedUploadUrl = onCall(async (request) => {
             fileName: sanitizedFileName,
             timestamp: FieldValue.serverTimestamp(),
         });
+        // eslint-disable-next-line no-console
+        console.log("✅ [DEBUG] Audit log written");
 
         return {success: true, url: url};
     } catch (error) {
         // eslint-disable-next-line no-console
-        console.error("Error generating signed URL:", error);
+        console.error("❌ [DEBUG] Error generating signed URL:", error);
+        // eslint-disable-next-line no-console
+        console.error("❌ [DEBUG] Error details:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
         throw new HttpsError("internal", "Could not generate upload URL.");
     }
 });

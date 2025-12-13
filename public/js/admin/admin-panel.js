@@ -4,39 +4,58 @@ import { showModal } from '../ui/modal.js';
 let venuesCache = [];
 
 export function initializeAdminPanel(db, auth, refreshData) {
-    console.log('🔧 Initializing Admin Panel...');
+    console.log('🔧 [DEBUG] ========================================');
+    console.log('🔧 [DEBUG] Initializing Admin Panel...');
+    console.log('🔧 [DEBUG] ========================================');
+    console.log('🔧 [DEBUG] Parameters:');
+    console.log('🔧 [DEBUG] - db:', !!db);
+    console.log('🔧 [DEBUG] - auth:', !!auth);
+    console.log('🔧 [DEBUG] - refreshData:', !!refreshData);
     
     // Initialize venue management
+    console.log('🔧 [DEBUG] Initializing venue management...');
     initializeVenueManagement(db, refreshData);
 
     const saveConfigBtn = document.getElementById('save-site-config-btn');
+    console.log('🔧 [DEBUG] Save config button found:', !!saveConfigBtn);
     if (saveConfigBtn) {
         saveConfigBtn.addEventListener('click', async () => {
+            console.log('💾 [DEBUG] Save site config button clicked');
             const siteTitle = document.getElementById('site-title-input').value;
             const metaDescription = document.getElementById('meta-description-input').value;
+            console.log('💾 [DEBUG] Site title:', siteTitle);
+            console.log('💾 [DEBUG] Meta description:', metaDescription);
 
             try {
+                console.log('💾 [DEBUG] Saving to Firestore...');
                 await setDoc(doc(db, "site_config", "main"), {
                     siteTitle,
                     metaDescription
                 }, { merge: true });
+                console.log('✅ [DEBUG] Site config saved successfully');
                 showModal("Site configuration saved successfully!", "alert");
                 await refreshData();
             } catch (error) {
-                console.error("Error saving site config:", error);
+                console.error("❌ [DEBUG] Error saving site config:", error);
                 showModal("Failed to save site configuration.", "alert");
             }
         });
     }
 
     const saveLogoUrlsBtn = document.getElementById('save-logo-urls-btn');
+    console.log('🔧 [DEBUG] Save logo URLs button found:', !!saveLogoUrlsBtn);
     if (saveLogoUrlsBtn) {
         saveLogoUrlsBtn.addEventListener('click', async () => {
+            console.log('🖼️ [DEBUG] Save logo URLs button clicked');
             const darkLogoUrl = document.getElementById('dark-logo-url').value;
             const lightLogoUrl = document.getElementById('light-logo-url').value;
             const defaultLogoUrl = document.getElementById('default-logo-url').value;
+            console.log('🖼️ [DEBUG] Dark logo URL:', darkLogoUrl);
+            console.log('🖼️ [DEBUG] Light logo URL:', lightLogoUrl);
+            console.log('🖼️ [DEBUG] Default logo URL:', defaultLogoUrl);
 
             try {
+                console.log('🖼️ [DEBUG] Saving logo URLs to Firestore...');
                 await setDoc(doc(db, "site_config", "main"), {
                     logoUrls: {
                         dark: darkLogoUrl,
@@ -44,16 +63,18 @@ export function initializeAdminPanel(db, auth, refreshData) {
                         default: defaultLogoUrl
                     }
                 }, { merge: true });
+                console.log('✅ [DEBUG] Logo URLs saved successfully');
                 showModal("Logo URLs saved successfully!", "alert");
                 await refreshData();
             } catch (error) {
-                console.error("Error saving logo URLs:", error);
+                console.error("❌ [DEBUG] Error saving logo URLs:", error);
                 showModal("Failed to save logo URLs.", "alert");
             }
         });
     }
 
-    console.log('✅ Admin Panel initialized.');
+    console.log('✅ [DEBUG] Admin Panel initialized.');
+    console.log('🔧 [DEBUG] ========================================');
 }
 
 // ============================================
@@ -61,40 +82,54 @@ export function initializeAdminPanel(db, auth, refreshData) {
 // ============================================
 
 function initializeVenueManagement(db, refreshData) {
-    console.log('🔧 Initializing Venue Management...');
+    console.log('🏢 [DEBUG] ========================================');
+    console.log('🏢 [DEBUG] Initializing Venue Management...');
+    console.log('🏢 [DEBUG] ========================================');
     
     const addVenueBtn = document.getElementById('add-venue-btn');
     const venueForm = document.getElementById('venue-form');
     const cancelVenueBtn = document.getElementById('cancel-venue-btn');
     const venuesList = document.getElementById('venues-list');
 
+    console.log('🏢 [DEBUG] Add venue button found:', !!addVenueBtn);
+    console.log('🏢 [DEBUG] Venue form found:', !!venueForm);
+    console.log('🏢 [DEBUG] Cancel venue button found:', !!cancelVenueBtn);
+    console.log('🏢 [DEBUG] Venues list found:', !!venuesList);
+
     if (!venueForm || !venuesList) {
-        console.warn('Venue management elements not found');
+        console.warn('⚠️ [DEBUG] Venue management elements not found - aborting initialization');
         return;
     }
 
     // Load venues on initialization
+    console.log('🏢 [DEBUG] Loading venues...');
     loadVenues(db);
 
     // Add venue button
     if (addVenueBtn) {
         addVenueBtn.addEventListener('click', () => {
+            console.log('➕ [DEBUG] Add venue button clicked');
             showAddVenueForm();
         });
+        console.log('🏢 [DEBUG] Add venue button listener attached');
     }
 
     // Cancel button
     if (cancelVenueBtn) {
         cancelVenueBtn.addEventListener('click', () => {
+            console.log('❌ [DEBUG] Cancel venue button clicked');
             cancelVenueForm();
         });
+        console.log('🏢 [DEBUG] Cancel venue button listener attached');
     }
 
     // Form submission
     venueForm.addEventListener('submit', async (e) => {
+        console.log('📝 [DEBUG] Venue form submitted');
         e.preventDefault();
         await saveVenue(db, refreshData);
     });
+    console.log('🏢 [DEBUG] Venue form submit listener attached');
 
     // Event delegation for edit/delete buttons
     venuesList.addEventListener('click', async (e) => {
@@ -102,40 +137,57 @@ function initializeVenueManagement(db, refreshData) {
         if (!target) return;
 
         const venueId = target.dataset.id;
+        console.log('🏢 [DEBUG] Venue action button clicked, ID:', venueId);
 
         if (target.classList.contains('edit-venue-btn')) {
+            console.log('✏️ [DEBUG] Edit venue button clicked');
             showEditVenueForm(venueId, db);
         } else if (target.classList.contains('delete-venue-btn')) {
+            console.log('🗑️ [DEBUG] Delete venue button clicked');
             await deleteVenue(venueId, db, refreshData);
         }
     });
+    console.log('🏢 [DEBUG] Venue list event delegation attached');
 
-    console.log('✅ Venue Management initialized.');
+    console.log('✅ [DEBUG] Venue Management initialized.');
+    console.log('🏢 [DEBUG] ========================================');
 }
 
 async function loadVenues(db) {
+    console.log('📋 [DEBUG] loadVenues called');
     const venuesList = document.getElementById('venues-list');
-    if (!venuesList) return;
+    if (!venuesList) {
+        console.warn('⚠️ [DEBUG] Venues list element not found');
+        return;
+    }
 
     try {
+        console.log('📋 [DEBUG] Setting loading state...');
         venuesList.innerHTML = '<p class="text-center text-gray-500">Loading venues...</p>';
         
+        console.log('📋 [DEBUG] Fetching venues from Firestore...');
         const venuesSnapshot = await getDocs(collection(db, 'venues'));
+        console.log('📋 [DEBUG] Venues snapshot received, size:', venuesSnapshot.size);
+        
         venuesCache = [];
         
         venuesSnapshot.forEach(doc => {
             venuesCache.push({ id: doc.id, ...doc.data() });
         });
+        console.log('📋 [DEBUG] Venues loaded into cache:', venuesCache.length);
 
         if (venuesCache.length === 0) {
+            console.log('📋 [DEBUG] No venues found');
             venuesList.innerHTML = '<p class="text-center text-gray-500">No venues found. Add your first venue!</p>';
             return;
         }
 
         // Sort venues alphabetically by name
+        console.log('📋 [DEBUG] Sorting venues...');
         venuesCache.sort((a, b) => a.name.localeCompare(b.name));
 
         // Render venues
+        console.log('📋 [DEBUG] Rendering venues...');
         venuesList.innerHTML = '';
         venuesCache.forEach(venue => {
             const venueCard = document.createElement('div');
@@ -163,9 +215,11 @@ async function loadVenues(db) {
             
             venuesList.appendChild(venueCard);
         });
+        console.log('✅ [DEBUG] Venues rendered successfully');
 
     } catch (error) {
-        console.error('Error loading venues:', error);
+        console.error('❌ [DEBUG] Error loading venues:', error);
+        console.error('❌ [DEBUG] Error details:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
         venuesList.innerHTML = '<p class="text-center text-red-500">Error loading venues. Please try again.</p>';
     }
 }
