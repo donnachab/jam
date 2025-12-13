@@ -1,22 +1,34 @@
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-functions.js";
+import { httpsCallable } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-functions.js";
 import { showModal } from '../ui/modal.js';
 
+// Store parameters for use in inner functions
+let storedFunctions;
+let storedRefreshCallback;
 
 /**
- * Verifies the admin PIN using a secure POST request. Extra comment for dummy push.
+ * Verifies the admin PIN using a secure POST request.
  */
 async function verifyPin(pin) {
-  const functions = getFunctions();
-  const verifyPinCallable = httpsCallable(functions, 'verifyAdminPin');
+  const setAdminClaimCallable = httpsCallable(storedFunctions, 'setAdminClaim');
   try {
-    const result = await verifyPinCallable({ pin: pin });
-    return result.data.success;
+    const result = await setAdminClaimCallable({ pin: pin });
+    // Backend returns {success, message, expiresAt}
+    if (result.data.success) {
+      // Store expiration time if needed for session management
+      if (result.data.expiresAt) {
+        sessionStorage.setItem("gjc_adminExpiresAt", result.data.expiresAt.toString());
+      }
+      return { success: true, message: result.data.message };
+    }
+    return { success: false, message: result.data.message || "Authentication failed" };
   } catch (error) {
-    console.error("Error calling verifyAdminPin function:", error);
-    showModal(`Error: ${error.message}`, "alert");
-    return false;
+    console.error("Error calling setAdminClaim function:", error);
+    const errorMessage = error.message || "An error occurred during authentication";
+    showModal(`Error: ${errorMessage}`, "alert");
+    return { success: false, message: errorMessage };
   }
 }
+
 /**
  * Toggles the admin mode UI on or off.
  */
@@ -38,6 +50,7 @@ function handleAdminClick(e) {
     if (isAdmin) {
         // Exit admin mode
         sessionStorage.removeItem("gjc_isAdmin");
+        sessionStorage.removeItem("gjc_adminExpiresAt");
         toggleAdminMode(false);
     } else {
         // Enter admin mode
@@ -45,14 +58,18 @@ function handleAdminClick(e) {
             if (!pin) return;
             
             showModal("Verifying...", "loading");
-            const isCorrect = await verifyPin(pin);
+            const result = await verifyPin(pin);
             
-            if (isCorrect) {
+            if (result.success) {
                 sessionStorage.setItem("gjc_isAdmin", "true");
                 toggleAdminMode(true);
                 showModal("PIN verified! You are now in admin mode.", "alert");
+                // Refresh data to show admin controls
+                if (storedRefreshCallback) {
+                    storedRefreshCallback();
+                }
             } else {
-                showModal("Incorrect PIN.", "alert");
+                showModal(result.message || "Incorrect PIN.", "alert");
             }
         });
     }
@@ -61,7 +78,10 @@ function handleAdminClick(e) {
 /**
  * Initializes all admin mode event listeners.
  */
-export function initializeAdminMode() {
+export function initializeAdminMode(db, auth, functions, refreshCallback) {
+    // Store parameters for use in inner functions
+    storedFunctions = functions;
+    storedRefreshCallback = refreshCallback;
     const adminModeBtn = document.getElementById("admin-mode-btn");
     
     if (adminModeBtn) {
